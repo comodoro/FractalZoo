@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FractalZoo</string>
+    <string name="exitMenuItem">Exit</string>
+    <string name="saveMenuItem">Save as JPG</string>
+    <string name="optionsMenuItem">Options</string>
+    <string name="prefs_key_fractals">Fractals</string>
+    <string name="prefs_key_current_fractal">Current Fractal</string>
+    
+    <string name="mandelbrot">Mandelbrot</string>
+    <string name="forest_fire">Forest Fire</string>
+    <string name="sierpinski_triangle">Sierpinski Triangle</string>
+    <string name="koch_snowflake">Koch Snowflake</string>
+</resources>
