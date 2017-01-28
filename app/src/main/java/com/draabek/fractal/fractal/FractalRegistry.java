@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Properties;
 
 public final class FractalRegistry {
-	public static final String LOG_KEY = FractalRegistry.class.getName();
+	private static final String LOG_KEY = FractalRegistry.class.getName();
 	private static FractalRegistry instance = null;
 	private List<Fractal> fractals;
 	
@@ -59,6 +59,7 @@ public final class FractalRegistry {
 				return f;
 			}
 		}
+        Log.w(LOG_KEY, "Fractal not found in registry: " + name);
 		return null;
 	}
 
@@ -68,6 +69,7 @@ public final class FractalRegistry {
 				return f;
 			}
 		}
+        Log.w(LOG_KEY, "Fractal class not found in registry: " + clazz);
 		return null;
 	}
 }

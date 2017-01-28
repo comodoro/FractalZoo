@@ -7,7 +7,7 @@ import android.graphics.RectF;
 public class MandelbrotFractal extends Fractal {
 	private int[] buffer;
 	
-	public MandelbrotFractal() {
+	MandelbrotFractal() {
 		super("Mandelbrot");
 	}
 		
@@ -33,7 +33,8 @@ public class MandelbrotFractal extends Fractal {
 		int height = part.bottom - part.top;
 		int bwidth = bitmap.getWidth();
 		NativeLib.redrawMandelbrotPart(buffer, bitmap.getWidth(), bitmap.getHeight(), 
-				orig.left, orig.top, orig.right, orig.bottom, portrait, 200, part.left, part.top, part.right, part.bottom);
+				orig.left, orig.top, orig.right, orig.bottom, portrait, 200, part.left, part.top,
+				part.right, part.bottom);
 		bitmap.setPixels(buffer, bwidth*part.top + part.left, bwidth, part.left, part.right, width, height);
 		return bitmap;
 	}
