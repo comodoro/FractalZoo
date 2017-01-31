@@ -35,7 +35,7 @@ public class MandelbrotFractal extends Fractal {
 		NativeLib.redrawMandelbrotPart(buffer, bitmap.getWidth(), bitmap.getHeight(), 
 				orig.left, orig.top, orig.right, orig.bottom, portrait, 200, part.left, part.top,
 				part.right, part.bottom);
-		bitmap.setPixels(buffer, bwidth*part.top + part.left, bwidth, part.left, part.right, width, height);
+		bitmap.setPixels(buffer, 0, bitmap.getWidth(), part.left, part.top, width, height);
 		return bitmap;
 	}
 	

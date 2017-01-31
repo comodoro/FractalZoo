@@ -29,7 +29,7 @@ public class MandelbrotFractalTest {
         MandelbrotFractal mf = new MandelbrotFractal();
         Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
         Bitmap bmp = Bitmap.createBitmap(100, 100, conf);
-        Bitmap mfbmp = mf.redrawBitmapPart(bmp, new RectF(0.0f, 0.0f, 1.0f, 1.0f), true, new Rect(0, 0, 99, 99));
+        Bitmap mfbmp = mf.redrawBitmapPart(bmp, new RectF(0.0f, 0.0f, 1.0f, 1.0f), true, new Rect(0, 0, 100, 100));
         assertEquals(100, bmp.getHeight());
         assertEquals(100, bmp.getWidth());
         assertEquals(100, mfbmp.getHeight());
