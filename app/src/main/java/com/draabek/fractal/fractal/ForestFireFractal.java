@@ -14,6 +14,7 @@ public class ForestFireFractal extends Fractal {
 	public static double SPREAD_PARAM = 0.2;
 	public static double FIRE_DURATION = 0.5;
 	public static double BURNT_DURATION = 0.01;
+	public static int ITERATIONS = 100;
 	private static final String KEY = ForestFireFractal.class.getName();
 	private int[][] forest;
 	private int[][] forest2;
@@ -77,7 +78,7 @@ public class ForestFireFractal extends Fractal {
 					forest2[i][j] = FOREST_COLOR;	
 				}
 		}
-		for (int i = 0;i < 10;i++) {
+		for (int i = 0;i < ITERATIONS;i++) {
 			iteration();
 		}
 		//slow and dirty for starters
