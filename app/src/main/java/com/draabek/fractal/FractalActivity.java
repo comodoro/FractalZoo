@@ -1,21 +1,15 @@
 package com.draabek.fractal;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
@@ -31,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class FractalActivity extends Activity {
+public class FractalActivity extends AppCompatActivity {
     private static final String LOG_KEY = FractalActivity.class.getName();
     public static final int CHOOSE_FRACTAL_CODE = 1;
     private FractalView view;
@@ -58,17 +52,20 @@ public class FractalActivity extends Activity {
             Log.e(LOG_KEY, "Cannot load fractal list");
         }
         FractalRegistry.getInstance().init(fractalList);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        /*requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
+
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.main);
         view = (FractalView) findViewById(R.id.fractalView);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-
+/*
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
@@ -76,13 +73,13 @@ public class FractalActivity extends Activity {
         super.onCreateContextMenu(menu, v, menuInfo);
 
     }
-
+*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(LOG_KEY, "onCreateOptionsMenu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -151,7 +148,7 @@ public class FractalActivity extends Activity {
         }
         return b;
     }
-
+/*
     @Override
     public boolean onCreatePanelMenu(int featureId, Menu menu) {
         Log.d(LOG_KEY, "onCreatePanelMenu");
@@ -163,7 +160,7 @@ public class FractalActivity extends Activity {
         Log.d(LOG_KEY, "onMenuOpened");
         return super.onMenuOpened(featureId, menu);
     }
-
+*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CHOOSE_FRACTAL_CODE) {

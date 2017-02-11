@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.draabek.fractal">
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="23"></uses-sdk>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="23"></uses-sdk>
 
     <application
         android:allowBackup="true"
@@ -13,7 +16,6 @@
         <activity android:name=".FractalActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for

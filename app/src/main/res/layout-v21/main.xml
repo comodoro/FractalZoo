@@ -13,7 +13,6 @@
         android:layout_height="50dip"
         android:minHeight="50dip"
         android:background="@android:color/darker_gray"
-        android:popupTheme="@style/Theme.AppCompat.DayNight"
         app:theme="@style/Theme.AppCompat.DayNight" />
 
     <com.draabek.fractal.FractalView
