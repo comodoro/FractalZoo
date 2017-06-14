@@ -1,13 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme.Base" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/red</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <!--<item name="windowActionBar">false</item>-->
-        <!--<item name="android:windowActionBarOverlay">true</item>-->
+        <item name="windowActionBar">false</item>
+        <!--&lt;!&ndash;<item name="android:windowActionBarOverlay">true</item>&ndash;&gt;-->
         <!--<item name="windowNoTitle">true</item>-->
     </style>
 

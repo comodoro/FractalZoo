@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,8 +60,8 @@ public class FractalActivity extends AppCompatActivity {
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.main);
         view = (FractalView) findViewById(R.id.fractalView);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -106,12 +107,8 @@ public class FractalActivity extends AppCompatActivity {
 
     public boolean storageAvailable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            // We can read and write the media
-            return true;
-        } else {
-            return false;
-        }
+        // We can read and write the media
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     private File getFile() {
@@ -132,7 +129,7 @@ public class FractalActivity extends AppCompatActivity {
         if (storageAvailable()) {
             Log.d(LOG_KEY, "storage available");
             File file = getFile();
-            FileOutputStream fos = null;
+            FileOutputStream fos;
             try {
                 fos = new FileOutputStream(file, false);
             } catch (FileNotFoundException e) {
@@ -166,7 +163,7 @@ public class FractalActivity extends AppCompatActivity {
         if (requestCode == CHOOSE_FRACTAL_CODE) {
             try {
                 Class<Fractal> clazz = (Class<Fractal>) data.getSerializableExtra(FractalListActivity.EXTRA_KEY);
-                Fractal fractal = (Fractal) clazz.newInstance();
+                Fractal fractal = clazz.newInstance();
                 Log.d(LOG_KEY, fractal.getName() + " received");
                 view.setFractal(fractal);
                 view.invalidate();
