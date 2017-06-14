@@ -54,7 +54,7 @@ public class FractalView extends SurfaceView implements SurfaceHolder.Callback
 		gd.setOnDoubleTapListener(this);*/
 		paint = new Paint();
 		prefs = context.getSharedPreferences(FRACTALS_PREFERENCE, Context.MODE_PRIVATE);
-		String name = prefs.getString(PREFS_CURRENT_FRACTAL_KEY, "Mandelbrot");//getResources().getString(R.string.mandelbrot));
+		String name = prefs.getString(PREFS_CURRENT_FRACTAL_KEY, "Forest Fire");//getResources().getString(R.string.mandelbrot));
 		fractal = FractalRegistry.getInstance().get(name);
 	}
 
@@ -184,9 +184,8 @@ public class FractalView extends SurfaceView implements SurfaceHolder.Callback
 			if (action == MotionEvent.ACTION_DOWN) {
 				Log.d(LOG_KEY, "Touch down");
 				isGesture = false;
-			} else if (((action == MotionEvent.ACTION_UP)
-					|| ((action == MotionEvent.ACTION_POINTER_UP)))
-							&& (isGesture == false)) {
+			} else if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP)
+					&& !isGesture) {
 				//single tap ocurred
 				if ((action == MotionEvent.ACTION_POINTER_UP)) {
 					tap(x, y);

@@ -9,7 +9,8 @@ public abstract class Fractal {
 	protected float width;
 	protected float height;
 	protected boolean portrait = false;
-	
+	protected FractalOptions options;
+
 	public Fractal() {
 		
 	}
@@ -18,7 +19,11 @@ public abstract class Fractal {
 		this();
 		this.name = name;
 	}
-	
+
+    public Fractal(FractalOptions options) {
+        this.options = options;
+    }
+
 	public String getName() {
 		return name;
 	}
