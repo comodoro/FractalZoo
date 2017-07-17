@@ -29,7 +29,7 @@ import java.util.Properties;
 public class FractalActivity extends AppCompatActivity {
     private static final String LOG_KEY = FractalActivity.class.getName();
     public static final int CHOOSE_FRACTAL_CODE = 1;
-    private FractalView view;
+    private FractalGLView view;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -59,7 +59,7 @@ public class FractalActivity extends AppCompatActivity {
 
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.main);
-        view = (FractalView) findViewById(R.id.fractalView);
+        view = (FractalGLView) findViewById(R.id.fractalView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -136,7 +136,7 @@ public class FractalActivity extends AppCompatActivity {
                 Log.e(LOG_KEY, "File not found: " + e);
                 return false;
             }
-            b = view.saveBitmap(fos);
+            //b = view.saveBitmap(fos);
             try {
                 fos.close();
             } catch (IOException e) {

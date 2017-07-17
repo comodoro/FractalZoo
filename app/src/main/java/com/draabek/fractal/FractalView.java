@@ -25,8 +25,8 @@ public class FractalView extends SurfaceView implements SurfaceHolder.Callback
 {
 
 	private static final String LOG_KEY = FractalView.class.getName();
-	public static final String FRACTALS_PREFERENCE	= "FRACTALS_PREFERENCE";
-	public static final String PREFS_CURRENT_FRACTAL_KEY = "prefs_current_fractal";
+    public static final String FRACTALS_PREFERENCE	= "FRACTALS_PREFERENCE";
+    public static final String PREFS_CURRENT_FRACTAL_KEY = "prefs_current_fractal";
 	private Bitmap fractalBitmap;
 	private Fractal fractal;
 	private RectF position;

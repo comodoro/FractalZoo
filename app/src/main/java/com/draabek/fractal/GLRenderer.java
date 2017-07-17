@@ -68,14 +68,14 @@ public class GLRenderer implements Renderer {
         // Update our example
 
         // Render our example
-        Render(mtrxProjectionAndView);
+        render(mtrxProjectionAndView);
 
         // Save the current time to see how long it took :).
         mLastTime = now;
 
     }
 
-    private void Render(float[] m) {
+    private void render(float[] m) {
 
         // clear Screen and Depth Buffer, we have set the clear color as black.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
