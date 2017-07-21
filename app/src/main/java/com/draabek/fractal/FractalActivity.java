@@ -1,7 +1,6 @@
 package com.draabek.fractal;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,10 +13,6 @@ import android.view.MenuItem;
 
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,15 +21,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/*
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+*/
+
 public class FractalActivity extends AppCompatActivity {
     private static final String LOG_KEY = FractalActivity.class.getName();
     public static final int CHOOSE_FRACTAL_CODE = 1;
-    private FractalGLView view;
+    private MyGLSurfaceView view;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+    ///private GoogleApiClient client;
 
     public FractalActivity() {
     }
@@ -59,12 +61,12 @@ public class FractalActivity extends AppCompatActivity {
 
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.main);
-        view = (FractalGLView) findViewById(R.id.fractalView);
+        view = (MyGLSurfaceView) findViewById(R.id.fractalView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        ///client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 /*
     @Override
@@ -182,7 +184,7 @@ public class FractalActivity extends AppCompatActivity {
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    public Action getIndexApiAction() {
+/*    public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
                 .setName("Fractal Page") // TODO: Define a title for the content shown.
                 // TODO: Make sure this auto-generated URL is correct.
@@ -192,7 +194,7 @@ public class FractalActivity extends AppCompatActivity {
                 .setObject(object)
                 .setActionStatus(Action.STATUS_TYPE_COMPLETED)
                 .build();
-    }
+    }*/
 
     @Override
     public void onStart() {
@@ -200,8 +202,8 @@ public class FractalActivity extends AppCompatActivity {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+        ///client.connect();
+        ///AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
@@ -210,7 +212,7 @@ public class FractalActivity extends AppCompatActivity {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
+        ///AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        ///client.disconnect();
     }
 }
