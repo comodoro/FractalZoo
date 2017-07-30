@@ -11,4 +11,7 @@
     <string name="forest_fire">Forest Fire</string>
     <string name="sierpinski_triangle">Sierpinski Triangle</string>
     <string name="koch_snowflake">Koch Snowflake</string>
+    <string name="listMenuItem">Fractal List</string>
+    <string name="prefs_use_gpu_key">PREFS_USE_GPU</string>
+    <string name="prefs_use_gpu_string">Use GPU</string>
 </resources>

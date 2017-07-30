@@ -92,13 +92,18 @@ public class FractalActivity extends AppCompatActivity {
                 Log.d(LOG_KEY, "Exit menu item pressed");
                 System.exit(0);
                 return true;
+            case R.id.fractalList:
+                Log.d(LOG_KEY, "Fractal list menu item pressed");
+                Intent intent = new Intent(this, FractalListActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.save:
                 Log.d(LOG_KEY, "Save menu item pressed");
                 return attemptSave();
             case R.id.options:
                 Log.d(LOG_KEY, "Options menu item pressed");
-                Intent intent = new Intent(this, FractalListActivity.class);
-                startActivityForResult(intent, CHOOSE_FRACTAL_CODE);
+                Intent intent2 = new Intent(this, FractalPreferenceActivity.class);
+                startActivity(intent2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
