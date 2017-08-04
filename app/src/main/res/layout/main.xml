@@ -6,7 +6,7 @@
                 android:fitsSystemWindows="true">
 
 
-    <com.draabek.fractal.FractalGLView
+    <com.draabek.fractal.MyGLSurfaceView
         android:id="@+id/fractalView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

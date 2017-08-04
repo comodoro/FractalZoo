@@ -6,11 +6,7 @@ import android.graphics.RectF;
 
 public class MandelbrotFractal extends Fractal {
 	private int[] buffer;
-	
-	MandelbrotFractal() {
-		super("Mandelbrot");
-	}
-		
+
 	/* Redraw bitmap via JNI */
 	@Override
 	public Bitmap redrawBitmap(Bitmap bitmap, RectF orig, boolean portrait) {
@@ -38,53 +34,5 @@ public class MandelbrotFractal extends Fractal {
 		bitmap.setPixels(buffer, 0, bitmap.getWidth(), part.left, part.top, width, height);
 		return bitmap;
 	}
-	
-	
-	/*public Bitmap redrawBitmap(Bitmap bitmap, RectF orig, boolean portrait) {
-		double cr,ci;
-		double zr,zi;
-		double crt;
-		float x = orig.left;
-		float y = orig.top;
-		//portrait = (bitmap.getWidth() <= bitmap.getHeight());
-		width = bitmap.getWidth();
-		height = bitmap.getHeight();
-		//int width = 200;
-		//int height = 200;
-		logger.info("redrawing mandelbrot, rect: " + x + ", " + y + ", " + orig.width() + ", " + orig.height());
-		long startTime = System.currentTimeMillis();
-		for (int i = 0;i < width;i++)
-			for (int j = 0;j < height;j++) {
-				 cr = x + (double)i/width*orig.width();
-				 ci = y + (double)j/width*orig.height();
-				 if (portrait) {
-					 double temp = cr;
-					 cr = ci;
-					 ci = temp;
-				 }
-				 zr = cr;
-				 zi = ci;
-			     int iter = 0;
-			     for (iter = 0;iter < maxIterations;iter++) {
-			    	 crt = cr;
-			    	 cr = cr*cr - ci*ci + zr;
-			    	 ci = 2*crt*ci + zi;
-			    	 //logger.info(" C: " + cr + "," + ci);
-			    	 if (cr*cr - ci*ci > 2*2) {
-			    		 //logger.info("Outside the set, iter:" + iter);
-			    		 break;
-			    	 }
-			     }
-			     float factor = (1 - (float)iter / maxIterations);
-//			     int rgb = (int) (factor * 0xff);
-//			     int color = rgb | rgb << 8 | rgb << 16 | 0xff000000; 
-//			     bitmap.setPixel(i, j, color);
-			     int color = palette.getColor(factor);
-			     bitmap.setPixel(i, j, color);
-			}
-		logger.info("finished redrawing Mandelbrot");
-		long endTime = System.currentTimeMillis();
-		logger.info("Time (ms): " + (endTime - startTime));
-		return bitmap;
-	}*/
+
 }
