@@ -8,9 +8,9 @@
   "name": "Debug",
   "class": "com.draabek.fractal.fractal.Debug",
   "shaders":"debug"
-},
+  },
   {
-    "name":"ForestFire",
+    "name":"Forest Fire",
     "class":"com.draabek.fractal.fractal.ForestFireFractal"
   }
 ]

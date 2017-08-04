@@ -22,7 +22,6 @@ public class ForestFireFractal extends Fractal {
 	private Random random;
 	
 	public ForestFireFractal() {
-		super("Forest Fire");
 		random = new Random();
 	}
 	

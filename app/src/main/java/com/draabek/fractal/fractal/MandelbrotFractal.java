@@ -6,14 +6,6 @@ import android.graphics.RectF;
 
 public class MandelbrotFractal extends Fractal {
 	private int[] buffer;
-	MandelbrotFractal() {
-		super("Mandelbrot");
-	}
-
-	public MandelbrotFractal(String vertexShader, String fragmentShader) {
-		this();
-		this.shaders = new String[] {vertexShader, fragmentShader};
-	}
 
 	/* Redraw bitmap via JNI */
 	@Override

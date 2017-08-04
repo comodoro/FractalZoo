@@ -16,11 +16,6 @@ public class SierpinskiTriangle extends Fractal {
 	}
 
 	@Override
-	public String toString() {
-		return "Sierpiński triangle";
-	}
-
-	@Override
 	public Bitmap redrawBitmapPart(Bitmap bitmap, RectF rect, boolean portrait,
 			Rect part) {
 		// TODO Auto-generated method stub

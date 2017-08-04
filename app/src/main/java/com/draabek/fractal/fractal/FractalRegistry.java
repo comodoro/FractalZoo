@@ -10,8 +10,6 @@ import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -64,8 +62,11 @@ public final class FractalRegistry {
 			JsonObject jsonObject = element.getAsJsonObject();
 			String clazz = jsonObject.get("class").getAsString();
             String shaders = jsonObject.get("shaders") != null ? jsonObject.get("shaders").getAsString() : null;
+			String name = jsonObject.get("name").getAsString();
+			String[] loadedShaders = null;
+			Class cls = null;
 			try {
-                Class cls = Class.forName(clazz);
+                cls = Class.forName(clazz);
 				//this is frontal lobotomy
                 if (shaders != null) {
 					BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -83,18 +84,12 @@ public final class FractalRegistry {
 					while ((line = br.readLine()) != null) {
 						vertexShader.append(line).append("\n");
 					}
-
-					Constructor cons = null;
-					try {
-						cons = cls.getConstructor(String.class, String.class);
-					} catch (NoSuchMethodException e) {
-						e.printStackTrace();
-					}
-					String[] loadedShaders = new String[] {vertexShader.toString(), fragmentShader.toString()};
-					add((Fractal) cons.newInstance(loadedShaders));
-                } else {
-					add((Fractal) cls.newInstance());
-				}
+					loadedShaders = new String[] {vertexShader.toString(), fragmentShader.toString()};
+                }
+                Fractal fractal = (Fractal)cls.newInstance();
+				fractal.setName(name);
+				fractal.setShaders(loadedShaders);
+				add(fractal);
 			} catch(ClassNotFoundException e) {
 				Log.w(LOG_KEY, "Cannot find fractal class " + clazz);
 			} catch(IllegalAccessException e) {
@@ -103,8 +98,6 @@ public final class FractalRegistry {
 				Log.w(LOG_KEY, "Cannot instantiate fractal class " + clazz);
 			} catch(IOException e) {
 				Log.w(LOG_KEY, "IOException loading fractal " + clazz);
-			} catch(InvocationTargetException e) {
-				Log.w(LOG_KEY, "InvocationTargetException loading fractal " + clazz);
 			}
 		}
 	}
