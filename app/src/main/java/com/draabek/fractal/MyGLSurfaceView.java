@@ -55,13 +55,14 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
         // Create an OpenGL ES 2.0 context.
         setEGLContextClientVersion(2);
-
+        setEGLConfigChooser(8 , 8, 8, 8, 8, 0);
         // Set the Renderer for drawing on the GLSurfaceView
         mRenderer = new MyGLRenderer();
         setRenderer(mRenderer);
 
         // Render the view only when there is a change in the drawing data
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        this.invalidate();
     }
 
     private final float TOUCH_SCALE_FACTOR = 180.0f / 320;

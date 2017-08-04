@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 package com.draabek.fractal;
+
 import android.opengl.GLES20;
+import android.util.Log;
+
+import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -39,15 +43,18 @@ public class Square {
             "}";
 
     private final String fragmentShaderCode =
+            //"uniform sampler1D tex;" +
             "precision mediump float;" +
             "uniform vec4 vColor;" +
             "void main() {" +
-            "  gl_FragColor = vColor;" +
+                    //"gl_FragColor = texture1D(tex, glFragCoord.x) / 100.0;"+
+                    "gl_FragColor = vec4(gl_FragCoord.x/500.0, 0, 0, 1);"+
+            //"  gl_FragColor = vec4(1,0,0,1);" +
             "}";
 
     private final FloatBuffer vertexBuffer;
     private final ShortBuffer drawListBuffer;
-    private final int mProgram;
+    private int mProgram;
     private int mPositionHandle;
     private int mColorHandle;
     private int mMVPMatrixHandle;
@@ -55,10 +62,10 @@ public class Square {
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
     static float squareCoords[] = {
-            -0.5f,  0.5f, 0.0f,   // top left
-            -0.5f, -0.5f, 0.0f,   // bottom left
-             0.5f, -0.5f, 0.0f,   // bottom right
-             0.5f,  0.5f, 0.0f }; // top right
+            -0.623f,  1.0f, 0.0f,   // top right
+            -0.623f, -1.0f, 0.0f,   // bottom right
+            0.623f, -1.0f, 0.0f,   // bottom left
+            0.623f,  1.0f, 0.0f }; // top left
 
     private final short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
 
@@ -91,15 +98,24 @@ public class Square {
         // prepare shaders and OpenGL program
         int vertexShader = MyGLRenderer.loadShader(
                 GLES20.GL_VERTEX_SHADER,
-                vertexShaderCode);
+                FractalRegistry.getInstance().get("Debug").getShaders()[0]);
         int fragmentShader = MyGLRenderer.loadShader(
                 GLES20.GL_FRAGMENT_SHADER,
-                fragmentShaderCode);
+                FractalRegistry.getInstance().get("Debug").getShaders()[1]);
 
         mProgram = GLES20.glCreateProgram();             // create empty OpenGL Program
         GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
         GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
         GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
+        int[] linkStatus = new int[1];
+        GLES20.glGetProgramiv(mProgram, GLES20.GL_LINK_STATUS, linkStatus, 0);
+        if (linkStatus[0] != GLES20.GL_TRUE) {
+            Log.e(this.getClass().getName(), "Could not link program");
+            String infoLog = GLES20.glGetShaderInfoLog(mProgram);
+            GLES20.glDeleteProgram(mProgram);
+            mProgram = 0;
+            throw new RuntimeException("Failed to compile shader!" + '\n' + infoLog);
+        }
     }
 
     /**
@@ -123,15 +139,37 @@ public class Square {
                 mPositionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
-
+/*
         // get handle to fragment shader's vColor member
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
 
         // Set color for drawing the triangle
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
+*/
+        int centerX = 3;
+        int centerY = 3;
+        float scale = 0.03f;
+        int iter = 1024;
+        float[] color = new float[]{0.0f, 0.5f, 0.0f, 0.5f};
+        // get handle to fragment shader's vColor member
+//        int colorHandle = GLES20.glGetUniformLocation(mProgram, "u_color");
+//        MyGLRenderer.checkGlError("glGetUniformLocation");
+//        GLES20.glUniform4f(colorHandle, color[0], color[1], color[2], color[3]);
+
+        int centerHandle = GLES20.glGetUniformLocation(mProgram, "u_center");
+        int scaleHandle = GLES20.glGetUniformLocation(mProgram, "u_scale");
+        int iterHandle = GLES20.glGetUniformLocation(mProgram, "u_iter");
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+        MyGLRenderer.checkGlError("glGetUniformLocation");
+        GLES20.glUniform2f(centerHandle, centerX, centerY);
+
+        MyGLRenderer.checkGlError("glGetUniformLocation");
+        GLES20.glUniform1f(scaleHandle, scale);
+
+        MyGLRenderer.checkGlError("glGetUniformLocation");
+        GLES20.glUniform1i(iterHandle, iter);
 
         // get handle to shape's transformation matrix
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
         MyGLRenderer.checkGlError("glGetUniformLocation");
 
         // Apply the projection and view transformation

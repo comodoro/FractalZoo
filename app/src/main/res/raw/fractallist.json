@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Mandelbrot",
+    "class": "com.draabek.fractal.fractal.MandelbrotFractal",
+    "shaders":"mandelbrot"
+  },
+  {
+  "name": "Debug",
+  "class": "com.draabek.fractal.fractal.Debug",
+  "shaders":"debug"
+},
+  {
+    "name":"ForestFire",
+    "class":"com.draabek.fractal.fractal.ForestFireFractal"
+  }
+]

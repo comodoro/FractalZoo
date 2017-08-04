@@ -13,13 +13,17 @@ import android.view.MenuItem;
 
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 /*
 import com.google.android.gms.appindexing.Action;
@@ -47,14 +51,12 @@ public class FractalActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        InputStream is = this.getResources().openRawResource(R.raw.fractallist);
-        Properties fractalList = new Properties();
-        try {
-            fractalList.load(is);
-        } catch (IOException e) {
-            Log.e(LOG_KEY, "Cannot load fractal list");
-        }
-        FractalRegistry.getInstance().init(fractalList);
+        Reader jsonReader = new InputStreamReader(this.getResources().openRawResource(R.raw.fractallist));
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        JsonElement fractalElement = parser.parse(jsonReader);
+        JsonArray fractalArray = fractalElement.getAsJsonArray();
+        FractalRegistry.getInstance().init(this, fractalArray);
         /*requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
@@ -64,6 +66,7 @@ public class FractalActivity extends AppCompatActivity {
         view = (MyGLSurfaceView) findViewById(R.id.fractalView);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         ///client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();

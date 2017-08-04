@@ -6,10 +6,7 @@ import android.graphics.RectF;
 
 public abstract class Fractal {
 	protected String name = "";
-	protected float width;
-	protected float height;
-	protected boolean portrait = false;
-	protected FractalOptions options;
+	protected String[] shaders = null;
 
 	public Fractal() {
 		
@@ -20,28 +17,15 @@ public abstract class Fractal {
 		this.name = name;
 	}
 
-    public Fractal(FractalOptions options) {
-        this.options = options;
-    }
-
 	public String getName() {
 		return name;
 	}
 
-	public float getWidth() {
-		return width;
-	}
-	
-	public float getHeight() {
-		return height;
-	}
-
-	public boolean isPortrait() {
-		return portrait;
-	}
-
 	public abstract Bitmap redrawBitmap(Bitmap bitmap, RectF rect, boolean portrait); 
 	public abstract Bitmap redrawBitmapPart(Bitmap bitmap, RectF rect, boolean portrait, Rect part);
+
+	public String[] getShaders() {return shaders;}
+
 	public String toString() {
 		return name;
 	}

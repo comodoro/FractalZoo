@@ -1,18 +1,28 @@
 package com.draabek.fractal.fractal;
 
+import android.content.Context;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public final class FractalRegistry {
 	private static final String LOG_KEY = FractalRegistry.class.getName();
 	private static FractalRegistry instance = null;
-	private List<Fractal> fractals;
+	private Map<String, Fractal>  fractals;
 	
 	private FractalRegistry() {
-		fractals = new ArrayList<Fractal>();
+		fractals = new HashMap<String, Fractal>();
 	}
 	
 	public static FractalRegistry getInstance() {
@@ -21,14 +31,14 @@ public final class FractalRegistry {
 	}
 	
 	public void add(Fractal fractal) {
-		fractals.add(fractal);
+		fractals.put(fractal.getName(), fractal);
 	}
 	
 	public void remove(Fractal fractal) {
 		fractals.remove(fractal);
 	}
 	
-	public List<Fractal> getFractals() {
+	public Map<String, Fractal> getFractals() {
 		return fractals;
 	}
 	
@@ -48,28 +58,62 @@ public final class FractalRegistry {
 			}
 		}
 	}
-	
-	public Fractal get(int index) {
-		return fractals.get(index);
-	}
-	
-	public Fractal get(String name) {
-		for (Fractal f : fractals) {
-			if (f.getName().equals(name)) {
-				return f;
+
+	public void init(Context ctx, JsonArray props) {
+		for (JsonElement element : props) {
+			JsonObject jsonObject = element.getAsJsonObject();
+			String clazz = jsonObject.get("class").getAsString();
+            String shaders = jsonObject.get("shaders") != null ? jsonObject.get("shaders").getAsString() : null;
+			try {
+                Class cls = Class.forName(clazz);
+				//this is frontal lobotomy
+                if (shaders != null) {
+					BufferedReader br = new BufferedReader(new InputStreamReader(
+							ctx.getAssets().open(shaders + "_fragment.glsl")
+					));
+					StringBuffer fragmentShader = new StringBuffer();
+					String line = null;
+					while ((line = br.readLine()) != null) {
+						fragmentShader.append(line).append("\n");
+					}
+					br = new BufferedReader(new InputStreamReader(
+							ctx.getAssets().open(shaders + "_vertex.glsl")
+					));
+					StringBuffer vertexShader = new StringBuffer();
+					while ((line = br.readLine()) != null) {
+						vertexShader.append(line).append("\n");
+					}
+
+					Constructor cons = null;
+					try {
+						cons = cls.getConstructor(String.class, String.class);
+					} catch (NoSuchMethodException e) {
+						e.printStackTrace();
+					}
+					String[] loadedShaders = new String[] {vertexShader.toString(), fragmentShader.toString()};
+					add((Fractal) cons.newInstance(loadedShaders));
+                } else {
+					add((Fractal) cls.newInstance());
+				}
+			} catch(ClassNotFoundException e) {
+				Log.w(LOG_KEY, "Cannot find fractal class " + clazz);
+			} catch(IllegalAccessException e) {
+				Log.w(LOG_KEY, "Cannot access fractal class " + clazz);
+			} catch(InstantiationException e) {
+				Log.w(LOG_KEY, "Cannot instantiate fractal class " + clazz);
+			} catch(IOException e) {
+				Log.w(LOG_KEY, "IOException loading fractal " + clazz);
+			} catch(InvocationTargetException e) {
+				Log.w(LOG_KEY, "InvocationTargetException loading fractal " + clazz);
 			}
 		}
+	}
+
+	public Fractal get(String name) {
+		Fractal f = fractals.get(name);
+		if (f != null) return f;
         Log.w(LOG_KEY, "Fractal not found in registry: " + name);
 		return null;
 	}
 
-	public Fractal getByClass(String clazz) {
-		for (Fractal f : fractals) {
-			if (f.getClass().getName().equals(clazz)) {
-				return f;
-			}
-		}
-        Log.w(LOG_KEY, "Fractal class not found in registry: " + clazz);
-		return null;
-	}
 }

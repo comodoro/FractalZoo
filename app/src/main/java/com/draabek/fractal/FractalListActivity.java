@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class FractalListActivity extends ListActivity {
@@ -22,7 +23,7 @@ public class FractalListActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		List<Fractal> fractalList = FractalRegistry.getInstance().getFractals();
+		List fractalList = Arrays.asList(FractalRegistry.getInstance().getFractals().values().toArray());
 		ArrayAdapter<Fractal> adapter = new ArrayAdapter<Fractal>(this, android.R.layout.simple_list_item_1,
 				fractalList);
 		setListAdapter(adapter);

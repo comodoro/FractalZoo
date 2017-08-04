@@ -95,5 +95,4 @@ public class ForestFireFractal extends Fractal {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 }
