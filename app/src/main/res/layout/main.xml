@@ -7,13 +7,24 @@
 
 
     <com.draabek.fractal.MyGLSurfaceView
-        android:id="@+id/fractalView"
+        android:id="@+id/fractalGlView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#77000080"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:visibility="visible"/>
+
+    <com.draabek.fractal.FractalView
+        android:id="@+id/fractalCpuView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00770080"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible"/>
 
     <!-- Toolbar should be above content-->
     <include layout="@layout/toolbar" />

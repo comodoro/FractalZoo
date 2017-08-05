@@ -18,9 +18,9 @@ import android.view.View;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
-import java.io.FileOutputStream;
+import java.io.OutputStream;
 
-public class FractalView extends SurfaceView implements SurfaceHolder.Callback
+public class FractalView extends SurfaceView implements SurfaceHolder.Callback, FractalViewHandler
 //,GestureDetector.OnDoubleTapListener, GestureDetector.OnGestureListener 
 {
 
@@ -273,9 +273,9 @@ public class FractalView extends SurfaceView implements SurfaceHolder.Callback
 		}
 	}*/
 
-	public boolean saveBitmap(FileOutputStream fos) {
+	public boolean saveBitmap(OutputStream os) {
 		if (fractalBitmap != null) {
-			return fractalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+			return fractalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
 		} else {
 			Log.e(LOG_KEY, "Attempting to save null bitmap");
 			return false;

@@ -22,12 +22,14 @@ import android.view.MotionEvent;
 
 import com.draabek.fractal.fractal.Fractal;
 
+import java.io.OutputStream;
+
 /**
  * A view container where OpenGL ES graphics can be drawn on screen.
  * This view can also be used to capture touch events, such as a user
  * interacting with drawn objects.
  */
-public class MyGLSurfaceView extends GLSurfaceView {
+public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler {
 
     private MyGLRenderer mRenderer;
 
@@ -84,16 +86,6 @@ public class MyGLSurfaceView extends GLSurfaceView {
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
 
-                // reverse direction of rotation above the mid-line
-                if (y > getHeight() / 2) {
-                    dx = dx * -1 ;
-                }
-
-                // reverse direction of rotation to left of the mid-line
-                if (x < getWidth() / 2) {
-                    dy = dy * -1 ;
-                }
-
                 mRenderer.setAngle(
                         mRenderer.getAngle() +
                         ((dx + dy) * TOUCH_SCALE_FACTOR));  // = 180.0f / 320
@@ -105,4 +97,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
         return true;
     }
 
+    @Override
+    public boolean saveBitmap(OutputStream os) {
+        return false;
+    }
 }

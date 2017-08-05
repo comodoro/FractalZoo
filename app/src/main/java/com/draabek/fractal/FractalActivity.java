@@ -35,7 +35,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public class FractalActivity extends AppCompatActivity {
     private static final String LOG_KEY = FractalActivity.class.getName();
     public static final int CHOOSE_FRACTAL_CODE = 1;
-    private MyGLSurfaceView view;
+    private MyGLSurfaceView myGLSurfaceView;
+    private FractalView cpuView;
+    private FractalViewHandler currentView;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -57,29 +59,19 @@ public class FractalActivity extends AppCompatActivity {
         JsonElement fractalElement = parser.parse(jsonReader);
         JsonArray fractalArray = fractalElement.getAsJsonArray();
         FractalRegistry.getInstance().init(this, fractalArray);
-        /*requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
-
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.main);
-        view = (MyGLSurfaceView) findViewById(R.id.fractalView);
+        myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
+        cpuView = (FractalView) findViewById(R.id.fractalCpuView);
+        if (this.getSharedPreferences("", MODE_PRIVATE).getBoolean("prefs_use_gpu", true)) {
+            currentView = myGLSurfaceView;
+        } else {
+            currentView = cpuView;
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        ///client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-/*
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenuInfo menuInfo) {
-        Log.d(LOG_KEY, "onCreateContextMenu");
-        super.onCreateContextMenu(menu, v, menuInfo);
 
-    }
-*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(LOG_KEY, "onCreateOptionsMenu");
@@ -122,7 +114,7 @@ public class FractalActivity extends AppCompatActivity {
     }
 
     private File getFile() {
-        String fileName = view.getFractal().toString() + System.currentTimeMillis() + ".jpg";
+        String fileName = myGLSurfaceView.getFractal().toString() + System.currentTimeMillis() + ".jpg";
         int apiVersion = Build.VERSION.SDK_INT;
         if (apiVersion >= Build.VERSION_CODES.ECLAIR_MR1) {
             return new File(this.getApplicationContext().getExternalFilesDir(null), fileName);
@@ -146,7 +138,7 @@ public class FractalActivity extends AppCompatActivity {
                 Log.e(LOG_KEY, "File not found: " + e);
                 return false;
             }
-            //b = view.saveBitmap(fos);
+            b = currentView.saveBitmap(fos);
             try {
                 fos.close();
             } catch (IOException e) {
@@ -175,8 +167,8 @@ public class FractalActivity extends AppCompatActivity {
                 Class<Fractal> clazz = (Class<Fractal>) data.getSerializableExtra(FractalListActivity.EXTRA_KEY);
                 Fractal fractal = clazz.newInstance();
                 Log.d(LOG_KEY, fractal.getName() + " received");
-                view.setFractal(fractal);
-                view.invalidate();
+                currentView.setFractal(fractal);
+                currentView.invalidate();
             } catch (IllegalAccessException e) {
                 Log.e(LOG_KEY, "Exception accessing fractal class: " + e);
             } catch (InstantiationException e) {

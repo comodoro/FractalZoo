@@ -146,9 +146,9 @@ public class Square {
         // Set color for drawing the triangle
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 */
-        int centerX = 3;
-        int centerY = 3;
-        float scale = 0.03f;
+        int centerX = 350;
+        int centerY = 400;
+        float scale = 0.005f;
         int iter = 1024;
         float[] color = new float[]{0.0f, 0.5f, 0.0f, 0.5f};
         // get handle to fragment shader's vColor member
@@ -162,14 +162,10 @@ public class Square {
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
         MyGLRenderer.checkGlError("glGetUniformLocation");
         GLES20.glUniform2f(centerHandle, centerX, centerY);
-
         MyGLRenderer.checkGlError("glGetUniformLocation");
         GLES20.glUniform1f(scaleHandle, scale);
-
         MyGLRenderer.checkGlError("glGetUniformLocation");
         GLES20.glUniform1i(iterHandle, iter);
-
-        // get handle to shape's transformation matrix
         MyGLRenderer.checkGlError("glGetUniformLocation");
 
         // Apply the projection and view transformation
