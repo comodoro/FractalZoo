@@ -67,7 +67,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
         this.invalidate();
     }
 
-    private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
+    private final float TOUCH_SCALE_FACTOR = 10;
     private float mPreviousX;
     private float mPreviousY;
 
@@ -86,9 +86,13 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
 
-                mRenderer.setAngle(
-                        mRenderer.getAngle() +
-                        ((dx + dy) * TOUCH_SCALE_FACTOR));  // = 180.0f / 320
+
+                mRenderer.setCenterX(
+                        mRenderer.getCenterX() +
+                                dx * TOUCH_SCALE_FACTOR);  // = 180.0f / 320
+                mRenderer.setCenterY(
+                        mRenderer.getCenterY() +
+                                dy * TOUCH_SCALE_FACTOR);  // = 180.0f / 320
                 requestRender();
         }
 

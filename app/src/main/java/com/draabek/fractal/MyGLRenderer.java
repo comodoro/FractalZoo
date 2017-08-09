@@ -44,6 +44,33 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private float mAngle;
 
+    public float getCenterX() {
+        return centerX;
+    }
+
+    public void setCenterX(float centerX) {
+        this.centerX = centerX;
+    }
+
+    public float getCenterY() {
+        return centerY;
+    }
+
+    public void setCenterY(float centerY) {
+        this.centerY = centerY;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
+    private float centerX = 350;
+    private float centerY = 400;
+    private float scale = 0.005f;
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 

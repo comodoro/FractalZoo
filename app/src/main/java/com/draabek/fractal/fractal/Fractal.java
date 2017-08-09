@@ -4,12 +4,16 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 public abstract class Fractal {
 	protected String name = "";
 	protected String[] shaders = null;
+	protected Map<String, Object> settings;
 
 	public Fractal() {
-		
+		settings = new Hashtable<String, Object>();
 	}
 
 	public Fractal(String name) {
@@ -22,6 +26,9 @@ public abstract class Fractal {
 		this.shaders = new String[] {vertexShader, fragmentShader};
 	}
 
+	public void updateSettings(Map<String, Object> newSettings) {
+		this.settings.putAll(newSettings);
+	}
 
 	public String getName() {
 		return name;
