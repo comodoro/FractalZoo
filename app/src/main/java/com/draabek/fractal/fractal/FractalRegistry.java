@@ -3,9 +3,11 @@ package com.draabek.fractal.fractal;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +20,7 @@ public final class FractalRegistry {
 	private static final String LOG_KEY = FractalRegistry.class.getName();
 	private static FractalRegistry instance = null;
 	private Map<String, Fractal>  fractals;
-	
+	private String currentFractal = "Mandelbrot";
 	private FractalRegistry() {
 		fractals = new HashMap<String, Fractal>();
 	}
@@ -63,6 +65,8 @@ public final class FractalRegistry {
 			String clazz = jsonObject.get("class").getAsString();
             String shaders = jsonObject.get("shaders") != null ? jsonObject.get("shaders").getAsString() : null;
 			String name = jsonObject.get("name").getAsString();
+			String settingsString = jsonObject.get("settings") != null ?
+					jsonObject.get("settings").toString() : null;
 			String[] loadedShaders = null;
 			Class cls = null;
 			try {
@@ -89,6 +93,12 @@ public final class FractalRegistry {
                 Fractal fractal = (Fractal)cls.newInstance();
 				fractal.setName(name);
 				fractal.setShaders(loadedShaders);
+				if (settingsString != null) {
+					Map<String, Float> retMap = new Gson().fromJson(
+							settingsString, new TypeToken<HashMap<String, Float>>() {}.getType()
+					);
+					fractal.updateSettings(retMap);
+				}
 				add(fractal);
 			} catch(ClassNotFoundException e) {
 				Log.w(LOG_KEY, "Cannot find fractal class " + clazz);
@@ -109,4 +119,11 @@ public final class FractalRegistry {
 		return null;
 	}
 
+	public String getCurrentFractal() {
+		return currentFractal;
+	}
+
+	public void setCurrentFractal(String currentFractal) {
+		this.currentFractal = currentFractal;
+	}
 }

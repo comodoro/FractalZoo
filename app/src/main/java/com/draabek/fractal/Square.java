@@ -18,46 +18,26 @@ package com.draabek.fractal;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.Map;
 
 /**
  * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
  */
 public class Square {
 
-    private final String vertexShaderCode =
-            // This matrix member variable provides a hook to manipulate
-            // the coordinates of the objects that use this vertex shader
-            "uniform mat4 uMVPMatrix;" +
-            "attribute vec4 vPosition;" +
-            "void main() {" +
-            // The matrix must be included as a modifier of gl_Position.
-            // Note that the uMVPMatrix factor *must be first* in order
-            // for the matrix multiplication product to be correct.
-            "  gl_Position = uMVPMatrix * vPosition;" +
-            "}";
-
-    private final String fragmentShaderCode =
-            //"uniform sampler1D tex;" +
-            "precision mediump float;" +
-            "uniform vec4 vColor;" +
-            "void main() {" +
-                    //"gl_FragColor = texture1D(tex, glFragCoord.x) / 100.0;"+
-                    "gl_FragColor = vec4(gl_FragCoord.x/500.0, 0, 0, 1);"+
-            //"  gl_FragColor = vec4(1,0,0,1);" +
-            "}";
-
     private final FloatBuffer vertexBuffer;
     private final ShortBuffer drawListBuffer;
     private int mProgram;
     private int mPositionHandle;
-    private int mColorHandle;
     private int mMVPMatrixHandle;
+    private Fractal currentFractal;
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
@@ -94,14 +74,24 @@ public class Square {
         drawListBuffer = dlb.asShortBuffer();
         drawListBuffer.put(drawOrder);
         drawListBuffer.position(0);
+        updateCurrentFractal();
+     }
 
+    public void updateCurrentFractal () {
+        currentFractal = FractalRegistry.getInstance().get(
+                FractalRegistry.getInstance().getCurrentFractal()
+        );
+        updateShaders();
+    }
+
+    private void updateShaders() {
         // prepare shaders and OpenGL program
         int vertexShader = MyGLRenderer.loadShader(
                 GLES20.GL_VERTEX_SHADER,
-                FractalRegistry.getInstance().get("Debug").getShaders()[0]);
+                currentFractal.getShaders()[0]);
         int fragmentShader = MyGLRenderer.loadShader(
                 GLES20.GL_FRAGMENT_SHADER,
-                FractalRegistry.getInstance().get("Debug").getShaders()[1]);
+                currentFractal.getShaders()[1]);
 
         mProgram = GLES20.glCreateProgram();             // create empty OpenGL Program
         GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
@@ -117,7 +107,6 @@ public class Square {
             throw new RuntimeException("Failed to compile shader!" + '\n' + infoLog);
         }
     }
-
     /**
      * Encapsulates the OpenGL ES instructions for drawing this shape.
      *
@@ -150,16 +139,35 @@ public class Square {
         int centerY = 400;
         float scale = 0.005f;
         int iter = 1024;
-        float[] color = new float[]{0.0f, 0.5f, 0.0f, 0.5f};
-        // get handle to fragment shader's vColor member
-//        int colorHandle = GLES20.glGetUniformLocation(mProgram, "u_color");
-//        MyGLRenderer.checkGlError("glGetUniformLocation");
-//        GLES20.glUniform4f(colorHandle, color[0], color[1], color[2], color[3]);
 
+        Map<String, Float> settings = currentFractal.getSettings();
+        for (String setting : settings.keySet()) {
+            int uniformHandle = GLES20.glGetUniformLocation(mProgram, setting);
+            if (uniformHandle == -1) {
+                throw new RuntimeException("glGetUniformLocation " + setting + " error");
+            }
+            Object o = settings.get(setting);
+            if ((o instanceof Double) || (o instanceof Float) || (o instanceof Integer)) {
+                float f = (float)o;
+                GLES20.glUniform1f(uniformHandle, f);
+            } else {
+                throw new RuntimeException("Type not supported: " + setting);
+            }
+                /*if (o instanceof List) {
+                    int len = ((List)o).size();
+                    if ((len < 2) || (len > 4)) {
+                        throw new RuntimeException("List size not supported: " + len);
+                    }
+                    float[] f = (float[])((List<Float>)o).toArray();
+                    GLES20.glUniform2fv(uniformHandle, len, f, 0);
+                }
+            }*/
+        }/*
         int centerHandle = GLES20.glGetUniformLocation(mProgram, "u_center");
         int scaleHandle = GLES20.glGetUniformLocation(mProgram, "u_scale");
-        int iterHandle = GLES20.glGetUniformLocation(mProgram, "u_iter");
+        int iterHandle = GLES20.glGetUniformLocation(mProgram, "u_iter");*/
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+        /*
         MyGLRenderer.checkGlError("glGetUniformLocation");
         GLES20.glUniform2f(centerHandle, centerX, centerY);
         MyGLRenderer.checkGlError("glGetUniformLocation");
@@ -167,7 +175,7 @@ public class Square {
         MyGLRenderer.checkGlError("glGetUniformLocation");
         GLES20.glUniform1i(iterHandle, iter);
         MyGLRenderer.checkGlError("glGetUniformLocation");
-
+*/
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
         MyGLRenderer.checkGlError("glUniformMatrix4fv");

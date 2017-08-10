@@ -10,10 +10,11 @@ import java.util.Map;
 public abstract class Fractal {
 	protected String name = "";
 	protected String[] shaders = null;
-	protected Map<String, Object> settings;
+
+	protected Map<String, Float> settings;
 
 	public Fractal() {
-		settings = new Hashtable<String, Object>();
+		settings = new Hashtable<String, Float>();
 	}
 
 	public Fractal(String name) {
@@ -26,7 +27,7 @@ public abstract class Fractal {
 		this.shaders = new String[] {vertexShader, fragmentShader};
 	}
 
-	public void updateSettings(Map<String, Object> newSettings) {
+	public void updateSettings(Map<String, Float> newSettings) {
 		this.settings.putAll(newSettings);
 	}
 
@@ -53,5 +54,10 @@ public abstract class Fractal {
 	public String toString() {
 		return name;
 	}
+
+	public Map<String, Float> getSettings() {
+		return settings;
+	}
+
 
 }

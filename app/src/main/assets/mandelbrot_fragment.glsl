@@ -1,21 +1,23 @@
 precision mediump float;
 
 //uniform sampler1D tex;
-uniform vec2 u_center;
-uniform float u_scale;
-uniform float u_iter;
-
-
+uniform float centerX;
+uniform float centerY;
+uniform float scale;
+uniform float iterations;
+#define maxiter 1024
 void main() {
     vec2 z, c;
 
 
-    c.x = 1.3333 * (gl_FragCoord.x - 0.5) * u_scale - u_center.x;
-    c.y = (gl_FragCoord.y - 0.5) * u_scale - u_center.y;
+    c.x = (gl_FragCoord.x - centerX) * scale;
+    c.y = (gl_FragCoord.y - centerY) * scale;
 
-    int i;
+    int j = 0;
     z = c;
-    for(i=0; i<u_iter; i++) {
+    for(int i = 0; i<maxiter; i++) {
+	    if (float(i) >= iterations) break;
+	    j++;
         float x = (z.x * z.x - z.y * z.y) + c.x;
         float y = (z.y * z.x + z.x * z.y) + c.y;
 
@@ -25,6 +27,6 @@ void main() {
     }
 
     //gl_FragColor = texture1D(tex, (i == u_iter ? 0.0 : float(i)) / 100.0);
-    vec3 color = vec3(float(i)/u_iter);
+    vec3 color = vec3(float(j)/float(iterations));
     gl_FragColor = vec4(color, 1.0);
 }
