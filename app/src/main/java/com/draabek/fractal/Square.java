@@ -51,12 +51,11 @@ public class Square {
 
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-    float color[] = { 0.2f, 0.709803922f, 0.898039216f, 1.0f };
-
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
     public Square() {
+
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
         // (# of coordinate values * 4 bytes per float)
@@ -120,26 +119,16 @@ public class Square {
         // get handle to vertex shader's vPosition member
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
 
-        // Enable a handle to the triangle vertices
+        // Enable a handle to the square vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
-        // Prepare the triangle coordinate data
+        // Prepare the square coordinate data
         GLES20.glVertexAttribPointer(
                 mPositionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
-/*
-        // get handle to fragment shader's vColor member
-        mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
 
-        // Set color for drawing the triangle
-        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
-*/
-        int centerX = 350;
-        int centerY = 400;
-        float scale = 0.005f;
-        int iter = 1024;
-
+        // Get rendering parameters and apply as uniforms
         Map<String, Float> settings = currentFractal.getSettings();
         for (String setting : settings.keySet()) {
             int uniformHandle = GLES20.glGetUniformLocation(mProgram, setting);
@@ -162,20 +151,9 @@ public class Square {
                     GLES20.glUniform2fv(uniformHandle, len, f, 0);
                 }
             }*/
-        }/*
-        int centerHandle = GLES20.glGetUniformLocation(mProgram, "u_center");
-        int scaleHandle = GLES20.glGetUniformLocation(mProgram, "u_scale");
-        int iterHandle = GLES20.glGetUniformLocation(mProgram, "u_iter");*/
+        }
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-        /*
-        MyGLRenderer.checkGlError("glGetUniformLocation");
-        GLES20.glUniform2f(centerHandle, centerX, centerY);
-        MyGLRenderer.checkGlError("glGetUniformLocation");
-        GLES20.glUniform1f(scaleHandle, scale);
-        MyGLRenderer.checkGlError("glGetUniformLocation");
-        GLES20.glUniform1i(iterHandle, iter);
-        MyGLRenderer.checkGlError("glGetUniformLocation");
-*/
+
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
         MyGLRenderer.checkGlError("glUniformMatrix4fv");
