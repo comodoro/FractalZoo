@@ -5,16 +5,14 @@ uniform float centerX;
 uniform float centerY;
 uniform float scale;
 uniform float iterations;
+uniform vec2 resolution;
 #define maxiter 1024
 void main() {
-    vec2 z, c;
-
-
-    c.x = (gl_FragCoord.x - centerX) * scale;
-    c.y = (gl_FragCoord.y - centerY) * scale;
-
+    vec2 center = vec2(centerX, centerY);
+    vec2 coord = vec2(gl_FragCoord.x, gl_FragCoord.y) / resolution;
+    vec2 c = (coord - center) * scale;
     int j = 0;
-    z = c;
+    vec2 z = c;
     for(int i = 0; i<maxiter; i++) {
 	    if (float(i) >= iterations) break;
 	    j++;

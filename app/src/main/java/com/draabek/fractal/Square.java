@@ -112,7 +112,7 @@ public class Square {
      * @param mvpMatrix - The Model View Project matrix in which to draw
      * this shape.
      */
-    public void draw(float[] mvpMatrix) {
+    public void draw(float[] mvpMatrix, int width, int height) {
         // Add program to OpenGL environment
         GLES20.glUseProgram(mProgram);
 
@@ -135,23 +135,14 @@ public class Square {
             if (uniformHandle == -1) {
                 throw new RuntimeException("glGetUniformLocation " + setting + " error");
             }
+            // For now only support float uniforms
             Object o = settings.get(setting);
-            if ((o instanceof Double) || (o instanceof Float) || (o instanceof Integer)) {
-                float f = (float)o;
-                GLES20.glUniform1f(uniformHandle, f);
-            } else {
-                throw new RuntimeException("Type not supported: " + setting);
-            }
-                /*if (o instanceof List) {
-                    int len = ((List)o).size();
-                    if ((len < 2) || (len > 4)) {
-                        throw new RuntimeException("List size not supported: " + len);
-                    }
-                    float[] f = (float[])((List<Float>)o).toArray();
-                    GLES20.glUniform2fv(uniformHandle, len, f, 0);
-                }
-            }*/
+            float f = (float)o;
+            GLES20.glUniform1f(uniformHandle, f);
         }
+
+        int resolutionHandle = GLES20.glGetUniformLocation(mProgram, "resolution");
+        GLES20.glUniform2f(resolutionHandle, width, height);
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
 
         // Apply the projection and view transformation

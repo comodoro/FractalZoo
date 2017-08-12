@@ -5,8 +5,8 @@
     "shaders":"mandelbrot",
     "settings":
       {
-        "centerX": 320.0, "centerY": 380.0,
-        "scale": 0.005,
+        "centerX": 0.7, "centerY": 0.5,
+        "scale": 2.5,
         "iterations": 256
       }
   },
