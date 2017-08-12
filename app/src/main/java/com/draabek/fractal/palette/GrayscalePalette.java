@@ -1,11 +1,8 @@
 package com.draabek.fractal.palette;
 
-import android.graphics.Bitmap;
-
 public class GrayscalePalette implements ColorPalette {
 
 	private int[] intCache;
-	private Bitmap bitmapCache;
 
 	public GrayscalePalette(int size) {
 		intCache = new int[size];
@@ -13,7 +10,6 @@ public class GrayscalePalette implements ColorPalette {
 			int rgbval = (int)((double)i/size * 0xff);
 			intCache[i] = rgbval | rgbval << 8 | rgbval << 16 | 0xff000000;
 		}
-		bitmapCache = Bitmap.createBitmap(intCache,size,1,Bitmap.Config.ARGB_8888);
 	}
 
 	@Override
@@ -26,8 +22,4 @@ public class GrayscalePalette implements ColorPalette {
 		return intCache;
 	}
 
-	@Override
-	public Bitmap getColorsBitmap() {
-		return bitmapCache;
-	}
 }
