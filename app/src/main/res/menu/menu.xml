@@ -12,11 +12,6 @@
         android:title="@string/saveMenuItem"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/exit"
-        android:icon="@android:drawable/ic_menu_revert"
-        android:title="@string/exitMenuItem"
-        app:showAsAction="always"/>
-    <item
         android:id="@+id/options"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/optionsMenuItem"

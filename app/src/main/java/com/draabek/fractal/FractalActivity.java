@@ -85,10 +85,6 @@ public class FractalActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(LOG_KEY, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
-            case R.id.exit:
-                Log.d(LOG_KEY, "Exit menu item pressed");
-                System.exit(0);
-                return true;
             case R.id.fractalList:
                 Log.d(LOG_KEY, "Fractal list menu item pressed");
                 Intent intent = new Intent(this, FractalListActivity.class);
