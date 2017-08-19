@@ -143,6 +143,7 @@ public class Square {
 
         int resolutionHandle = GLES20.glGetUniformLocation(mProgram, "resolution");
         GLES20.glUniform2f(resolutionHandle, width, height);
+
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
 
         // Apply the projection and view transformation

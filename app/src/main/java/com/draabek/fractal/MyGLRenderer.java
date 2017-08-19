@@ -99,7 +99,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         // Adjust the viewport based on geometry changes,
         // such as screen rotation
-        GLES20.glViewport(0, 0, width, height);
+        //GLES20.glViewport(0, 0, width, height);
         this.width = width;
         this.height = height;
 
@@ -107,7 +107,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        // FIXME: find out more
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio/10, ratio/10, -1, 1, 3, 7);
 
     }
 
