@@ -77,9 +77,7 @@ public class Square {
      }
 
     public void updateCurrentFractal () {
-        currentFractal = FractalRegistry.getInstance().get(
-                FractalRegistry.getInstance().getCurrentFractal()
-        );
+        currentFractal = FractalRegistry.getInstance().getCurrent();
         updateShaders();
     }
 

@@ -13,9 +13,9 @@ import android.view.MenuItem;
 
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.File;
@@ -54,11 +54,17 @@ public class FractalActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Reader jsonReader = new InputStreamReader(this.getResources().openRawResource(R.raw.fractallist));
-        Gson gson = new Gson();
         JsonParser parser = new JsonParser();
         JsonElement fractalElement = parser.parse(jsonReader);
         JsonArray fractalArray = fractalElement.getAsJsonArray();
         FractalRegistry.getInstance().init(this, fractalArray);
+        jsonReader = new InputStreamReader(this.getResources().openRawResource(R.raw.settings));
+        JsonObject jsonObject = parser.parse(jsonReader).getAsJsonObject();
+        //ugh
+        FractalRegistry.getInstance().setCurrent(
+                FractalRegistry.getInstance()
+                        .get(jsonObject.get("current").getAsString())
+        );
         setContentView(R.layout.main);
         myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
         cpuView = (FractalView) findViewById(R.id.fractalCpuView);

@@ -11,9 +11,13 @@
       }
   },
   {
-  "name": "Debug",
-  "class": "com.draabek.fractal.fractal.Debug",
-  "shaders":"debug"
+    "name": "Debug",
+    "class": "com.draabek.fractal.fractal.Debug",
+    "shaders": "roentgen",
+    "settings": {
+      "centerX": 100.0,
+      "centerY": 100.0
+    }
   },
   {
     "name":"Forest Fire",

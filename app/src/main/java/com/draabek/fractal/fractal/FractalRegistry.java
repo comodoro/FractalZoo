@@ -14,13 +14,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 public final class FractalRegistry {
 	private static final String LOG_KEY = FractalRegistry.class.getName();
 	private static FractalRegistry instance = null;
 	private Map<String, Fractal>  fractals;
-	private String currentFractal = "Mandelbrot";
+	private Fractal currentFractal = null;
 	private FractalRegistry() {
 		fractals = new HashMap<String, Fractal>();
 	}
@@ -40,23 +39,6 @@ public final class FractalRegistry {
 	
 	public Map<String, Fractal> getFractals() {
 		return fractals;
-	}
-	
-	public void init(Properties props) {
-		for (Object name : props.keySet()) {
-			String clazz = (String) props.get(name);
-			try {
-				Object o = Class.forName(clazz).newInstance();
-				Fractal f = (Fractal) o;
-				add(f);
-			} catch(ClassNotFoundException e) {
-				Log.w(LOG_KEY, "Cannot find fractal class " + clazz);
-			} catch(IllegalAccessException e) {
-				Log.w(LOG_KEY, "Cannot access fractal class " + clazz);
-			} catch(InstantiationException e) {
-				Log.w(LOG_KEY, "Cannot instantiate fractal class " + clazz);
-			}
-		}
 	}
 
 	public void init(Context ctx, JsonArray props) {
@@ -119,11 +101,11 @@ public final class FractalRegistry {
 		return null;
 	}
 
-	public String getCurrentFractal() {
+	public Fractal getCurrent() {
 		return currentFractal;
 	}
 
-	public void setCurrentFractal(String currentFractal) {
+	public void setCurrent(Fractal currentFractal) {
 		this.currentFractal = currentFractal;
 	}
 }

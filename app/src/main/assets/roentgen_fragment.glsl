@@ -50,7 +50,7 @@ float map (vec3 p)
   float cy = 0.5;
   const float repeat = 9.;
   p1.xy *= rot(length(p)*.5);
-  float t = time*0.001;
+  float t = 0.001;
   for (float i = 0.; i < repeat; ++i)
   {
     p1.yz *= rot(0.3+t*0.5);
