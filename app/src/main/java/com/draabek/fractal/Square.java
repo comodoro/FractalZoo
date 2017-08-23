@@ -111,6 +111,9 @@ public class Square {
      * this shape.
      */
     public void draw(float[] mvpMatrix, int width, int height) {
+        if (currentFractal != FractalRegistry.getInstance().getCurrent()) {
+            updateCurrentFractal();
+        }
         // Add program to OpenGL environment
         GLES20.glUseProgram(mProgram);
 

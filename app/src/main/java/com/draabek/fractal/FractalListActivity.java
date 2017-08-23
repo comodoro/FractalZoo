@@ -41,6 +41,7 @@ public class FractalListActivity extends ListActivity {
 		Editor editor = prefs.edit();
 		editor.putString(FractalView.PREFS_CURRENT_FRACTAL_KEY, fractal.getName());
 		editor.apply();
+		FractalRegistry.getInstance().setCurrent(fractal);
 		finish();
 	}
 	
