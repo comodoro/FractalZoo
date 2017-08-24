@@ -1,20 +1,20 @@
 package com.draabek.fractal.fractal;
 
-import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.graphics.RectF;
-
 public class GLSLFractal extends Fractal {
+	protected String[] shaders = null;
 
-	@Override
-	public Bitmap redrawBitmap(Bitmap bitmap, RectF orig, boolean portrait) {
-		throw new UnsupportedOperationException();
+	public GLSLFractal(String name, String vertexShader, String fragmentShader) {
+		super(name);
+		this.shaders = new String[] {vertexShader, fragmentShader};
 	}
 
-	@Override
-	public Bitmap redrawBitmapPart(Bitmap bitmap, RectF orig, boolean portrait,
-			Rect part) {
-		throw new UnsupportedOperationException();
+	public String[] getShaders() {
+		return shaders;
 	}
+
+	public void setShaders(String[] shaders) {
+		this.shaders = shaders;
+	}
+
 
 }

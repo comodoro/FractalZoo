@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-public class SierpinskiTriangle extends Fractal {
+public class SierpinskiTriangle extends BitmapDrawFractal {
 	@Override
 	public Bitmap redrawBitmap(Bitmap bitmap, RectF rect, boolean portrait) {
 		int min = Math.min(bitmap.getHeight(), bitmap.getWidth());

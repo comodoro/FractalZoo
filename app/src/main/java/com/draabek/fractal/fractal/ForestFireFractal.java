@@ -6,7 +6,7 @@ import android.graphics.RectF;
 
 import java.util.Random;
 
-public class ForestFireFractal extends Fractal {
+public class ForestFireFractal extends BitmapDrawFractal {
 	public static final int FOREST_COLOR = 0xff005500;
 	public static final int FIRE_COLOR = 0xffff8800;
 	public static final int BURNT_COLOR = 0xff222222;

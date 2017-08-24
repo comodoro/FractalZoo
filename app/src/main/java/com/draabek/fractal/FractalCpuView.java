@@ -15,33 +15,34 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import com.draabek.fractal.fractal.BitmapDrawFractal;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.io.OutputStream;
 
-public class FractalView extends SurfaceView implements SurfaceHolder.Callback, FractalViewHandler
+
+public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callback, FractalViewHandler
 //,GestureDetector.OnDoubleTapListener, GestureDetector.OnGestureListener 
 {
 
-	private static final String LOG_KEY = FractalView.class.getName();
+	private static final String LOG_KEY = FractalCpuView.class.getName();
     public static final String FRACTALS_PREFERENCE	= "FRACTALS_PREFERENCE";
     public static final String PREFS_CURRENT_FRACTAL_KEY = "prefs_current_fractal";
 	private Bitmap fractalBitmap;
-	private Fractal fractal;
+	private BitmapDrawFractal fractal;
 	private RectF position;
 	private RectF oldPosition;
-	private boolean portrait = false;
 	private Paint paint;
 	private SurfaceHolder holder;
 	private SharedPreferences prefs;
 	
-	public FractalView(Context context, AttributeSet attrs) {
+	public FractalCpuView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(context);
 	}
 
-	public FractalView(Context context) {
+	public FractalCpuView(Context context) {
 		super(context);
 		init(context);
 	}
@@ -54,10 +55,14 @@ public class FractalView extends SurfaceView implements SurfaceHolder.Callback, 
 		gd.setOnDoubleTapListener(this);*/
 		paint = new Paint();
 		prefs = context.getSharedPreferences(FRACTALS_PREFERENCE, Context.MODE_PRIVATE);
-		String name = prefs.getString(PREFS_CURRENT_FRACTAL_KEY, "Forest Fire");//getResources().getString(R.string.mandelbrot));
-		fractal = FractalRegistry.getInstance().get(name);
 	}
 
+	public void updateFractal() {
+		Fractal f = FractalRegistry.getInstance().getCurrent();
+		if (!(f instanceof BitmapDrawFractal)) {
+			throw new IllegalStateException("Current fractal is not " + BitmapDrawFractal.class.getName());
+		}
+	}
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Log.d(LOG_KEY,"onDraw");
@@ -209,7 +214,7 @@ public class FractalView extends SurfaceView implements SurfaceHolder.Callback, 
 					} else {
 						translate((x - origin.x), (y - origin.y));
 					}
-				} else if (!isMoveGesture) {
+				} else {
 					Log.d(LOG_KEY, "Continuing pinch gesture");
 					int n = evt.getPointerCount();
 					if (n < 2) return;
@@ -282,13 +287,6 @@ public class FractalView extends SurfaceView implements SurfaceHolder.Callback, 
 		}
 	}
 
-	public Fractal getFractal() {
-		return fractal;
-	}
-	
-	public void setFractal(Fractal fractal) {
-		this.fractal = fractal;
-	}
 
 	/*
 	@Override

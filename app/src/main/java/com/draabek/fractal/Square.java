@@ -20,6 +20,7 @@ import android.util.Log;
 
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
+import com.draabek.fractal.fractal.GLSLFractal;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -37,7 +38,7 @@ public class Square {
     private int mProgram;
     private int mPositionHandle;
     private int mMVPMatrixHandle;
-    private Fractal currentFractal;
+    private GLSLFractal currentFractal;
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
@@ -77,7 +78,11 @@ public class Square {
      }
 
     public void updateCurrentFractal () {
-        currentFractal = FractalRegistry.getInstance().getCurrent();
+        Fractal f = FractalRegistry.getInstance().getCurrent();
+        if (!(f instanceof GLSLFractal)) {
+            throw new IllegalStateException("Current fractal not instance of " + GLSLFractal.class.getName());
+        }
+        currentFractal = (GLSLFractal)f;
         updateShaders();
     }
 
@@ -136,11 +141,13 @@ public class Square {
             if (uniformHandle == -1) {
                 throw new RuntimeException("glGetUniformLocation " + setting + " error");
             }
-            // For now only support float uniforms
+            // For now only support single float uniforms
             Object o = settings.get(setting);
             float f = (float)o;
             GLES20.glUniform1f(uniformHandle, f);
         }
+
+
 
         int resolutionHandle = GLES20.glGetUniformLocation(mProgram, "resolution");
         GLES20.glUniform2f(resolutionHandle, width, height);

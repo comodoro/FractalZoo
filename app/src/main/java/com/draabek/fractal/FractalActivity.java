@@ -10,9 +10,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.draabek.fractal.fractal.BitmapDrawFractal;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
+import com.draabek.fractal.fractal.GLSLFractal;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,7 +39,7 @@ public class FractalActivity extends AppCompatActivity {
     private static final String LOG_KEY = FractalActivity.class.getName();
     public static final int CHOOSE_FRACTAL_CODE = 1;
     private MyGLSurfaceView myGLSurfaceView;
-    private FractalView cpuView;
+    private FractalCpuView cpuView;
     private FractalViewHandler currentView;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -67,7 +70,7 @@ public class FractalActivity extends AppCompatActivity {
         );
         setContentView(R.layout.main);
         myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
-        cpuView = (FractalView) findViewById(R.id.fractalCpuView);
+        cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
         if (this.getSharedPreferences("", MODE_PRIVATE).getBoolean("prefs_use_gpu", true)) {
             currentView = myGLSurfaceView;
         } else {
@@ -116,7 +119,7 @@ public class FractalActivity extends AppCompatActivity {
     }
 
     private File getFile() {
-        String fileName = myGLSurfaceView.getFractal().toString() + System.currentTimeMillis() + ".jpg";
+        String fileName = FractalRegistry.getInstance().getCurrent().toString() + System.currentTimeMillis() + ".jpg";
         int apiVersion = Build.VERSION.SDK_INT;
         if (apiVersion >= Build.VERSION_CODES.ECLAIR_MR1) {
             return new File(this.getApplicationContext().getExternalFilesDir(null), fileName);
@@ -166,15 +169,17 @@ public class FractalActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CHOOSE_FRACTAL_CODE) {
             try {
-                Class<Fractal> clazz = (Class<Fractal>) data.getSerializableExtra(FractalListActivity.EXTRA_KEY);
-                Fractal fractal = clazz.newInstance();
-                Log.d(LOG_KEY, fractal.getName() + " received");
-                currentView.setFractal(fractal);
+                Fractal f = FractalRegistry.getInstance().getCurrent();
+                Log.d(LOG_KEY, f.getName() + " is current");
+                if (f instanceof BitmapDrawFractal) {
+                    currentView = cpuView;
+                    myGLSurfaceView.setVisibility(View.INVISIBLE);
+                } else if (f instanceof GLSLFractal) {
+                    currentView = myGLSurfaceView;
+                    cpuView.setVisibility(View.INVISIBLE);
+                }
+                currentView.setVisibility(View.VISIBLE);
                 currentView.invalidate();
-            } catch (IllegalAccessException e) {
-                Log.e(LOG_KEY, "Exception accessing fractal class: " + e);
-            } catch (InstantiationException e) {
-                Log.e(LOG_KEY, "Exception instantiating fractal: " + e);
             } catch (Exception e) {
                 Log.e(LOG_KEY, "Exception loading fractal: " + e);
             }

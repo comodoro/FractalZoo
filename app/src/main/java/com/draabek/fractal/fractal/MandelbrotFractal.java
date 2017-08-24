@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-public class MandelbrotFractal extends Fractal {
+public class MandelbrotFractal extends BitmapDrawFractal {
 	private int[] buffer;
 
 	/* Redraw bitmap via JNI */

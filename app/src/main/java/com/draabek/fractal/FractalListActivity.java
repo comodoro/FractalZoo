@@ -34,12 +34,11 @@ public class FractalListActivity extends ListActivity {
 		Fractal fractal = (Fractal)getListView().getItemAtPosition(position);
 		Log.d(LOG_KEY, fractal.getName() + " clicked");
 		Intent intent = this.getIntent();
-		intent.putExtra(EXTRA_KEY, fractal.getClass());
 		this.setResult(RESULT_OK, intent);
 		SharedPreferences prefs = this.getApplicationContext().getSharedPreferences(
-				FractalView.FRACTALS_PREFERENCE, Context.MODE_PRIVATE);
+				FractalCpuView.FRACTALS_PREFERENCE, Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
-		editor.putString(FractalView.PREFS_CURRENT_FRACTAL_KEY, fractal.getName());
+		editor.putString(FractalCpuView.PREFS_CURRENT_FRACTAL_KEY, fractal.getName());
 		editor.apply();
 		FractalRegistry.getInstance().setCurrent(fractal);
 		finish();

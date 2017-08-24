@@ -82,17 +82,19 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
+                if (e.getPointerCount() == 1) {
+                    float dx = x - mPreviousX;
+                    float dy = y - mPreviousY;
 
-                float dx = x - mPreviousX;
-                float dy = y - mPreviousY;
+                    mRenderer.setCenterX(
+                            mRenderer.getCenterX() +
+                                    dx * TOUCH_SCALE_FACTOR);  // = 180.0f / 320
+                    mRenderer.setCenterY(
+                            mRenderer.getCenterY() +
+                                    dy * TOUCH_SCALE_FACTOR);  // = 180.0f / 320
+                } else if (e.getPointerCount() == 2) {
 
-
-                mRenderer.setCenterX(
-                        mRenderer.getCenterX() +
-                                dx * TOUCH_SCALE_FACTOR);  // = 180.0f / 320
-                mRenderer.setCenterY(
-                        mRenderer.getCenterY() +
-                                dy * TOUCH_SCALE_FACTOR);  // = 180.0f / 320
+                }
                 requestRender();
         }
 

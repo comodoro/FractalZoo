@@ -1,7 +1,5 @@
 package com.draabek.fractal;
 
-import com.draabek.fractal.fractal.Fractal;
-
 import java.io.OutputStream;
 
 /**
@@ -9,9 +7,7 @@ import java.io.OutputStream;
  */
 
 public interface FractalViewHandler {
-    public Fractal getFractal();
-    public void setFractal(Fractal fractal);
     public boolean saveBitmap(OutputStream os);
-    public void invalidate();
-
+    void setVisibility(int visibility);
+    void invalidate();
 }

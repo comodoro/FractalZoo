@@ -6,16 +6,7 @@ import android.graphics.RectF;
 
 import java.util.Arrays;
 
-public class Debug extends Fractal {
-
-	Debug() {
-		super("Debug");
-	}
-
-	public Debug(String vertexShader, String fragmentShader) {
-		this();
-		this.shaders = new String[] {vertexShader, fragmentShader};
-	}
+public class Debug extends BitmapDrawFractal {
 
 	/* Redraw bitmap via JNI */
 	@Override

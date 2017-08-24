@@ -74,7 +74,9 @@ public final class FractalRegistry {
                 }
                 Fractal fractal = (Fractal)cls.newInstance();
 				fractal.setName(name);
-				fractal.setShaders(loadedShaders);
+				if (fractal instanceof GLSLFractal) {
+					((GLSLFractal)fractal).setShaders(loadedShaders);
+				}
 				if (settingsString != null) {
 					Map<String, Float> retMap = new Gson().fromJson(
 							settingsString, new TypeToken<HashMap<String, Float>>() {}.getType()
