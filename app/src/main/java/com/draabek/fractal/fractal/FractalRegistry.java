@@ -89,7 +89,9 @@ public final class FractalRegistry {
 			} catch(IllegalAccessException e) {
 				Log.w(LOG_KEY, "Cannot access fractal class " + clazz);
 			} catch(InstantiationException e) {
-				Log.w(LOG_KEY, "Cannot instantiate fractal class " + clazz);
+				//TODO different on debug
+				throw new RuntimeException(e);
+				//Log.w(LOG_KEY, "Cannot instantiate fractal class " + clazz);
 			} catch(IOException e) {
 				Log.w(LOG_KEY, "IOException loading fractal " + clazz);
 			}

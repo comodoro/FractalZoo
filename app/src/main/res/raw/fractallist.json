@@ -11,8 +11,8 @@
       }
   },
   {
-    "name": "Debug",
-    "class": "com.draabek.fractal.fractal.Debug",
+    "name": "Roentgen",
+    "class": "com.draabek.fractal.fractal.GLSLFractal",
     "shaders": "roentgen",
     "settings": {
       "centerX": 100.0,
