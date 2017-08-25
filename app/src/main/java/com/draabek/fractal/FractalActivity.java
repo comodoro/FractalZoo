@@ -37,7 +37,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 public class FractalActivity extends AppCompatActivity {
     private static final String LOG_KEY = FractalActivity.class.getName();
+    public static final String CURRENT_FRACTAL_KEY = "current_fractal";
     public static final int CHOOSE_FRACTAL_CODE = 1;
+
     private MyGLSurfaceView myGLSurfaceView;
     private FractalCpuView cpuView;
     private FractalViewHandler currentView;
@@ -71,11 +73,7 @@ public class FractalActivity extends AppCompatActivity {
         setContentView(R.layout.main);
         myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
         cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
-        if (this.getSharedPreferences("", MODE_PRIVATE).getBoolean("prefs_use_gpu", true)) {
-            currentView = myGLSurfaceView;
-        } else {
-            currentView = cpuView;
-        }
+        unveilCorrectView();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -97,7 +95,7 @@ public class FractalActivity extends AppCompatActivity {
             case R.id.fractalList:
                 Log.d(LOG_KEY, "Fractal list menu item pressed");
                 Intent intent = new Intent(this, FractalListActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, CHOOSE_FRACTAL_CODE);
                 return true;
             case R.id.save:
                 Log.d(LOG_KEY, "Save menu item pressed");
@@ -165,23 +163,33 @@ public class FractalActivity extends AppCompatActivity {
         return super.onMenuOpened(featureId, menu);
     }
 */
+    private void unveilCorrectView() {
+        Fractal f = FractalRegistry.getInstance().getCurrent();
+        if (currentView != null) currentView.setVisibility(View.GONE);
+        FractalRegistry.getInstance().setCurrent(f);
+        Log.d(LOG_KEY, f.getName() + " is current");
+        if (f instanceof BitmapDrawFractal) {
+            currentView = cpuView;
+            myGLSurfaceView.setVisibility(View.GONE);
+        } else if (f instanceof GLSLFractal) {
+            currentView = myGLSurfaceView;
+            cpuView.setVisibility(View.GONE);
+        }
+        currentView.setVisibility(View.VISIBLE);
+        currentView.invalidate();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CHOOSE_FRACTAL_CODE) {
             try {
-                Fractal f = FractalRegistry.getInstance().getCurrent();
-                Log.d(LOG_KEY, f.getName() + " is current");
-                if (f instanceof BitmapDrawFractal) {
-                    currentView = cpuView;
-                    myGLSurfaceView.setVisibility(View.INVISIBLE);
-                } else if (f instanceof GLSLFractal) {
-                    currentView = myGLSurfaceView;
-                    cpuView.setVisibility(View.INVISIBLE);
-                }
-                currentView.setVisibility(View.VISIBLE);
-                currentView.invalidate();
+                String pickedFractal = data.getStringExtra(CURRENT_FRACTAL_KEY);
+                FractalRegistry.getInstance().setCurrent(
+                        FractalRegistry.getInstance().get(pickedFractal)
+                );
+                unveilCorrectView();
             } catch (Exception e) {
-                Log.e(LOG_KEY, "Exception loading fractal: " + e);
+                Log.e(LOG_KEY, "Exception on fractal switch: " + e);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

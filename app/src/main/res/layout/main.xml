@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <com.draabek.fractal.FractalCpuView
         android:id="@+id/fractalCpuView"
@@ -24,7 +24,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
     <!-- Toolbar should be above content-->
     <include layout="@layout/toolbar" />

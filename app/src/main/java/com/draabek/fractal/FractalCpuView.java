@@ -74,6 +74,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			canvas.drawBitmap(fractalBitmap, 0, 0, paint);
 		}
 		Log.d(LOG_KEY, "finished onDraw");
+		fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
 	}
 
 	@Override
@@ -81,6 +82,8 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			int height) {
 		this.holder = holder;
 		Log.d(LOG_KEY,"surface changed");
+		fractal = (BitmapDrawFractal) FractalRegistry.getInstance().getCurrent();
+		invalidate();
 	}
 
 	@Override
@@ -90,8 +93,6 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		fractalBitmap = Bitmap.createBitmap(getWidth(), getHeight(),
 				Bitmap.Config.ARGB_8888);
 		position = new RectF(1, -2, -1, 1);
-		fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
-		invalidate();
 	}
 
 	@Override

@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FractalListActivity extends ListActivity {
-	public static final String EXTRA_KEY = "Fractal";
+
 	private static final String LOG_KEY = FractalListActivity.class.getName();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +34,14 @@ public class FractalListActivity extends ListActivity {
 		Fractal fractal = (Fractal)getListView().getItemAtPosition(position);
 		Log.d(LOG_KEY, fractal.getName() + " clicked");
 		Intent intent = this.getIntent();
+		intent.putExtra(FractalActivity.CURRENT_FRACTAL_KEY, fractal.getName());
+		//FractalRegistry.getInstance().setCurrent(fractal);
 		this.setResult(RESULT_OK, intent);
 		SharedPreferences prefs = this.getApplicationContext().getSharedPreferences(
 				FractalCpuView.FRACTALS_PREFERENCE, Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
 		editor.putString(FractalCpuView.PREFS_CURRENT_FRACTAL_KEY, fractal.getName());
 		editor.apply();
-		FractalRegistry.getInstance().setCurrent(fractal);
 		finish();
 	}
 	
