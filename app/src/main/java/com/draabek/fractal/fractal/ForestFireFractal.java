@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import java.nio.IntBuffer;
 import java.util.Random;
 
 public class ForestFireFractal extends BitmapDrawFractal {
@@ -14,34 +15,39 @@ public class ForestFireFractal extends BitmapDrawFractal {
 	public static double SPREAD_PARAM = 0.2;
 	public static double FIRE_DURATION = 0.5;
 	public static double BURNT_DURATION = 0.01;
-	public static int ITERATIONS = 100;
+	public static int ITERATIONS = 30;
 	private static final String KEY = ForestFireFractal.class.getName();
-	private int[][] forest;
-	private int[][] forest2;
-	
+	private IntBuffer forest;
+	private IntBuffer forest2;
+
+	private int bitmap_width;
+	private int bitmap_height;
+
 	private Random random;
-	
+	private IntBuffer buffer;
+
 	public ForestFireFractal() {
 		random = new Random();
 	}
 	
 	public void iteration() {
-			for (int i = 0;i < forest.length;i++)
-				for (int j = 0;j < forest[0].length;j++) {
-					int value = forest[i][j];
+			for (int i = 0; i < bitmap_width; i++)
+				for (int j = 0; j < bitmap_height; j++) {
+					int value = forest.get(i* bitmap_height +j);
 					double rand = random.nextDouble();
 					if (value == FOREST_COLOR) {
 						if (rand < IGNITE_PARAM) {
-							forest2[i][j] = FIRE_COLOR;
+							forest2.put(i* bitmap_height +j, FIRE_COLOR);
 						} else {
 							//find fire in the vicinity
 							search_loop:
 							for (int k = -1;k <= 1;k++) {
 								for (int l = -1;l <= 1;l++) {
-									if ((i + k >= 0) && (j + l >= 0) && (i + k < forest.length) && (j + l < forest[0].length)) {
-										if (forest[i+k][j+l] == FIRE_COLOR) {
+									int idx = (i+k)* bitmap_height + j+l;
+									if ((idx > 0) && (idx < bitmap_width * bitmap_height)) {
+										if (forest.get((i+k)* bitmap_height + j+l) == FIRE_COLOR) {
 											if (rand < SPREAD_PARAM) {
-												forest2[i][j] = FIRE_COLOR;
+												forest2.put(i* bitmap_height +j, FIRE_COLOR);
 												break search_loop;
 											}
 										}
@@ -51,40 +57,34 @@ public class ForestFireFractal extends BitmapDrawFractal {
 						}
 					} else if (value == FIRE_COLOR) {
 						if (rand < FIRE_DURATION) {
-							forest2[i][j] = BURNT_COLOR;
+							forest2.put(i* bitmap_height +j, BURNT_COLOR);
 						}
 					} else if (value == BURNT_COLOR) {
 						if (rand < BURNT_DURATION) {
-							forest2[i][j] = FOREST_COLOR;
+							forest2.put(i* bitmap_height +j, FOREST_COLOR);
 						}
 					}
 				}
-			for (int i = 0;i < forest.length;i++)
-				for (int j = 0;j < forest[0].length;j++) {
-					forest[i][j] = forest2[i][j];
-				}
+			forest = forest2;
 		}
 
 	@Override
 	public Bitmap redrawBitmap(Bitmap bitmap, RectF rect, boolean portrait) {
-		if ((forest == null) || (forest.length != bitmap.getWidth()) || 
-				(forest[0].length != bitmap.getHeight())) {
-			forest = new int[bitmap.getWidth()][bitmap.getHeight()];
-			forest2 = new int[bitmap.getWidth()][bitmap.getHeight()];
-			for (int i = 0;i < bitmap.getWidth();i++)
-				for (int j = 0;j < bitmap.getHeight();j++) {
-					forest[i][j] = FOREST_COLOR;
-					forest2[i][j] = FOREST_COLOR;	
+		bitmap_width = bitmap.getWidth();
+		bitmap_height = bitmap.getHeight();
+		if ((forest == null) || (forest.limit() != bitmap.getWidth()*bitmap.getHeight())) {
+			forest = IntBuffer.allocate(bitmap_width * bitmap_height);
+			forest2 = IntBuffer.allocate(bitmap_width * bitmap_height);
+			for (int i = 0; i < bitmap_width; i++)
+				for (int j = 0; j < bitmap_height; j++) {
+					forest.put(i* bitmap_height +j, FOREST_COLOR);
+					forest2.put(i* bitmap_height +j, FOREST_COLOR);
 				}
 		}
 		for (int i = 0;i < ITERATIONS;i++) {
 			iteration();
 		}
-		//slow and dirty for starters
-		for (int i = 0;i < bitmap.getWidth();i++)
-			for (int j = 0;j < bitmap.getHeight();j++) {
-				bitmap.setPixel(i, j, forest[i][j]);
-			}
+		bitmap.copyPixelsFromBuffer(forest);
 		return bitmap;
 	}
 
