@@ -10,7 +10,7 @@ uniform vec2 resolution;
 void main() {
     vec2 center = vec2(centerX, centerY);
     vec2 coord = vec2(gl_FragCoord.x, gl_FragCoord.y) / resolution;
-    vec2 c = (coord - center) * scale;
+    vec2 c = (coord - center) / scale;
     int j = 0;
     vec2 z = c;
     for(int i = 0; i<maxiter; i++) {

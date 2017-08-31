@@ -4,11 +4,11 @@
     "class": "com.draabek.fractal.fractal.GLSLFractal",
     "shaders":"mandelbrot",
     "settings":
-      {
-        "centerX": 0.7, "centerY": 0.5,
-        "scale": 2.5,
-        "iterations": 256
-      }
+    {
+      "centerX": 0.7, "centerY":0.5,
+      "scale": 0.5,
+      "iterations": 256
+    }
   },
   {
     "name": "Roentgen",

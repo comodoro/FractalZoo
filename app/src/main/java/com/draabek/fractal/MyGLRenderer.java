@@ -17,7 +17,6 @@ package com.draabek.fractal;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
 import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -84,14 +83,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        // Set the camera position (View matrix)
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-
-        // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
         // Draw square
-        mSquare.draw(mMVPMatrix, width, height);
+        mSquare.draw(width, height);
 
     }
 
@@ -104,12 +97,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         this.height = height;
 
         float ratio = (float) width / height;
-
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
-        // FIXME: find out more
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio/10, ratio/10, -1, 1, 3, 7);
-
     }
 
     /**

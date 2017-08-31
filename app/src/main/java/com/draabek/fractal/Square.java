@@ -43,10 +43,10 @@ public class Square {
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
     static float squareCoords[] = {
-            -0.623f,  1.0f, 0.0f,   // top right
-            -0.623f, -1.0f, 0.0f,   // bottom right
-            0.623f, -1.0f, 0.0f,   // bottom left
-            0.623f,  1.0f, 0.0f }; // top left
+            -1.0f,  1.0f, 0.0f,   // top right
+            -1.0f, -1.0f, 0.0f,   // bottom right
+            1.0f, -1.0f, 0.0f,   // bottom left
+            1.0f,  1.0f, 0.0f }; // top left
 
     private final short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
 
@@ -115,7 +115,7 @@ public class Square {
      * @param mvpMatrix - The Model View Project matrix in which to draw
      * this shape.
      */
-    public void draw(float[] mvpMatrix, int width, int height) {
+    public void draw(int width, int height) {
         if (currentFractal != FractalRegistry.getInstance().getCurrent()) {
             updateCurrentFractal();
         }
@@ -147,16 +147,8 @@ public class Square {
             GLES20.glUniform1f(uniformHandle, f);
         }
 
-
-
         int resolutionHandle = GLES20.glGetUniformLocation(mProgram, "resolution");
         GLES20.glUniform2f(resolutionHandle, width, height);
-
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-
-        // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-        MyGLRenderer.checkGlError("glUniformMatrix4fv");
 
         // Draw the square
         GLES20.glDrawElements(
