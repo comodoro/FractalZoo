@@ -68,13 +68,17 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		Log.d(LOG_KEY,"onDraw");
 		SurfaceHolder sh = getHolder();
 		synchronized (sh) {
-			if (fractalBitmap == null)
+			if ((fractalBitmap == null) || (fractalBitmap.getHeight() != canvas.getHeight()) ||
+					(fractalBitmap.getWidth() != canvas.getWidth()))
+				Log.v(LOG_KEY, "Reallocate buffer");
 				fractalBitmap = Bitmap.createBitmap(getWidth(), getHeight(),
 						Bitmap.Config.ARGB_8888);
+			Log.v(LOG_KEY, "Start drawing to buffer");
+			fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
+			Log.v(LOG_KEY, "Draw to canvas");
 			canvas.drawBitmap(fractalBitmap, 0, 0, paint);
 		}
 		Log.d(LOG_KEY, "finished onDraw");
-		fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
 	}
 
 	@Override
