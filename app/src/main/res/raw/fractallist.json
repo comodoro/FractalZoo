@@ -40,14 +40,23 @@
     }
   },
   {
-  "name": "PChaos",
-  "class": "com.draabek.fractal.fractal.GLSLFractal",
-  "shaders":"pchaos",
-  "settings":
+    "name": "PChaos",
+    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "shaders":"pchaos",
+    "settings":
+    {
+      "centerX": 0.5, "centerY": 0.5
+    }
+  },
   {
-    "centerX": 0.5, "centerY": 0.5
-  }
-},
+    "name": "Burner",
+    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "shaders":"burner",
+    "settings":
+    {
+      "centerX": 0.0, "centerY": 0.0
+    }
+  },
   {
     "name":"Forest Fire",
     "class":"com.draabek.fractal.fractal.ForestFireFractal"
