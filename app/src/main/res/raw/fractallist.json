@@ -15,8 +15,8 @@
     "class": "com.draabek.fractal.fractal.GLSLFractal",
     "shaders": "roentgen",
     "settings": {
-      "centerX": 100.0,
-      "centerY": 100.0
+      "centerX": 0.0,
+      "centerY": 0.0
     }
   },
   {
