@@ -20,6 +20,17 @@
     }
   },
   {
+    "name": "Julia",
+    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "shaders":"julia",
+    "settings":
+    {
+      "centerX": 0.5, "centerY": 0.5,
+      "scale": 0.3,
+      "iterations": 256
+    }
+  },
+  {
     "name":"Forest Fire",
     "class":"com.draabek.fractal.fractal.ForestFireFractal"
   }
