@@ -31,6 +31,15 @@
     }
   },
   {
+    "name": "Fleshy",
+    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "shaders":"fleshy",
+    "settings":
+    {
+      "centerX": 0.5, "centerY": 0.5
+    }
+  },
+  {
     "name":"Forest Fire",
     "class":"com.draabek.fractal.fractal.ForestFireFractal"
   }
