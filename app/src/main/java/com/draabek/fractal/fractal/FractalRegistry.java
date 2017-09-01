@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,9 +64,17 @@ public final class FractalRegistry {
 					while ((line = br.readLine()) != null) {
 						fragmentShader.append(line).append("\n");
 					}
-					br = new BufferedReader(new InputStreamReader(
-							ctx.getAssets().open(shaders + "_vertex.glsl")
-					));
+					InputStream vertexIS = null;
+					try {
+						vertexIS = ctx.getAssets().open(shaders + "_vertex.glsl");
+					} catch(IOException e) {
+						Log.d(LOG_KEY, "Using default vertex shader for fractal " + clazz);
+						vertexIS = ctx.getAssets().open("default_vertex.glsl");
+					}
+					if (vertexIS == null) {//fallback to simplest vertex shader
+						Log.e(LOG_KEY, "Not even default vertex shader found for fractal " + clazz);
+					}
+					br = new BufferedReader(new InputStreamReader(vertexIS));
 					StringBuffer vertexShader = new StringBuffer();
 					while ((line = br.readLine()) != null) {
 						vertexShader.append(line).append("\n");
