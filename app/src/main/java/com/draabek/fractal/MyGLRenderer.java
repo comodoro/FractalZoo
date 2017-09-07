@@ -33,42 +33,12 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private static final String TAG = "MyGLRenderer";
+    private static final String TAG = MyGLRenderer.class.getName();
     private Square mSquare;
-    // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
-    private final float[] mMVPMatrix = new float[16];
-    private final float[] mProjectionMatrix = new float[16];
-    private final float[] mViewMatrix = new float[16];
 
-    public float getCenterX() {
-        return centerX;
-    }
-
-    public void setCenterX(float centerX) {
-        this.centerX = centerX;
-    }
-
-    public float getCenterY() {
-        return centerY;
-    }
-
-    public void setCenterY(float centerY) {
-        this.centerY = centerY;
-    }
-
-    public float getScale() {
-        return scale;
-    }
-
-    public void setScale(float scale) {
-        this.scale = scale;
-    }
-
-    private float centerX = 350;
-    private float centerY = 400;
-    private float scale = 0.005f;
     private int width;
     private int height;
+
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 
@@ -92,11 +62,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         // Adjust the viewport based on geometry changes,
         // such as screen rotation
-        //GLES20.glViewport(0, 0, width, height);
+        GLES20.glViewport(0, 0, width, height);
         this.width = width;
         this.height = height;
-
-        float ratio = (float) width / height;
     }
 
     /**

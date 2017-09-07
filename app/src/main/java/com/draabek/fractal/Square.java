@@ -32,12 +32,11 @@ import java.util.Map;
  * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
  */
 public class Square {
-
+    private final int[] extraBufferId = new int[1];
     private final FloatBuffer vertexBuffer;
     private final ShortBuffer drawListBuffer;
     private int mProgram;
     private int mPositionHandle;
-    private int mMVPMatrixHandle;
     private GLSLFractal currentFractal;
 
     // number of coordinates per vertex in this array
@@ -108,12 +107,13 @@ public class Square {
             mProgram = 0;
             throw new RuntimeException("Failed to compile shader!" + '\n' + infoLog);
         }
+        if (FractalRegistry.getInstance().getCurrent().getSettings().get("glBuffer")>0) {
+            GLES20.glGenFramebuffers( 1, extraBufferId, 0 );
+            GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, extraBufferId[0]);
+        }
     }
     /**
      * Encapsulates the OpenGL ES instructions for drawing this shape.
-     *
-     * @param mvpMatrix - The Model View Project matrix in which to draw
-     * this shape.
      */
     public void draw(int width, int height) {
         if (currentFractal != FractalRegistry.getInstance().getCurrent()) {
