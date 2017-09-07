@@ -1,25 +1,39 @@
 package com.draabek.fractal.fractal;
 
 
-import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
-public class SierpinskiTriangle extends BitmapDrawFractal {
-	@Override
-	public Bitmap redrawBitmap(Bitmap bitmap, RectF rect, boolean portrait) {
-		int min = Math.min(bitmap.getHeight(), bitmap.getWidth());
-		int xoffset = (bitmap.getHeight() < bitmap.getWidth()) ? (bitmap.getWidth() - bitmap.getHeight())/2 : 0;
-		int yoffset = (bitmap.getHeight() > bitmap.getWidth()) ? (bitmap.getHeight() - bitmap.getWidth())/2 : 0;
-		throw new UnsupportedOperationException("Not supported yet");
-		
+public class SierpinskiTriangle extends CanvasFractal {
+
+
+	public SierpinskiTriangle() {
+
 	}
 
 	@Override
-	public Bitmap redrawBitmapPart(Bitmap bitmap, RectF rect, boolean portrait,
-			Rect part) {
-		// TODO Auto-generated method stub
-		return null;
+	public void draw(Canvas canvas) {
+		int iterations = this.getSettings().get("iterations").intValue();
+		float centerX = this.getSettings().get("centerX");
+		float centerY = this.getSettings().get("centerY");
+		Paint paint = new Paint();
+		paint.setColor(Color.WHITE);
+		paint.setStrokeWidth(2.0f);
+		canvas.drawLine(canvas.getWidth()/2, 0, 0, canvas.getHeight(), paint);
+		canvas.drawLine(canvas.getWidth()/2, 0, canvas.getWidth(), canvas.getHeight(), paint);
+		canvas.drawLine(canvas.getWidth(), canvas.getHeight(), 0, canvas.getHeight(), paint);
 	}
 
+	private void drawHelper(Canvas canvas, int depth) {
+		/*float centerX = this.getSettings().get("centerX");
+		float centerY = this.getSettings().get("centerY");
+		float scale  = this.getSettings().get("scale");
+		int width = canvas.getWidth();
+		int height = canvas.getHeight();
+		float adjcenterX = (centerX * width * scale) + width/2;
+		float adjcenterY = (centerY * height * scale) + height/2;
+		Paint paint = new Paint();
+		canvas.drawLine(adjcenterX, adjcenterY - height/2*scale, );*/
+	}
 }

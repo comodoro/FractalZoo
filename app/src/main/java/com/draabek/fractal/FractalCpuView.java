@@ -16,6 +16,8 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import com.draabek.fractal.fractal.BitmapDrawFractal;
+import com.draabek.fractal.fractal.CanvasFractal;
+import com.draabek.fractal.fractal.CpuFractal;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
@@ -30,7 +32,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
     public static final String FRACTALS_PREFERENCE	= "FRACTALS_PREFERENCE";
     public static final String PREFS_CURRENT_FRACTAL_KEY = "prefs_current_fractal";
 	private Bitmap fractalBitmap;
-	private BitmapDrawFractal fractal;
+	private CpuFractal fractal;
 	private RectF position;
 	private RectF oldPosition;
 	private Paint paint;
@@ -59,27 +61,33 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 
 	public void updateFractal() {
 		Fractal f = FractalRegistry.getInstance().getCurrent();
-		if (!(f instanceof BitmapDrawFractal)) {
+		if (!(f instanceof CpuFractal)) {
 			throw new IllegalStateException("Current fractal is not " + BitmapDrawFractal.class.getName());
 		}
+		fractal = (CpuFractal)f;
 	}
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Log.d(LOG_KEY,"onDraw");
 		SurfaceHolder sh = getHolder();
 		synchronized (sh) {
-			if ((fractalBitmap == null) || (fractalBitmap.getHeight() != canvas.getHeight()) ||
-					(fractalBitmap.getWidth() != canvas.getWidth()))
-				Log.v(LOG_KEY, "Reallocate buffer");
+			if (fractal instanceof BitmapDrawFractal) {
+				if ((fractalBitmap == null) || (fractalBitmap.getHeight() != canvas.getHeight()) ||
+						(fractalBitmap.getWidth() != canvas.getWidth()))
+					Log.v(LOG_KEY, "Reallocate buffer");
 				fractalBitmap = Bitmap.createBitmap(getWidth(), getHeight(),
 						Bitmap.Config.ARGB_8888);
-			Log.v(LOG_KEY, "Start drawing to buffer");
-			fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
-			Log.v(LOG_KEY, "Draw to canvas");
-			canvas.drawBitmap(fractalBitmap, 0, 0, paint);
+				Log.v(LOG_KEY, "Start drawing to buffer");
+				fractalBitmap = ((BitmapDrawFractal)fractal).redrawBitmap(fractalBitmap, position, true);
+				Log.v(LOG_KEY, "Draw to canvas");
+				canvas.drawBitmap(fractalBitmap, 0, 0, paint);
+			} else if (fractal instanceof CanvasFractal) {
+				((CanvasFractal)fractal).draw(canvas);
+			}
 		}
 		Log.d(LOG_KEY, "finished onDraw");
 	}
+
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -111,7 +119,6 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	
 	public void endTranslate() {
 		Log.d(LOG_KEY, "Translation ended, redrawing fractal");
-		fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
 		invalidate();
 	}
 	
@@ -137,7 +144,6 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	
 	public void endScale() {
 		Log.d(LOG_KEY, "Scale gesture ended, redrawing fractal");
-		fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
 		invalidate();
 	}
 	

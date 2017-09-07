@@ -35,7 +35,7 @@ public final class FractalRegistry {
 	}
 	
 	public void remove(Fractal fractal) {
-		fractals.remove(fractal);
+		fractals.remove(fractal.getName());
 	}
 	
 	public Map<String, Fractal> getFractals() {

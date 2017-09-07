@@ -58,7 +58,7 @@
     }
   },
   {
-    "name":"Forest Fire",
-    "class":"com.draabek.fractal.fractal.ForestFireFractal"
+    "name":"Sierpinski Triangle",
+    "class":"com.draabek.fractal.fractal.SierpinskiTriangle"
   }
 ]
