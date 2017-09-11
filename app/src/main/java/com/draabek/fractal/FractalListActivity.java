@@ -1,11 +1,11 @@
 package com.draabek.fractal;
 
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -37,11 +37,10 @@ public class FractalListActivity extends ListActivity {
 		intent.putExtra(FractalActivity.CURRENT_FRACTAL_KEY, fractal.getName());
 		//FractalRegistry.getInstance().setCurrent(fractal);
 		this.setResult(RESULT_OK, intent);
-		SharedPreferences prefs = this.getApplicationContext().getSharedPreferences(
-				FractalCpuView.FRACTALS_PREFERENCE, Context.MODE_PRIVATE);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor editor = prefs.edit();
-		editor.putString(FractalCpuView.PREFS_CURRENT_FRACTAL_KEY, fractal.getName());
-		editor.apply();
+		editor.putString(Utils.PREFS_CURRENT_FRACTAL_KEY, fractal.getName());
+		editor.commit();
 		finish();
 	}
 	

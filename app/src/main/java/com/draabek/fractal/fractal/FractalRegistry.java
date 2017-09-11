@@ -24,7 +24,8 @@ public final class FractalRegistry {
 	private FractalRegistry() {
 		fractals = new HashMap<String, Fractal>();
 	}
-	
+	private boolean initialized = false;
+
 	public static FractalRegistry getInstance() {
 		if (instance == null) instance = new FractalRegistry();
 		return instance;
@@ -43,6 +44,7 @@ public final class FractalRegistry {
 	}
 
 	public void init(Context ctx, JsonArray props) {
+		if (initialized) return;
 		for (JsonElement element : props) {
 			JsonObject jsonObject = element.getAsJsonObject();
 			String clazz = jsonObject.get("class").getAsString();
@@ -105,6 +107,7 @@ public final class FractalRegistry {
 				Log.w(LOG_KEY, "IOException loading fractal " + clazz);
 			}
 		}
+		initialized = true;
 	}
 
 	public Fractal get(String name) {

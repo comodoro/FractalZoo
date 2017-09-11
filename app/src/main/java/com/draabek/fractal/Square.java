@@ -107,7 +107,7 @@ public class Square {
             mProgram = 0;
             throw new RuntimeException("Failed to compile shader!" + '\n' + infoLog);
         }
-        if (FractalRegistry.getInstance().getCurrent().getSettings().get("glBuffer")>0) {
+        if (FractalRegistry.getInstance().getCurrent().getSettings().get("glBuffer") != null) {
             GLES20.glGenFramebuffers( 1, extraBufferId, 0 );
             GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, extraBufferId[0]);
         }
@@ -139,7 +139,8 @@ public class Square {
         for (String setting : settings.keySet()) {
             int uniformHandle = GLES20.glGetUniformLocation(mProgram, setting);
             if (uniformHandle == -1) {
-                throw new RuntimeException("glGetUniformLocation " + setting + " error");
+                //throw new RuntimeException("glGetUniformLocation " + setting + " error");
+                Log.w(this.getClass().getName(), "Unable to find uniform for " + setting);
             }
             // For now only support single float uniforms
             Object o = settings.get(setting);
