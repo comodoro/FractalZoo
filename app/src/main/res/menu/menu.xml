@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/fractalList"
-        android:icon="@android:drawable/ic_menu_agenda"
+        android:icon="@drawable/levels"
         android:title="@string/listMenuItem"
         app:showAsAction="always"/>
     <item
