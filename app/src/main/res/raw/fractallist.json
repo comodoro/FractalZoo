@@ -59,6 +59,22 @@
   },
   {
     "name":"Sierpinski Triangle",
-    "class":"com.draabek.fractal.fractal.SierpinskiTriangle"
+    "class":"com.draabek.fractal.fractal.SierpinskiTriangle",
+    "settings":
+    {
+      "iterations": 5.0,
+      "centerX": 0.0, "centerY": 0.0
+    }
+  },
+  {
+    "name":"Sierpinski Carpet",
+    "class":"com.draabek.fractal.fractal.GLSLFractal",
+    "shaders": "sierpinski_carpet",
+    "settings":
+    {
+      "iterations": 10.0,
+      "centerX": -0.5,
+      "centerY": -0.5
+    }
   }
 ]

@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,7 +18,6 @@ import android.view.View;
 import com.draabek.fractal.fractal.BitmapDrawFractal;
 import com.draabek.fractal.fractal.CanvasFractal;
 import com.draabek.fractal.fractal.CpuFractal;
-import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.io.OutputStream;
@@ -29,13 +28,12 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 {
 
 	private static final String LOG_KEY = FractalCpuView.class.getName();
-    public static final String FRACTALS_PREFERENCE	= "FRACTALS_PREFERENCE";
-    public static final String PREFS_CURRENT_FRACTAL_KEY = "prefs_current_fractal";
 	private Bitmap fractalBitmap;
 	private CpuFractal fractal;
 	private RectF position;
 	private RectF oldPosition;
 	private Paint paint;
+	private Canvas bufferCanvas = null;
 	private SurfaceHolder holder;
 	private SharedPreferences prefs;
 	
@@ -53,37 +51,32 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
 		this.setOnTouchListener(new MotionTracker());
-		/*gd = new GestureDetector(context, this);
-		gd.setOnDoubleTapListener(this);*/
 		paint = new Paint();
-		prefs = context.getSharedPreferences(FRACTALS_PREFERENCE, Context.MODE_PRIVATE);
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	public void updateFractal() {
-		Fractal f = FractalRegistry.getInstance().getCurrent();
-		if (!(f instanceof CpuFractal)) {
-			throw new IllegalStateException("Current fractal is not " + BitmapDrawFractal.class.getName());
-		}
-		fractal = (CpuFractal)f;
-	}
 	@Override
 	protected void onDraw(Canvas canvas) {
 		Log.d(LOG_KEY,"onDraw");
 		SurfaceHolder sh = getHolder();
 		synchronized (sh) {
-			if (fractal instanceof BitmapDrawFractal) {
-				if ((fractalBitmap == null) || (fractalBitmap.getHeight() != canvas.getHeight()) ||
-						(fractalBitmap.getWidth() != canvas.getWidth()))
-					Log.v(LOG_KEY, "Reallocate buffer");
+			if ((fractalBitmap == null) || (fractalBitmap.getHeight() != canvas.getHeight()) ||
+					(fractalBitmap.getWidth() != canvas.getWidth()) || (bufferCanvas == null)) {
+				Log.v(LOG_KEY, "Reallocate buffer");
 				fractalBitmap = Bitmap.createBitmap(getWidth(), getHeight(),
 						Bitmap.Config.ARGB_8888);
+				bufferCanvas = new Canvas(fractalBitmap);
+			}
+			if (fractal instanceof BitmapDrawFractal) {
 				Log.v(LOG_KEY, "Start drawing to buffer");
 				fractalBitmap = ((BitmapDrawFractal)fractal).redrawBitmap(fractalBitmap, position, true);
-				Log.v(LOG_KEY, "Draw to canvas");
-				canvas.drawBitmap(fractalBitmap, 0, 0, paint);
 			} else if (fractal instanceof CanvasFractal) {
-				((CanvasFractal)fractal).draw(canvas);
+				Log.v(LOG_KEY, "Draw to canvas");
+				((CanvasFractal)fractal).draw(bufferCanvas);
+			} else {
+				throw new RuntimeException("Wrong fractal type for " + this.getClass().getName());
 			}
+			canvas.drawBitmap(fractalBitmap, 0, 0, paint);
 		}
 		Log.d(LOG_KEY, "finished onDraw");
 	}
@@ -94,7 +87,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			int height) {
 		this.holder = holder;
 		Log.d(LOG_KEY,"surface changed");
-		fractal = (BitmapDrawFractal) FractalRegistry.getInstance().getCurrent();
+		fractal = (CpuFractal) FractalRegistry.getInstance().getCurrent();
 		invalidate();
 	}
 
@@ -110,30 +103,19 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.d(LOG_KEY, "surface destroyed");
+		bufferCanvas = null;
+		fractalBitmap = null;
+		//consider apply instead of commit
+		prefs.edit().putString(Utils.PREFS_CURRENT_FRACTAL_KEY, FractalRegistry.getInstance().getCurrent().getName()).commit();
 	}
 	
 	public void startTranslate() {
 		oldPosition = new RectF();
 		oldPosition.set(position);
 	}
-	
-	public void endTranslate() {
-		Log.d(LOG_KEY, "Translation ended, redrawing fractal");
-		invalidate();
-	}
-	
+
 	public void translate(float xshift, float yshift) {
-		//Need to convert pixel coordinates into unitless complex fractal coordinates
-		float xstep = (position.right - position.left) / getWidth();
-		float ystep = (position.bottom - position.top) / getHeight();
-		//the coordinates actually represent the set not the screen, hence the minus
-		xshift = -xshift * xstep;
-		yshift = -yshift * ystep;
-		position.left = oldPosition.left + xshift;
-		position.right = oldPosition.right + xshift;
-		position.top = oldPosition.top + yshift;
-		position.bottom = oldPosition.bottom + yshift;
-		gestureRedraw();
+		gestureRedraw(xshift, yshift, 1);
 		Log.d(LOG_KEY, "Translate: " + xshift + " horizontally, " + yshift + " vertically");
 	}
 
@@ -142,42 +124,30 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		oldPosition.set(position);
 	}
 	
-	public void endScale() {
-		Log.d(LOG_KEY, "Scale gesture ended, redrawing fractal");
+	public void endGesture() {
+		Log.d(LOG_KEY, "Gesture ended, redrawing fractal");
+		oldPosition = null;
 		invalidate();
 	}
 	
 	public void scale(float scale) {
-		float width = oldPosition.right - oldPosition.left;
-		float height = oldPosition.bottom - oldPosition.top;
-		float xcenter = oldPosition.left + width/2;
-		float ycenter = oldPosition.top + height/2;
-		//the function actually gets 1/scale
-		float newWidth = width / scale;
-		float newHeight = height / scale;
-		position.left = xcenter - newWidth/2;
-		position.right = xcenter + newWidth/2;
-		position.top = ycenter - newHeight/2;
-		position.bottom = ycenter + newHeight/2;
-		gestureRedraw();
+		gestureRedraw(0, 0, scale);
 		Log.d(LOG_KEY, "Scale: " + scale);
 	}
 	
-	public void gestureRedraw() {
+	public void gestureRedraw(float dx, float dy, float scale) {
 		Log.d(LOG_KEY, "Redrawing gesture");
 		Canvas c = null;
 		try {
 			synchronized(holder) {
 				c = holder.lockCanvas();
-				float xratio = (oldPosition.right - oldPosition.left) / getWidth();
-				float yratio = (oldPosition.bottom - oldPosition.top) / getHeight();
-				Rect src = new Rect(0, 0, getWidth(), getHeight());
-				RectF dst = new RectF(position.left/xratio, position.top/yratio, position.right/xratio, position.bottom/yratio);
-				c.drawBitmap(fractalBitmap, src, dst, paint);
+				if (scale != 1) c.scale(scale, scale);
+				if ((dx != 0) || (dy != 0)) c.translate(dx, dy);
 			}
 		} finally {
 			if (c != null) {
 				holder.unlockCanvasAndPost(c);
+				invalidate();
 			}
 		}
 	}
@@ -234,9 +204,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 					float newDistance = (float)Math.sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
 					if (distance != 0) {
 						float ratio = (float)(newDistance / distance);
-						//if (ratio > 1) {
-							scale(ratio);
-						//}
+						scale(ratio);
 					} else {
 						distance = newDistance;
 					}
@@ -246,8 +214,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 				isGesture = false;
 				distance = 0;
 				origin = null;
-				endTranslate();
-				endScale();
+				endGesture();
 			}
 		}
 
@@ -258,36 +225,6 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		}
 		
 	}
-	
-	
-	/*@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		logger.info("MotionEvent");
-		if (gd.onTouchEvent(event)) {
-			logger.info("GD handled the event");
-			return true;
-		} else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			logger.info("MotionEvent down");
-			return false;
-		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			logger.info("MotionEvent move");
-			float x = event.getX() - lastX;
-			float y = event.getY() - lastY;
-			logger.info("Motion coordinates: " + x + ", " + y);
-			float origX = position.left;
-			float origY = position.top;
-			float w = position.width();
-			float h = position.height();
-			position = new RectF(x + origX, y + origY, w, h);
-			fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
-			lastX = x;
-			lastY = y;
-			invalidate();
-			return true;
-		} else {
-			return false;
-		}
-	}*/
 
 	public boolean saveBitmap(OutputStream os) {
 		if (fractalBitmap != null) {
@@ -296,6 +233,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			Log.e(LOG_KEY, "Attempting to save null bitmap");
 			return false;
 		}
+
 	}
 
 

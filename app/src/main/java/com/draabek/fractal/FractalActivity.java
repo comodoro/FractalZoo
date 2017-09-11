@@ -1,9 +1,11 @@
 package com.draabek.fractal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,13 +14,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.draabek.fractal.fractal.BitmapDrawFractal;
+import com.draabek.fractal.fractal.CpuFractal;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 import com.draabek.fractal.fractal.GLSLFractal;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.File;
@@ -43,11 +44,7 @@ public class FractalActivity extends AppCompatActivity {
     private MyGLSurfaceView myGLSurfaceView;
     private FractalCpuView cpuView;
     private FractalViewHandler currentView;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    ///private GoogleApiClient client;
+    private SharedPreferences prefs;
 
     public FractalActivity() {
     }
@@ -63,17 +60,16 @@ public class FractalActivity extends AppCompatActivity {
         JsonElement fractalElement = parser.parse(jsonReader);
         JsonArray fractalArray = fractalElement.getAsJsonArray();
         FractalRegistry.getInstance().init(this, fractalArray);
-        jsonReader = new InputStreamReader(this.getResources().openRawResource(R.raw.settings));
-        JsonObject jsonObject = parser.parse(jsonReader).getAsJsonObject();
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         //ugh
         FractalRegistry.getInstance().setCurrent(
-                FractalRegistry.getInstance()
-                        .get(jsonObject.get("current").getAsString())
+                FractalRegistry.getInstance().get(prefs.getString(Utils.PREFS_CURRENT_FRACTAL_KEY, "Mandelbrot"))
         );
         setContentView(R.layout.main);
         myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
         cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
-        unveilCorrectView();
+        unveilCorrectView(FractalRegistry.getInstance().getCurrent().getName());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -150,31 +146,19 @@ public class FractalActivity extends AppCompatActivity {
         }
         return b;
     }
-/*
-    @Override
-    public boolean onCreatePanelMenu(int featureId, Menu menu) {
-        Log.d(LOG_KEY, "onCreatePanelMenu");
-        return super.onCreatePanelMenu(featureId, menu);
-    }
 
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        Log.d(LOG_KEY, "onMenuOpened");
-        return super.onMenuOpened(featureId, menu);
-    }
-*/
-    private void unveilCorrectView() {
-        Fractal f = FractalRegistry.getInstance().getCurrent();
+    private void unveilCorrectView(String newFractal) {
+        Fractal f = FractalRegistry.getInstance().get(newFractal);
         if (currentView != null) currentView.setVisibility(View.GONE);
-        FractalRegistry.getInstance().setCurrent(f);
-        Log.d(LOG_KEY, f.getName() + " is current");
-        if (f instanceof BitmapDrawFractal) {
+        if (f instanceof CpuFractal) {
             currentView = cpuView;
             myGLSurfaceView.setVisibility(View.GONE);
         } else if (f instanceof GLSLFractal) {
             currentView = myGLSurfaceView;
             cpuView.setVisibility(View.GONE);
         }
+        FractalRegistry.getInstance().setCurrent(f);
+        Log.d(LOG_KEY, f.getName() + " is current");
         currentView.setVisibility(View.VISIBLE);
         currentView.invalidate();
     }
@@ -184,10 +168,7 @@ public class FractalActivity extends AppCompatActivity {
         if (requestCode == CHOOSE_FRACTAL_CODE) {
             try {
                 String pickedFractal = data.getStringExtra(CURRENT_FRACTAL_KEY);
-                FractalRegistry.getInstance().setCurrent(
-                        FractalRegistry.getInstance().get(pickedFractal)
-                );
-                unveilCorrectView();
+                unveilCorrectView(pickedFractal);
             } catch (Exception e) {
                 Log.e(LOG_KEY, "Exception on fractal switch: " + e);
             }
@@ -195,39 +176,13 @@ public class FractalActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-/*    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Fractal Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }*/
-
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        ///client.connect();
-        ///AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        ///AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        ///client.disconnect();
     }
 }
