@@ -67,6 +67,16 @@
     }
   },
   {
+    "name":"Fractal Tree",
+    "class":"com.draabek.fractal.fractal.FractalTree",
+    "settings":
+    {
+      "angle": 20.0,
+      "iterations": 10.0,
+      "centerX": 0.0, "centerY": 0.7
+    }
+  },
+  {
     "name":"Sierpinski Carpet",
     "class":"com.draabek.fractal.fractal.GLSLFractal",
     "shaders": "sierpinski_carpet",
