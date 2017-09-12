@@ -18,7 +18,7 @@ public class SierpinskiTriangle extends CanvasFractal {
 		paint.setStyle(Paint.Style.FILL);
 		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), paint);
 		paint.setColor(Color.WHITE);
-		paint.setStrokeWidth(1.0f);
+		paint.setStrokeWidth(0.1f);
 		int shortDim = Math.min(canvas.getWidth(), canvas.getHeight());
 		int startX = (int)((canvas.getWidth()-shortDim)/2+centerX*canvas.getWidth());
 		int endX = canvas.getWidth()-startX;
