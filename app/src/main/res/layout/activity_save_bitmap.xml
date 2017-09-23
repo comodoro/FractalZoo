@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              tools:context="com.draabek.fractal.SaveBitmapActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioGroup
+                android:id="@+id/save_bitmap_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <RadioButton
+                android:id="@+id/bitmap_filename_radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_bitmap_radio_button_filename"/>
+
+                <EditText
+                    android:id="@+id/bitmap_filename"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/save_bitmap_filename"
+
+                    android:inputType="textUri"
+                    android:maxLines="1"
+                    android:singleLine="true"/>
+
+                <RadioButton
+                    android:id="@+id/bitmap_set_as_background_radio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save_bitmap_set_as_background"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
+            <Button
+                android:id="@+id/save_bitmap_ok_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/save_bitmap_ok_button"
+            android:textStyle="bold"/>
+
+</LinearLayout>

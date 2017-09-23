@@ -87,10 +87,10 @@ public class Square {
 
     private void updateShaders() {
         // prepare shaders and OpenGL program
-        int vertexShader = MyGLRenderer.loadShader(
+        int vertexShader = MyGLSurfaceView.loadShader(
                 GLES20.GL_VERTEX_SHADER,
                 currentFractal.getShaders()[0]);
-        int fragmentShader = MyGLRenderer.loadShader(
+        int fragmentShader = MyGLSurfaceView.loadShader(
                 GLES20.GL_FRAGMENT_SHADER,
                 currentFractal.getShaders()[1]);
 

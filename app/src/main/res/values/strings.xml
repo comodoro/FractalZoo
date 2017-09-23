@@ -6,7 +6,7 @@
     <string name="optionsMenuItem">Options</string>
     <string name="prefs_key_fractals">Fractals</string>
     <string name="prefs_key_current_fractal">Current Fractal</string>
-    
+
     <string name="mandelbrot">Mandelbrot</string>
     <string name="forest_fire">Forest Fire</string>
     <string name="sierpinski_triangle">Sierpinski Triangle</string>
@@ -14,4 +14,11 @@
     <string name="listMenuItem">Fractal List</string>
     <string name="prefs_use_gpu_key">PREFS_USE_GPU</string>
     <string name="prefs_use_gpu_string">Use GPU</string>
+
+    <string name="title_activity_save_bitmap">Save current screen</string>
+    <string name="save_bitmap_filename">Path and file name to save</string>
+    <string name="save_bitmap_set_as_background">Set as Home screen background</string>
+    <string name="save_bitmap_radio_button_filename">Save as file</string>
+    <string name="save_bitmap_ok_button">OK</string>
+
 </resources>

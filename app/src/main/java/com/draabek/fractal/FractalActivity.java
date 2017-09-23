@@ -2,9 +2,7 @@ package com.draabek.fractal;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,10 +20,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -106,45 +100,9 @@ public class FractalActivity extends AppCompatActivity {
         }
     }
 
-    public boolean storageAvailable() {
-        String state = Environment.getExternalStorageState();
-        // We can read and write the media
-        return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
-    private File getFile() {
-        String fileName = FractalRegistry.getInstance().getCurrent().toString() + System.currentTimeMillis() + ".jpg";
-        int apiVersion = Build.VERSION.SDK_INT;
-        if (apiVersion >= Build.VERSION_CODES.ECLAIR_MR1) {
-            return new File(this.getApplicationContext().getExternalFilesDir(null), fileName);
-        } else {
-            File dir = Environment.getExternalStorageDirectory();
-            String path = dir.getAbsolutePath() + "/Android/data/com.drabek.fractal/files/" + fileName;
-            return new File(path);
-        }
-    }
-
     public boolean attemptSave() {
-        Log.d(LOG_KEY, "attemptSave");
-        boolean b = false;
-        if (storageAvailable()) {
-            Log.d(LOG_KEY, "storage available");
-            File file = getFile();
-            FileOutputStream fos;
-            try {
-                fos = new FileOutputStream(file, false);
-            } catch (FileNotFoundException e) {
-                Log.e(LOG_KEY, "File not found: " + e);
-                return false;
-            }
-            b = currentView.saveBitmap(fos);
-            try {
-                fos.close();
-            } catch (IOException e) {
-                Log.w(LOG_KEY, "Cannot close stream: " + e);
-            }
-        }
-        return b;
+        currentView.saveBitmap();
+        return true;
     }
 
     private void unveilCorrectView(String newFractal) {
