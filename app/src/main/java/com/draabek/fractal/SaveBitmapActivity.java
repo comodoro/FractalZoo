@@ -1,6 +1,6 @@
 package com.draabek.fractal;
 
-import android.graphics.Bitmap;
+import android.app.WallpaperManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,9 +14,11 @@ import android.widget.RadioGroup;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 /**
  * A login screen that offers login via email/password.
@@ -28,7 +30,7 @@ public class SaveBitmapActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     EditText filenameEdit;
     private Button button;
-    private Bitmap bitmap;
+    private File bitmapFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class SaveBitmapActivity extends AppCompatActivity {
         radioGroup = (RadioGroup) findViewById(R.id.save_bitmap_radio_group);
         filenameEdit = (EditText) findViewById(R.id.bitmap_filename);
         button = (Button) findViewById(R.id.save_bitmap_ok_button);
-        bitmap = this.getIntent().getBundleExtra("bitmap").getParcelable(null);
+        bitmapFile = new File(this.getIntent().getStringExtra(getString(R.string.intent_extra_bitmap_file)));
         File suggestedPath = getFile();
         filenameEdit.getText().append(suggestedPath.getAbsolutePath());
         button.setOnClickListener(new View.OnClickListener() {
@@ -46,10 +48,16 @@ public class SaveBitmapActivity extends AppCompatActivity {
                 if (radioGroup.getCheckedRadioButtonId() == R.id.bitmap_filename_radio) {
                     String filename = filenameEdit.getText().toString();
                     File f = new File(filename);
-                    saveBitmap(bitmap, f);
+                    saveBitmap(bitmapFile, f);
                     finish();
                 } else if (radioGroup.getCheckedRadioButtonId() == R.id.bitmap_set_as_background_radio) {
-
+                    WallpaperManager myWallpaperManager = WallpaperManager.getInstance(SaveBitmapActivity.this);
+                    try {
+                        myWallpaperManager.setStream(new FileInputStream(bitmapFile));
+                    } catch (IOException e) {
+                        // Tjust be ugly in the logcat
+                        e.printStackTrace();
+                    }
                 } else {
                     Log.e(this.getClass().getName(), "Unknown radio button in SaveBitmapActivity");
                 }
@@ -57,33 +65,27 @@ public class SaveBitmapActivity extends AppCompatActivity {
         });
     }
 
-    private boolean saveBitmap(Bitmap bitmap, File path) {
-        boolean b = false;
-        if (storageAvailable()) {
-            FileOutputStream fos;
+    private boolean saveBitmap(File bitmapTempFile, File path) {
+        FileChannel sourceChannel = null;
+        FileChannel destChannel = null;
+        try {
+            sourceChannel = new FileInputStream(bitmapTempFile).getChannel();
+            destChannel = new FileOutputStream(path).getChannel();
+            destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally{
             try {
-                fos = new FileOutputStream(path, false);
-            } catch (FileNotFoundException e) {
-                if (Utils.DEBUG) {
-                    throw new RuntimeException(e);
-                } else {
-                    Log.e(LOG_KEY, "Path not found: " + e);
-                }
-                return false;
-            }
-            b = bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            if (!b) {
-                if (Utils.DEBUG) {
-                    throw new RuntimeException("Bitmap.compress failed");
-                }
-            }
-            try {
-                fos.close();
+                sourceChannel.close();
+                destChannel.close();
             } catch (IOException e) {
-                Log.w(LOG_KEY, "Cannot close stream: " + e);
+                e.printStackTrace();
             }
         }
-        return b;
+        return false;
     }
 
     public boolean storageAvailable() {

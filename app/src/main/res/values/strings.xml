@@ -20,5 +20,6 @@
     <string name="save_bitmap_set_as_background">Set as Home screen background</string>
     <string name="save_bitmap_radio_button_filename">Save as file</string>
     <string name="save_bitmap_ok_button">OK</string>
+    <string name="intent_extra_bitmap_file">bitmap_file</string>
 
 </resources>

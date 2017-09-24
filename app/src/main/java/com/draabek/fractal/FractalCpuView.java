@@ -1,6 +1,7 @@
 package com.draabek.fractal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,13 +15,16 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.draabek.fractal.fractal.BitmapDrawFractal;
 import com.draabek.fractal.fractal.CanvasFractal;
 import com.draabek.fractal.fractal.CpuFractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
-import java.io.OutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callback, FractalViewHandler
@@ -226,12 +230,19 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		
 	}
 
-	public boolean saveBitmap(OutputStream os) {
-		if (fractalBitmap != null) {
-			return fractalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-		} else {
-			Log.e(LOG_KEY, "Attempting to save null bitmap");
-			return false;
+	@Override
+	public void saveBitmap() {
+		try {
+			File tmpFile = File.createTempFile("bitmap", "jpg", getContext().getCacheDir());
+			fractalBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
+					new FileOutputStream(tmpFile));
+			Intent intent = new Intent(this.getContext(), SaveBitmapActivity.class);
+			intent.setAction(Intent.ACTION_SEND);
+			intent.putExtra(getContext().getString(R.string.intent_extra_bitmap_file), tmpFile.getAbsolutePath());
+			getContext().startActivity(intent);
+		} catch (IOException e) {
+			Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();;
+			e.printStackTrace();
 		}
 
 	}

@@ -21,14 +21,17 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -123,12 +126,18 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
     }
 
     private void captureBitmapCallback(Bitmap bitmap) {
-        Intent intent = new Intent(this.getContext(), FractalActivity.class);
-        intent.setAction(Intent.ACTION_SEND);
-        Bundle b = new Bundle();
-        b.putParcelable(null, bitmap);
-        intent.putExtra("bitmap", b);
-        getContext().startActivity(intent);
+        try {
+            File tmpFile = File.createTempFile("bitmap", "jpg", getContext().getCacheDir());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100,
+                    new FileOutputStream(tmpFile));
+            Intent intent = new Intent(this.getContext(), SaveBitmapActivity.class);
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(getContext().getString(R.string.intent_extra_bitmap_file), tmpFile.getAbsolutePath());
+            getContext().startActivity(intent);
+        } catch (IOException e) {
+            Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();;
+            e.printStackTrace();
+        }
     }
 
     @Override
