@@ -21,5 +21,8 @@
     <string name="save_bitmap_radio_button_filename">Save as file</string>
     <string name="save_bitmap_ok_button">OK</string>
     <string name="intent_extra_bitmap_file">bitmap_file</string>
+    <string name="save_bitmap_storage_write_rationale">The app needs write permission to save the image</string>
+    <string name="save_bitmap_set_wallpaper_rationale">The Set Wallpaper permission is needed to set the Home screen wallpaper.</string>
+    <string name="save_bitmap_success_toast">Current screen saved to</string>
 
 </resources>
