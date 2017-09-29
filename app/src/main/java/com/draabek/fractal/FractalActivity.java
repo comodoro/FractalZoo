@@ -3,6 +3,8 @@ package com.draabek.fractal;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.draabek.fractal.fractal.CpuFractal;
 import com.draabek.fractal.fractal.Fractal;
@@ -39,6 +42,7 @@ public class FractalActivity extends AppCompatActivity {
     private FractalCpuView cpuView;
     private FractalViewHandler currentView;
     private SharedPreferences prefs;
+    private ProgressBar progressBar;
 
     public FractalActivity() {
     }
@@ -63,10 +67,34 @@ public class FractalActivity extends AppCompatActivity {
         setContentView(R.layout.main);
         myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
         cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
+        progressBar = (ProgressBar)findViewById(R.id.indeterminateBar);
         unveilCorrectView(FractalRegistry.getInstance().getCurrent().getName());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    final int desiredVisibility = currentView.isRendering() ? View.VISIBLE : View.INVISIBLE;
+                    if (progressBar.getVisibility() != desiredVisibility) {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(desiredVisibility);
+                                progressBar.bringToFront();
+                                progressBar.getParent().bringChildToFront(progressBar);
+                            }
+                        });
+                    }
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     @Override

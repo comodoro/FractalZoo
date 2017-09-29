@@ -24,6 +24,7 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.draabek.fractal.fractal.Fractal;
@@ -84,6 +85,15 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
 
     private float mPreviousX;
     private float mPreviousY;
+
+    public boolean isRendering() {
+        return mRenderer.renderInProgress;
+    }
+
+    @Override
+    public View getView() {
+        return this;
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
@@ -196,6 +206,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
         private int width;
         private int height;
         private boolean capturing;
+        private boolean renderInProgress;
 
         @Override
         public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -225,7 +236,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
 
         @Override
         public void onDrawFrame(GL10 unused) {
-
+            renderInProgress = true;
             // Draw background color
             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
@@ -237,6 +248,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
                 capturing = false;
 
             }
+            renderInProgress = false;
         }
 
         @Override

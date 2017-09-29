@@ -40,6 +40,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	private Canvas bufferCanvas = null;
 	private SurfaceHolder holder;
 	private SharedPreferences prefs;
+	private boolean rendering;
 	
 	public FractalCpuView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -60,7 +61,14 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	@Override
+	public View getView() {
+		return this;
+	}
+
+
+	@Override
 	protected void onDraw(Canvas canvas) {
+		rendering = true;
 		Log.d(LOG_KEY,"onDraw");
 		SurfaceHolder sh = getHolder();
 		synchronized (sh) {
@@ -83,6 +91,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			canvas.drawBitmap(fractalBitmap, 0, 0, paint);
 		}
 		Log.d(LOG_KEY, "finished onDraw");
+		rendering = false;
 	}
 
 
@@ -231,6 +240,11 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	@Override
+	public boolean isRendering() {
+		return rendering;
+	}
+
+	@Override
 	public void saveBitmap() {
 		try {
 			File tmpFile = File.createTempFile("bitmap", "jpg", getContext().getCacheDir());
@@ -244,6 +258,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();;
 			e.printStackTrace();
 		}
+
 
 	}
 
