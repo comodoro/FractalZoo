@@ -3,7 +3,6 @@ package com.draabek.fractal;
 import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -25,6 +24,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+
+import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.os.Environment.getExternalStoragePublicDirectory;
 
 /**
  * A login screen that offers login via email/password.
@@ -170,14 +172,7 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
 
     private File getFile() {
         String fileName = FractalRegistry.getInstance().getCurrent().toString() + System.currentTimeMillis() + ".jpg";
-        int apiVersion = Build.VERSION.SDK_INT;
-        if (apiVersion >= Build.VERSION_CODES.ECLAIR_MR1) {
-            return new File(this.getApplicationContext().getExternalFilesDir(null), fileName);
-        } else {
-            File dir = Environment.getExternalStorageDirectory();
-            String path = dir.getAbsolutePath() + "/Android/data/com.drabek.fractal/files/" + fileName;
-            return new File(path);
-        }
+        return new File(getExternalStoragePublicDirectory(DIRECTORY_PICTURES).getAbsolutePath(), fileName);
     }
 
 }
