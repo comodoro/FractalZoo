@@ -27,7 +27,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.io.File;
@@ -49,16 +48,6 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
 
     private MyGLRenderer mRenderer;
 
-    public Fractal getFractal() {
-        return fractal;
-    }
-
-    public void setFractal(Fractal fractal) {
-        this.fractal = fractal;
-    }
-
-    private Fractal fractal;
-
     public MyGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
@@ -73,14 +62,14 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
 
         // Create an OpenGL ES 2.0 context.
         setEGLContextClientVersion(2);
-        setEGLConfigChooser(8 , 8, 8, 8, 8, 0);
+        setEGLConfigChooser(8, 8, 8, 8, 8, 0);
         // Set the Renderer for drawing on the GLSurfaceView
         mRenderer = new MyGLRenderer();
         setRenderer(mRenderer);
 
         // Render the view only when there is a change in the drawing data
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-        this.invalidate();
+        //this.invalidate();
     }
 
     private float mPreviousX;
@@ -104,6 +93,9 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
+                if (Utils.DEBUG) {
+                    Log.d(this.getClass().getName(), "GL MOVE");
+                }
                 if (e.getPointerCount() == 1) {
                     float dx = x - mPreviousX;
                     float dy = y - mPreviousY;
@@ -127,7 +119,9 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
                 } else if (e.getPointerCount() == 2) {
 
                 }
-                requestRender();
+                case MotionEvent.ACTION_POINTER_UP:
+                case MotionEvent.ACTION_UP:
+                    requestRender();
         }
 
         mPreviousX = x;
@@ -156,15 +150,16 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
         requestRender();
     }
 
-             /** Utility method for compiling a OpenGL shader.
-            *
-            * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
-         * method to debug shader coding errors.</p>
-            *
-            * @param type - Vertex or fragment shader type.
-         * @param shaderCode - String containing the shader code.
-         * @return - Returns an id for the shader.
-            */
+    /**
+     * Utility method for compiling a OpenGL shader.
+     * <p>
+     * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
+     * method to debug shader coding errors.</p>
+     *
+     * @param type       - Vertex or fragment shader type.
+     * @param shaderCode - String containing the shader code.
+     * @return - Returns an id for the shader.
+     */
     public static int loadShader(int type, String shaderCode){
 
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
@@ -194,7 +189,9 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
         int error;
         if ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
             Log.e(MyGLSurfaceView.class.getName(), glOperation + ": glError " + error);
-            throw new RuntimeException(glOperation + ": glError " + error);
+            if (Utils.DEBUG) {
+                throw new RuntimeException(String.format("%s: glError %d", glOperation, error));
+            }
         }
     }
 

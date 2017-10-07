@@ -105,7 +105,9 @@ public class Square {
             String infoLog = GLES20.glGetShaderInfoLog(mProgram);
             GLES20.glDeleteProgram(mProgram);
             mProgram = 0;
-            throw new RuntimeException("Failed to compile shader!" + '\n' + infoLog);
+            if (Utils.DEBUG) {
+                throw new RuntimeException("Failed to compile shader!" + '\n' + infoLog);
+            }
         }
         if (FractalRegistry.getInstance().getCurrent().getSettings().get("glBuffer") != null) {
             GLES20.glGenFramebuffers( 1, extraBufferId, 0 );
@@ -139,17 +141,27 @@ public class Square {
         for (String setting : settings.keySet()) {
             int uniformHandle = GLES20.glGetUniformLocation(mProgram, setting);
             if (uniformHandle == -1) {
-                //throw new RuntimeException("glGetUniformLocation " + setting + " error");
                 Log.w(this.getClass().getName(), "Unable to find uniform for " + setting);
+                if (Utils.DEBUG) {
+                    throw new RuntimeException("glGetUniformLocation " + setting + " error");
+                }
             }
             // For now only support single float uniforms
             Object o = settings.get(setting);
             float f = (float)o;
             GLES20.glUniform1f(uniformHandle, f);
+            MyGLSurfaceView.checkGlError("glUniform1f");
         }
 
         int resolutionHandle = GLES20.glGetUniformLocation(mProgram, "resolution");
+        if (resolutionHandle == -1) {
+            Log.w(this.getClass().getName(), "Unable to find uniform for resolution");
+            if (Utils.DEBUG) {
+                throw new RuntimeException("glGetUniformLocation resolution error");
+            }
+        }
         GLES20.glUniform2f(resolutionHandle, width, height);
+        MyGLSurfaceView.checkGlError("glUniform1f");
 
         // Draw the square
         GLES20.glDrawElements(

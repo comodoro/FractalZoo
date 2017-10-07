@@ -96,7 +96,6 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_WRITE) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 saveToFile();

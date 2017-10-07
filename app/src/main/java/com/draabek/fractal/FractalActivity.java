@@ -43,7 +43,7 @@ public class FractalActivity extends AppCompatActivity {
     private FractalViewHandler currentView;
     private SharedPreferences prefs;
     private ProgressBar progressBar;
-
+    private boolean running;
     public FractalActivity() {
     }
 
@@ -53,6 +53,7 @@ public class FractalActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        running = true;
         Reader jsonReader = new InputStreamReader(this.getResources().openRawResource(R.raw.fractallist));
         JsonParser parser = new JsonParser();
         JsonElement fractalElement = parser.parse(jsonReader);
@@ -75,15 +76,22 @@ public class FractalActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {
+                while (FractalActivity.this.running) {
                     final int desiredVisibility = currentView.isRendering() ? View.VISIBLE : View.INVISIBLE;
                     if (progressBar.getVisibility() != desiredVisibility) {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
                                 progressBar.setVisibility(desiredVisibility);
-                                progressBar.bringToFront();
-                                progressBar.getParent().bringChildToFront(progressBar);
+                                progressBar.getParent().requestLayout();
+                                if (Utils.DEBUG) {
+                                    if (desiredVisibility == View.VISIBLE) {
+                                        Log.d(LOG_KEY, "Bringing ProgressBar to front");
+                                    }
+                                    else {
+                                        int d = Log.d(LOG_KEY, "Hiding ProgressBar");
+                                    }
+                                }
                             }
                         });
                     }
@@ -144,9 +152,11 @@ public class FractalActivity extends AppCompatActivity {
             cpuView.setVisibility(View.GONE);
         }
         FractalRegistry.getInstance().setCurrent(f);
-        Log.d(LOG_KEY, f.getName() + " is current");
+        if (Utils.DEBUG) {
+            Log.d(LOG_KEY, f.getName() + " is current");
+        }
         currentView.setVisibility(View.VISIBLE);
-        currentView.invalidate();
+        currentView.getView().postInvalidate();
     }
 
     @Override

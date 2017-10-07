@@ -9,7 +9,6 @@ import android.view.View;
 public interface FractalViewHandler {
     void saveBitmap();
     void setVisibility(int visibility);
-    void invalidate();
     boolean isRendering();
     View getView();
 }
