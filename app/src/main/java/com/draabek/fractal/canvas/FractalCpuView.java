@@ -1,4 +1,4 @@
-package com.draabek.fractal;
+package com.draabek.fractal.canvas;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,9 +17,10 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.draabek.fractal.fractal.BitmapDrawFractal;
-import com.draabek.fractal.fractal.CanvasFractal;
-import com.draabek.fractal.fractal.CpuFractal;
+import com.draabek.fractal.FractalViewHandler;
+import com.draabek.fractal.R;
+import com.draabek.fractal.SaveBitmapActivity;
+import com.draabek.fractal.Utils;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.io.File;

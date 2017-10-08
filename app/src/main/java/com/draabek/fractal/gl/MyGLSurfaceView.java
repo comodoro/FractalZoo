@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.draabek.fractal;
+package com.draabek.fractal.gl;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +27,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.draabek.fractal.FractalViewHandler;
+import com.draabek.fractal.R;
+import com.draabek.fractal.SaveBitmapActivity;
+import com.draabek.fractal.Utils;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.io.File;

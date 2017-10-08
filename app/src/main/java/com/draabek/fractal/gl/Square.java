@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.draabek.fractal;
+package com.draabek.fractal.gl;
 
 import android.opengl.GLES20;
 import android.util.Log;
 
+import com.draabek.fractal.Utils;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
-import com.draabek.fractal.fractal.GLSLFractal;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

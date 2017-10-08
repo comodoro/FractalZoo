@@ -1,7 +1,7 @@
 [
   {
     "name": "Mandelbrot",
-    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"mandelbrot",
     "settings":
     {
@@ -12,7 +12,7 @@
   },
   {
     "name": "Roentgen",
-    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders": "roentgen",
     "settings": {
       "centerX": 0.0,
@@ -21,7 +21,7 @@
   },
   {
     "name": "Julia",
-    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"julia",
     "settings":
     {
@@ -32,7 +32,7 @@
   },
   {
     "name": "Fleshy",
-    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"fleshy",
     "settings":
     {
@@ -41,7 +41,7 @@
   },
   {
     "name": "PChaos",
-    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"pchaos",
     "settings":
     {
@@ -50,7 +50,7 @@
   },
   {
     "name": "Burner",
-    "class": "com.draabek.fractal.fractal.GLSLFractal",
+    "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"burner",
     "settings":
     {
@@ -59,7 +59,7 @@
   },
   {
     "name":"Sierpinski Triangle",
-    "class":"com.draabek.fractal.fractal.SierpinskiTriangle",
+    "class":"com.draabek.fractal.canvas.instance.SierpinskiTriangle",
     "settings":
     {
       "iterations": 5.0,
@@ -68,7 +68,7 @@
   },
   {
     "name":"Fractal Tree",
-    "class":"com.draabek.fractal.fractal.FractalTree",
+    "class":"com.draabek.fractal.canvas.instance.FractalTree",
     "settings":
     {
       "angle": 20.0,
@@ -77,7 +77,7 @@
     }
   },  {
   "name":"Pythagoras Tree",
-  "class":"com.draabek.fractal.fractal.PythagorasTree",
+  "class":"com.draabek.fractal.canvas.PythagorasTree",
   "settings":
   {
     "iterations": 10.0,
@@ -86,7 +86,7 @@
 },
   {
     "name":"Sierpinski Carpet",
-    "class":"com.draabek.fractal.fractal.GLSLFractal",
+    "class":"com.draabek.fractal.gl.GLSLFractal",
     "shaders": "sierpinski_carpet",
     "settings":
     {

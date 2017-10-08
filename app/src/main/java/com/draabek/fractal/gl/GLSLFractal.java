@@ -1,4 +1,6 @@
-package com.draabek.fractal.fractal;
+package com.draabek.fractal.gl;
+
+import com.draabek.fractal.fractal.Fractal;
 
 public class GLSLFractal extends Fractal {
 	protected String[] shaders = null;

@@ -1,8 +1,11 @@
-package com.draabek.fractal.fractal;
+package com.draabek.fractal.canvas.instance;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
+
+import com.draabek.fractal.canvas.BitmapDrawFractal;
+import com.draabek.fractal.canvas.NativeLib;
 
 public class MandelbrotFractal extends BitmapDrawFractal {
 	private int[] buffer;
@@ -13,7 +16,7 @@ public class MandelbrotFractal extends BitmapDrawFractal {
 		if ((buffer == null) || (buffer.length != bitmap.getWidth()*bitmap.getHeight())) {
 			buffer = new int[bitmap.getWidth()*bitmap.getHeight()];
 		}
-		NativeLib.redrawMandelbrot(buffer, bitmap.getWidth(), bitmap.getHeight(), 
+		NativeLib.redrawMandelbrot(buffer, bitmap.getWidth(), bitmap.getHeight(),
 				orig.left, orig.top, orig.right, orig.bottom, portrait, 200);
 		bitmap.setPixels(buffer, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 		return bitmap;

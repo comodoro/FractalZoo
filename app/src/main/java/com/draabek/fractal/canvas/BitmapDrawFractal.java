@@ -1,4 +1,4 @@
-package com.draabek.fractal.fractal;
+package com.draabek.fractal.canvas;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;

@@ -3,6 +3,7 @@ package com.draabek.fractal.fractal;
 import android.content.Context;
 import android.util.Log;
 
+import com.draabek.fractal.gl.GLSLFractal;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

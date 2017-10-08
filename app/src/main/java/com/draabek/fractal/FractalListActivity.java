@@ -34,7 +34,7 @@ public class FractalListActivity extends ListActivity {
 		Fractal fractal = (Fractal)getListView().getItemAtPosition(position);
 		Log.d(LOG_KEY, fractal.getName() + " clicked");
 		Intent intent = this.getIntent();
-		intent.putExtra(FractalActivity.CURRENT_FRACTAL_KEY, fractal.getName());
+		intent.putExtra(MainActivity.CURRENT_FRACTAL_KEY, fractal.getName());
 		//FractalRegistry.getInstance().setCurrent(fractal);
 		this.setResult(RESULT_OK, intent);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

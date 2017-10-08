@@ -1,5 +1,9 @@
-package com.draabek.fractal.fractal;
+package com.draabek.fractal.canvas;
 
+/**
+ * Native rendering code. Not used anymore, superseded by OpenGL
+ */
+@Deprecated
 public class NativeLib {
 
 	static {

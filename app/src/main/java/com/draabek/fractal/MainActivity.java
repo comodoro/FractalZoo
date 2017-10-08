@@ -15,10 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.draabek.fractal.fractal.CpuFractal;
+import com.draabek.fractal.canvas.CpuFractal;
+import com.draabek.fractal.canvas.FractalCpuView;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
-import com.draabek.fractal.fractal.GLSLFractal;
+import com.draabek.fractal.gl.GLSLFractal;
+import com.draabek.fractal.gl.MyGLSurfaceView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -33,8 +35,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 */
 
-public class FractalActivity extends AppCompatActivity {
-    private static final String LOG_KEY = FractalActivity.class.getName();
+public class MainActivity extends AppCompatActivity {
+    private static final String LOG_KEY = MainActivity.class.getName();
     public static final String CURRENT_FRACTAL_KEY = "current_fractal";
     public static final int CHOOSE_FRACTAL_CODE = 1;
 
@@ -44,7 +46,7 @@ public class FractalActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private ProgressBar progressBar;
     private boolean running;
-    public FractalActivity() {
+    public MainActivity() {
     }
 
     /**
@@ -65,7 +67,7 @@ public class FractalActivity extends AppCompatActivity {
         FractalRegistry.getInstance().setCurrent(
                 FractalRegistry.getInstance().get(prefs.getString(Utils.PREFS_CURRENT_FRACTAL_KEY, "Mandelbrot"))
         );
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_main);
         myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
         cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
         progressBar = (ProgressBar)findViewById(R.id.indeterminateBar);
@@ -76,7 +78,7 @@ public class FractalActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (FractalActivity.this.running) {
+                while (MainActivity.this.running) {
                     final int desiredVisibility = currentView.isRendering() ? View.VISIBLE : View.INVISIBLE;
                     if (progressBar.getVisibility() != desiredVisibility) {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {

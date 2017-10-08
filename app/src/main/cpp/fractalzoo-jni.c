@@ -3,7 +3,7 @@
 extern "C" {
 #endif
 
-JNIEXPORT void JNICALL Java_com_draabek_fractal_fractal_NativeLib_redrawMandelbrot
+JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbrot
   (JNIEnv * env, jclass clazz, jintArray bitmapArray, jint width, jint height, jdouble left, jdouble top, jdouble right, jdouble bottom, jboolean portrait, jint maxiter) {
 		double cr,ci;
 		double zr,zi;
@@ -46,7 +46,7 @@ JNIEXPORT void JNICALL Java_com_draabek_fractal_fractal_NativeLib_redrawMandelbr
 		(*env)->ReleaseIntArrayElements(env, bitmapArray, bitmap, 0);
 }
 
-JNIEXPORT void JNICALL Java_com_draabek_fractal_fractal_NativeLib_redrawMandelbrotPart
+JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbrotPart
 		(JNIEnv * env, jclass clazz, jintArray bitmapArray, jint width, jint height, jdouble left,
 		 jdouble top, jdouble right, jdouble bottom, jboolean portrait, jint maxiter, jint fromX,
 		jint fromY, jint toX, jint toY) {

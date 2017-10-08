@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.is;
 public class FirstEspressoTest {
 
     @Rule
-    public ActivityTestRule<FractalActivity> mActivityTestRule = new ActivityTestRule<>(FractalActivity.class);
+    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
     public void firstEspressoTest() {

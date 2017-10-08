@@ -1,8 +1,10 @@
-package com.draabek.fractal.fractal;
+package com.draabek.fractal.canvas.instance;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
+import com.draabek.fractal.canvas.CanvasFractal;
 
 /**
  * Created by Vojta on 12.09.2017.
