@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Locale;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -78,6 +79,8 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
 
     private float mPreviousX;
     private float mPreviousY;
+    private float mPreviousX2;
+    private float mPreviousY2;
 
     public boolean isRendering() {
         return mRenderer.renderInProgress;
@@ -90,11 +93,16 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        float TOUCH_SCALE_FACTOR = 1.0f/Math.min(getWidth(), getHeight());
+        float TOUCH_SCALE_FACTOR = 1.5f/Math.min(getWidth(), getHeight());
 
         float x = e.getX();
         float y = e.getY();
-
+        float x2 = 0;
+        float y2 = 0;
+        if (e.getPointerCount() > 1) {
+            x2 = e.getX(1);
+            y2 = e.getY(1);
+        }
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 if (Utils.DEBUG) {
@@ -113,23 +121,40 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
                         if (fractalX != null) {
                             FractalRegistry.getInstance().getCurrent()
                                     .getSettings().put("centerX", fractalX + dx * TOUCH_SCALE_FACTOR);
+                            Log.v(this.getClass().getName(), "X shift: " + dx * TOUCH_SCALE_FACTOR);
                         }
                         if (fractalY != null) {
                             //- instead of + because OpenGL has y axis upside down
                             FractalRegistry.getInstance().getCurrent()
                                     .getSettings().put("centerY", fractalY - dy * TOUCH_SCALE_FACTOR);
+                            Log.v(this.getClass().getName(), "Y shift: " + dy * TOUCH_SCALE_FACTOR);
                         }
                     }
-                } else if (e.getPointerCount() == 2) {
-
+                } else if ((e.getPointerCount() == 2) && ((mPreviousY2 > 0) || (mPreviousX2 > 0))) {
+                    Float scale = FractalRegistry.getInstance().getCurrent()
+                            .getSettings().get("scale");
+                    if (scale == null) {
+                        Log.i(this.getClass().getName(), "Fractal is not scaleable");
+                    } else {
+                        // Probably abs() is sufficient, but this is better for clarity
+                        float oldDist = (float) Math.sqrt((mPreviousX - mPreviousX2) * (mPreviousX - mPreviousX2) +
+                                (mPreviousY - mPreviousY2) * (mPreviousY - mPreviousY2));
+                        float newDist = (float) Math.sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
+                        if (oldDist > 0) {
+                            FractalRegistry.getInstance().getCurrent().getSettings().put("scale",
+                                    scale * newDist / oldDist);
+                            Log.v(this.getClass().getName(), "Scale: " + scale * newDist / oldDist);
+                        }
+                    }
                 }
                 case MotionEvent.ACTION_POINTER_UP:
                 case MotionEvent.ACTION_UP:
                     requestRender();
         }
-
         mPreviousX = x;
         mPreviousY = y;
+        mPreviousX2 = x2;
+        mPreviousY2 = y2;
         return true;
     }
 
@@ -143,7 +168,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
             intent.putExtra(getContext().getString(R.string.intent_extra_bitmap_file), tmpFile.getAbsolutePath());
             getContext().startActivity(intent);
         } catch (IOException e) {
-            Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();;
+            Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -194,7 +219,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
         if ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
             Log.e(MyGLSurfaceView.class.getName(), glOperation + ": glError " + error);
             if (Utils.DEBUG) {
-                throw new RuntimeException(String.format("%s: glError %d", glOperation, error));
+                throw new RuntimeException(String.format(Locale.US, "%s: glError %d", glOperation, error));
             }
         }
     }
@@ -218,7 +243,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
             capturing = false;
         }
 
-        public void captureSurface() {
+        void captureSurface() {
             capturing = true;
         }
 
