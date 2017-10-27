@@ -53,6 +53,8 @@ public final class FractalRegistry {
 			String name = jsonObject.get("name").getAsString();
 			String settingsString = jsonObject.get("settings") != null ?
 					jsonObject.get("settings").toString() : null;
+			String thumbPath = jsonObject.get("thumbnail") != null ?
+					jsonObject.get("thumbnail").getAsString() : null;
 			String[] loadedShaders = null;
 			Class cls = null;
 			try {
@@ -86,6 +88,9 @@ public final class FractalRegistry {
                 }
                 Fractal fractal = (Fractal)cls.newInstance();
 				fractal.setName(name);
+				if (thumbPath != null) {
+					fractal.setThumbPath(thumbPath);
+				}
 				if (fractal instanceof GLSLFractal) {
 					((GLSLFractal)fractal).setShaders(loadedShaders);
 				}
