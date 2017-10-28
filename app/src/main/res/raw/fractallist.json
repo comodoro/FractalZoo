@@ -3,7 +3,9 @@
     "name": "Mandelbrot",
     "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"mandelbrot",
-    "settings":
+    "palette":"com.draabek.fractal.palette.CopperPalette",
+    "thumbnail": "mandelbrot_thumb.png",
+    "parameters":
     {
       "centerX": 0.7, "centerY":0.5,
       "scale": 0.5,
@@ -15,7 +17,7 @@
     "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders": "roentgen",
     "thumbnail": "roentgen_thumb.png",
-    "settings": {
+    "parameters": {
       "centerX": 0.0,
       "centerY": 0.0
     }
@@ -24,7 +26,8 @@
     "name": "Julia",
     "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"julia",
-    "settings":
+    "thumbnail": "julia_thumb.png",
+    "parameters":
     {
       "centerX": 0.5, "centerY": 0.5,
       "scale": 0.3,
@@ -35,7 +38,8 @@
     "name": "Fleshy",
     "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"fleshy",
-    "settings":
+    "thumbnail": "fleshy_thumb.png",
+    "parameters":
     {
       "centerX": 0.5, "centerY": 0.5
     }
@@ -44,7 +48,8 @@
     "name": "PChaos",
     "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"pchaos",
-    "settings":
+    "thumbnail": "pchaos_thumb.png",
+    "parameters":
     {
       "centerX": 0.5, "centerY": 0.5
     }
@@ -53,7 +58,8 @@
     "name": "Burner",
     "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"burner",
-    "settings":
+    "thumbnail": "burner_thumb.png",
+    "parameters":
     {
       "centerX": 0.0, "centerY": 0.0
     }
@@ -61,7 +67,8 @@
   {
     "name":"Sierpinski Triangle",
     "class":"com.draabek.fractal.canvas.instance.SierpinskiTriangle",
-    "settings":
+    "thumbnail": "sierpinski_triangle_thumb.png",
+    "parameters":
     {
       "iterations": 5.0,
       "centerX": 0.0, "centerY": 0.0
@@ -70,7 +77,8 @@
   {
     "name":"Fractal Tree",
     "class":"com.draabek.fractal.canvas.instance.FractalTree",
-    "settings":
+    "thumbnail": "fractal_tree_thumb.png",
+    "parameters":
     {
       "angle": 20.0,
       "iterations": 10.0,
@@ -78,8 +86,9 @@
     }
   },  {
   "name":"Pythagoras Tree",
-  "class":"com.draabek.fractal.canvas.PythagorasTree",
-  "settings":
+  "class":"com.draabek.fractal.canvas.instance.PythagorasTree",
+  "thumbnail": "pythagoras_tree_thumb.png",
+  "parameters":
   {
     "iterations": 10.0,
     "centerX": 0.0, "centerY": 0.0
@@ -89,7 +98,8 @@
     "name":"Sierpinski Carpet",
     "class":"com.draabek.fractal.gl.GLSLFractal",
     "shaders": "sierpinski_carpet",
-    "settings":
+    "thumbnail": "sierpinski_carpet_thumb.png",
+    "parameters":
     {
       "iterations": 10.0,
       "centerX": -0.5,

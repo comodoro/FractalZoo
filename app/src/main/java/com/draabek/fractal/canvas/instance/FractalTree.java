@@ -14,10 +14,10 @@ import com.draabek.fractal.canvas.CanvasFractal;
 public class FractalTree extends CanvasFractal {
     @Override
     public void draw(Canvas canvas) {
-        int iterations = this.getSettings().get("iterations").intValue();
-        float centerX = this.getSettings().get("centerX");
-        float centerY = this.getSettings().get("centerY");
-        float angleInc = this.getSettings().get("angle");
+        int iterations = this.getParameters().get("iterations").intValue();
+        float centerX = this.getParameters().get("centerX");
+        float centerY = this.getParameters().get("centerY");
+        float angleInc = this.getParameters().get("angle");
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
@@ -32,11 +32,11 @@ public class FractalTree extends CanvasFractal {
 
     private void drawTree(Canvas canvas, Paint paint, int x1, int y1, float angle, int depth) {
         if (depth == 0) return;
-        int iterations = this.getSettings().get("iterations").intValue();
+        int iterations = this.getParameters().get("iterations").intValue();
         int x2 = x1 + (int) (Math.cos(Math.toRadians(angle)) * depth * 50.0/iterations);
         int y2 = y1 + (int) (Math.sin(Math.toRadians(angle)) * depth * 50.0/iterations);
         canvas.drawLine(x1, y1, x2, y2, paint);
-        float angleInc = this.getSettings().get("angle");
+        float angleInc = this.getParameters().get("angle");
         drawTree(canvas, paint, x2, y2, angle - angleInc, depth - 1);
         drawTree(canvas, paint, x2, y2, angle + angleInc, depth - 1);
     }

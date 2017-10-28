@@ -15,9 +15,9 @@ import com.draabek.fractal.canvas.CanvasFractal;
 public class PythagorasTree extends CanvasFractal {
     @Override
     public void draw(Canvas canvas) {
-        int iterations = this.getSettings().get("iterations").intValue();
-        float centerX = this.getSettings().get("centerX");
-        float centerY = this.getSettings().get("centerY");
+        int iterations = this.getParameters().get("iterations").intValue();
+        float centerX = this.getParameters().get("centerX");
+        float centerY = this.getParameters().get("centerY");
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);

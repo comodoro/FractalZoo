@@ -112,27 +112,27 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
                     float dx = x - mPreviousX;
                     float dy = y - mPreviousY;
                     Float fractalX = FractalRegistry.getInstance().getCurrent()
-                            .getSettings().get("centerX");
+                            .getParameters().get("centerX");
                     Float fractalY = FractalRegistry.getInstance().getCurrent()
-                            .getSettings().get("centerY");
+                            .getParameters().get("centerY");
                     if ((fractalX == null) && (fractalY == null)) {
                         Log.i(this.getClass().getName(), "Fractal has no movable center");
                     } else {
                         if (fractalX != null) {
                             FractalRegistry.getInstance().getCurrent()
-                                    .getSettings().put("centerX", fractalX + dx * TOUCH_SCALE_FACTOR);
+                                    .getParameters().put("centerX", fractalX + dx * TOUCH_SCALE_FACTOR);
                             Log.v(this.getClass().getName(), "X shift: " + dx * TOUCH_SCALE_FACTOR);
                         }
                         if (fractalY != null) {
                             //- instead of + because OpenGL has y axis upside down
                             FractalRegistry.getInstance().getCurrent()
-                                    .getSettings().put("centerY", fractalY - dy * TOUCH_SCALE_FACTOR);
+                                    .getParameters().put("centerY", fractalY - dy * TOUCH_SCALE_FACTOR);
                             Log.v(this.getClass().getName(), "Y shift: " + dy * TOUCH_SCALE_FACTOR);
                         }
                     }
                 } else if ((e.getPointerCount() == 2) && ((mPreviousY2 > 0) || (mPreviousX2 > 0))) {
                     Float scale = FractalRegistry.getInstance().getCurrent()
-                            .getSettings().get("scale");
+                            .getParameters().get("scale");
                     if (scale == null) {
                         Log.i(this.getClass().getName(), "Fractal is not scaleable");
                     } else {
@@ -141,7 +141,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
                                 (mPreviousY - mPreviousY2) * (mPreviousY - mPreviousY2));
                         float newDist = (float) Math.sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
                         if (oldDist > 0) {
-                            FractalRegistry.getInstance().getCurrent().getSettings().put("scale",
+                            FractalRegistry.getInstance().getCurrent().getParameters().put("scale",
                                     scale * newDist / oldDist);
                             Log.v(this.getClass().getName(), "Scale: " + scale * newDist / oldDist);
                         }

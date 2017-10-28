@@ -7,10 +7,10 @@ public abstract class Fractal {
 	protected String name = "";
 	protected String thumbPath;
 
-	protected Map<String, Float> settings;
+	protected Map<String, Float> parameters;
 
 	public Fractal() {
-		settings = new Hashtable<String, Float>();
+		parameters = new Hashtable<>();
 	}
 
 	public Fractal(String name) {
@@ -19,7 +19,7 @@ public abstract class Fractal {
 	}
 
 	public void updateSettings(Map<String, Float> newSettings) {
-		this.settings.putAll(newSettings);
+		this.parameters.putAll(newSettings);
 	}
 
 	public String getName() {
@@ -34,8 +34,8 @@ public abstract class Fractal {
 		return name;
 	}
 
-	public Map<String, Float> getSettings() {
-		return settings;
+	public Map<String, Float> getParameters() {
+		return parameters;
 	}
 
 	public String getThumbPath() { return thumbPath;}

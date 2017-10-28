@@ -109,7 +109,7 @@ public class Square {
                 throw new RuntimeException("Failed to compile shader!" + '\n' + infoLog);
             }
         }
-        if (FractalRegistry.getInstance().getCurrent().getSettings().get("glBuffer") != null) {
+        if (FractalRegistry.getInstance().getCurrent().getParameters().get("glBuffer") != null) {
             GLES20.glGenFramebuffers( 1, extraBufferId, 0 );
             GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, extraBufferId[0]);
         }
@@ -137,7 +137,7 @@ public class Square {
                 vertexStride, vertexBuffer);
 
         // Get rendering parameters and apply as uniforms
-        Map<String, Float> settings = currentFractal.getSettings();
+        Map<String, Float> settings = currentFractal.getParameters();
         for (String setting : settings.keySet()) {
             int uniformHandle = GLES20.glGetUniformLocation(mProgram, setting);
             if (uniformHandle == -1) {

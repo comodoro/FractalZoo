@@ -3,6 +3,7 @@ package com.draabek.fractal.fractal;
 import android.content.Context;
 import android.util.Log;
 
+import com.draabek.fractal.Utils;
 import com.draabek.fractal.gl.GLSLFractal;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -44,6 +45,41 @@ public final class FractalRegistry {
 		return fractals;
 	}
 
+	private String[] loadShaders(Context ctx, String shaderPath) {
+		if (shaderPath == null) {
+			return null;
+		}
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					ctx.getAssets().open(shaderPath + "_fragment.glsl")
+			));
+			StringBuffer fragmentShader = new StringBuffer();
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				fragmentShader.append(line).append("\n");
+			}
+			InputStream vertexIS = null;
+			try {
+				vertexIS = ctx.getAssets().open(shaderPath + "_vertex.glsl");
+			} catch(IOException e) {
+				Log.d(LOG_KEY, "Using default vertex shader for " + shaderPath);
+				vertexIS = ctx.getAssets().open("default_vertex.glsl");
+			}
+			if (vertexIS == null) {//fallback to simplest vertex shader
+				Log.e(LOG_KEY, "Not even default vertex shader found for fractal " + shaderPath);
+			}
+			br = new BufferedReader(new InputStreamReader(vertexIS));
+			StringBuffer vertexShader = new StringBuffer();
+			while ((line = br.readLine()) != null) {
+				vertexShader.append(line).append("\n");
+			}
+			return new String[] {vertexShader.toString(), fragmentShader.toString()};
+		} catch(IOException e) {
+			Log.w(LOG_KEY, "IOException loading fractal shaders for" + shaderPath);
+			return null;
+		}
+	}
+
 	public void init(Context ctx, JsonArray props) {
 		if (initialized) return;
 		for (JsonElement element : props) {
@@ -51,47 +87,31 @@ public final class FractalRegistry {
 			String clazz = jsonObject.get("class").getAsString();
             String shaders = jsonObject.get("shaders") != null ? jsonObject.get("shaders").getAsString() : null;
 			String name = jsonObject.get("name").getAsString();
-			String settingsString = jsonObject.get("settings") != null ?
-					jsonObject.get("settings").toString() : null;
+			String settingsString = jsonObject.get("parameters") != null ?
+					jsonObject.get("parameters").toString() : null;
 			String thumbPath = jsonObject.get("thumbnail") != null ?
 					jsonObject.get("thumbnail").getAsString() : null;
-			String[] loadedShaders = null;
+			String paletteString = jsonObject.get("palette") != null ?
+					jsonObject.get("palette").getAsString() : null;
+			String[] loadedShaders = loadShaders(ctx, shaders);
 			Class cls = null;
 			try {
                 cls = Class.forName(clazz);
 				//this is frontal lobotomy
-                if (shaders != null) {
-					BufferedReader br = new BufferedReader(new InputStreamReader(
-							ctx.getAssets().open(shaders + "_fragment.glsl")
-					));
-					StringBuffer fragmentShader = new StringBuffer();
-					String line = null;
-					while ((line = br.readLine()) != null) {
-						fragmentShader.append(line).append("\n");
-					}
-					InputStream vertexIS = null;
-					try {
-						vertexIS = ctx.getAssets().open(shaders + "_vertex.glsl");
-					} catch(IOException e) {
-						Log.d(LOG_KEY, "Using default vertex shader for fractal " + clazz);
-						vertexIS = ctx.getAssets().open("default_vertex.glsl");
-					}
-					if (vertexIS == null) {//fallback to simplest vertex shader
-						Log.e(LOG_KEY, "Not even default vertex shader found for fractal " + clazz);
-					}
-					br = new BufferedReader(new InputStreamReader(vertexIS));
-					StringBuffer vertexShader = new StringBuffer();
-					while ((line = br.readLine()) != null) {
-						vertexShader.append(line).append("\n");
-					}
-					loadedShaders = new String[] {vertexShader.toString(), fragmentShader.toString()};
-                }
                 Fractal fractal = (Fractal)cls.newInstance();
 				fractal.setName(name);
 				if (thumbPath != null) {
 					fractal.setThumbPath(thumbPath);
 				}
 				if (fractal instanceof GLSLFractal) {
+					if (loadedShaders == null) {
+						if (Utils.DEBUG) {
+							throw new RuntimeException("No shaders loaded for " + fractal);
+						} else {
+							Log.e(LOG_KEY, "No shaders loaded for " + fractal);
+							continue;
+						}
+					}
 					((GLSLFractal)fractal).setShaders(loadedShaders);
 				}
 				if (settingsString != null) {
@@ -109,8 +129,6 @@ public final class FractalRegistry {
 				//TODO different on debug
 				throw new RuntimeException(e);
 				//Log.w(LOG_KEY, "Cannot instantiate fractal class " + clazz);
-			} catch(IOException e) {
-				Log.w(LOG_KEY, "IOException loading fractal " + clazz);
 			}
 		}
 		initialized = true;
