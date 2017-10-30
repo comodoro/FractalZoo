@@ -100,7 +100,7 @@
   "class":"com.draabek.fractal.canvas.instance.KochSnowflake",
   "settings":
   {
-    "iterations": 1.0,
+    "iterations": 5.0,
     "centerX": 0.0, "centerY": 0.0
   }
 }
