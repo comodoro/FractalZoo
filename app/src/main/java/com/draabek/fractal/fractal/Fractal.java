@@ -5,6 +5,7 @@ import java.util.Map;
 
 public abstract class Fractal {
 	protected String name = "";
+	protected String thumbPath;
 
 	protected Map<String, Float> settings;
 
@@ -37,5 +38,9 @@ public abstract class Fractal {
 		return settings;
 	}
 
+	public String getThumbPath() { return thumbPath;}
 
+	public void setThumbPath(String thumbPath) {
+		this.thumbPath = thumbPath;
+	}
 }
