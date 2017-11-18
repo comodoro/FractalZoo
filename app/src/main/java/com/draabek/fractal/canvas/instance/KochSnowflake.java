@@ -3,7 +3,6 @@ package com.draabek.fractal.canvas.instance;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 
 import com.draabek.fractal.canvas.CanvasFractal;
 
@@ -20,9 +19,9 @@ public class KochSnowflake extends CanvasFractal {
     @Override
     public void draw(Canvas _canvas) {
         canvas = _canvas;
-        int iterations = this.getSettings().get("iterations").intValue();
-        float centerX = this.getSettings().get("centerX");
-        float centerY = this.getSettings().get("centerY");
+        int iterations = this.getParameters().get("iterations").intValue();
+        float centerX = this.getParameters().get("centerX");
+        float centerY = this.getParameters().get("centerY");
         paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.FILL);
