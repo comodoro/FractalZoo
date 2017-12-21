@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class FractalRegistry {
@@ -24,7 +25,7 @@ public final class FractalRegistry {
 	private Map<String, Fractal>  fractals;
 	private Fractal currentFractal = null;
 	private FractalRegistry() {
-		fractals = new HashMap<String, Fractal>();
+		fractals = new LinkedHashMap<String, Fractal>();
 	}
 	private boolean initialized = false;
 
