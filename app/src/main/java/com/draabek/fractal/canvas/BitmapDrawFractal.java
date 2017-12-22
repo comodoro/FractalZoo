@@ -14,7 +14,7 @@ public abstract class BitmapDrawFractal extends CpuFractal {
         throw new UnsupportedOperationException();
     }
 
-    public abstract Bitmap redrawBitmap(Bitmap bitmap, RectF rect, boolean portrait);
+    public abstract Bitmap redrawBitmap(Bitmap bitmap, RectF rect);
     @Deprecated
-    public abstract Bitmap redrawBitmapPart(Bitmap bitmap, RectF rect, boolean portrait, Rect part);
+    public abstract Bitmap redrawBitmapPart(Bitmap bitmap, RectF rect, Rect part);
 }

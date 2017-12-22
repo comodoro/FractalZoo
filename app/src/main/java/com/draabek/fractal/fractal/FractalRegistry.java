@@ -25,7 +25,7 @@ public final class FractalRegistry {
 	private Map<String, Fractal>  fractals;
 	private Fractal currentFractal = null;
 	private FractalRegistry() {
-		fractals = new LinkedHashMap<String, Fractal>();
+		fractals = new LinkedHashMap<>();
 	}
 	private boolean initialized = false;
 
@@ -54,12 +54,12 @@ public final class FractalRegistry {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					ctx.getAssets().open(shaderPath + "_fragment.glsl")
 			));
-			StringBuffer fragmentShader = new StringBuffer();
-			String line = null;
+			StringBuilder fragmentShader = new StringBuilder();
+			String line;
 			while ((line = br.readLine()) != null) {
 				fragmentShader.append(line).append("\n");
 			}
-			InputStream vertexIS = null;
+			InputStream vertexIS;
 			try {
 				vertexIS = ctx.getAssets().open(shaderPath + "_vertex.glsl");
 			} catch(IOException e) {
@@ -68,9 +68,10 @@ public final class FractalRegistry {
 			}
 			if (vertexIS == null) {//fallback to simplest vertex shader
 				Log.e(LOG_KEY, "Not even default vertex shader found for fractal " + shaderPath);
+				return null;
 			}
 			br = new BufferedReader(new InputStreamReader(vertexIS));
-			StringBuffer vertexShader = new StringBuffer();
+			StringBuilder vertexShader = new StringBuilder();
 			while ((line = br.readLine()) != null) {
 				vertexShader.append(line).append("\n");
 			}
@@ -95,7 +96,7 @@ public final class FractalRegistry {
 			String paletteString = jsonObject.get("palette") != null ?
 					jsonObject.get("palette").getAsString() : null;
 			String[] loadedShaders = loadShaders(ctx, shaders);
-			Class cls = null;
+			Class cls;
 			try {
                 cls = Class.forName(clazz);
 				//this is frontal lobotomy

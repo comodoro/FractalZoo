@@ -1,9 +1,9 @@
 package com.draabek.fractal.canvas;
 
 /**
- * Native rendering code. Not used anymore, superseded by OpenGL
+ * Native rendering code. Superseded by GLSL where possible
  */
-@Deprecated
+
 public class NativeLib {
 
 	static {
@@ -12,25 +12,11 @@ public class NativeLib {
 
 	public static native void redrawMandelbrot(int[] array, 
 			int width, int height, 
-			double left, double top, double right, double bottom, 
-			boolean portrait,
+			double left, double top, double right, double bottom,
 			int maxiter);
 	public static native void redrawMandelbrotPart(int[] array, 
 			int width, int height,
 			double left, double top, double right, double bottom, 
-			boolean portrait,
-			int maxiter, 
-			int x, int y, int x2, int y2);
-
-	public static native void redrawForestFire(int[] array, 
-			int width, int height, 
-			int forest_color, int burnt_color, int fire_color,
-			double ignite_param, double spread_param, double burnt_param, double fire_duration, double burnt_duration, 
-			boolean portrait);
-	public static native void redrawForestFirePart(int[] array, 
-			int width, int height, 
-			int forest_color, int burnt_color, int fire_color,
-			double ignite_param, double spread_param, double burnt_param, double fire_duration, double burnt_duration, 
-			boolean portrait,
+			int maxiter,
 			int x, int y, int x2, int y2);
 }

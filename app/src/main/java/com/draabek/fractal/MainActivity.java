@@ -3,8 +3,6 @@ package com.draabek.fractal;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -45,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private FractalViewHandler currentView;
     private SharedPreferences prefs;
     private ProgressBar progressBar;
-    private boolean running;
     public MainActivity() {
     }
 
@@ -55,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        running = true;
         Reader jsonReader = new InputStreamReader(this.getResources().openRawResource(R.raw.fractallist));
         JsonParser parser = new JsonParser();
         JsonElement fractalElement = parser.parse(jsonReader);
@@ -74,37 +70,8 @@ public class MainActivity extends AppCompatActivity {
         unveilCorrectView(FractalRegistry.getInstance().getCurrent().getName());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (MainActivity.this.running) {
-                    final int desiredVisibility = currentView.isRendering() ? View.VISIBLE : View.INVISIBLE;
-                    if (progressBar.getVisibility() != desiredVisibility) {
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.setVisibility(desiredVisibility);
-                                progressBar.getParent().requestLayout();
-                                if (Utils.DEBUG) {
-                                    if (desiredVisibility == View.VISIBLE) {
-                                        Log.d(LOG_KEY, "Bringing ProgressBar to front");
-                                    }
-                                    else {
-                                        int d = Log.d(LOG_KEY, "Hiding ProgressBar");
-                                    }
-                                }
-                            }
-                        });
-                    }
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
     }
 
     @Override

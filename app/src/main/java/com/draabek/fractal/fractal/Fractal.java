@@ -1,5 +1,7 @@
 package com.draabek.fractal.fractal;
 
+import android.support.annotation.NonNull;
+
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -22,11 +24,11 @@ public abstract class Fractal {
 		this.parameters.putAll(newSettings);
 	}
 
-	public String getName() {
+	public @NonNull String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(@NonNull String name) {
 		this.name = name;
 	}
 

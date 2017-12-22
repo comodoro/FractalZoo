@@ -4,7 +4,7 @@ extern "C" {
 #endif
 
 JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbrot
-  (JNIEnv * env, jclass clazz, jintArray bitmapArray, jint width, jint height, jdouble left, jdouble top, jdouble right, jdouble bottom, jboolean portrait, jint maxiter) {
+  (JNIEnv * env, jclass clazz, jintArray bitmapArray, jint width, jint height, jdouble left, jdouble top, jdouble right, jdouble bottom, jint maxiter) {
 		double cr,ci;
 		double zr,zi;
 		double crt;
@@ -23,11 +23,11 @@ JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbro
 			for (j = 0;j < height;j++) {
 				 cr = left + (double)i/width*orig_x_len;
 				 ci = top + (double)j/width*orig_y_len;
-				 if (portrait) {
+				 /*if (portrait) {
 					 double temp = cr;
 					 cr = ci;
 					 ci = temp;
-				 }
+				 }*/
 				 zr = cr;
 				 zi = ci;
 			     for (iter = 0;iter < maxiter;iter++) {
@@ -48,7 +48,7 @@ JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbro
 
 JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbrotPart
 		(JNIEnv * env, jclass clazz, jintArray bitmapArray, jint width, jint height, jdouble left,
-		 jdouble top, jdouble right, jdouble bottom, jboolean portrait, jint maxiter, jint fromX,
+		 jdouble top, jdouble right, jdouble bottom, jint maxiter, jint fromX,
 		jint fromY, jint toX, jint toY) {
 	double cr,ci;
 	double zr,zi;
@@ -68,11 +68,11 @@ JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbro
 		for (j = fromY;j < toY;j++) {
 			cr = left + (double)i/width*orig_x_len;
 			ci = top + (double)j/width*orig_y_len;
-			if (portrait) {
+			/*if (portrait) {
 				double temp = cr;
 				cr = ci;
 				ci = temp;
-			}
+			}*/
 			zr = cr;
 			zi = ci;
 			for (iter = 0;iter < maxiter;iter++) {

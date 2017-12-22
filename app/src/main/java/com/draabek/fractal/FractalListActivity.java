@@ -78,7 +78,7 @@ public class FractalListActivity extends ListActivity {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		Editor editor = prefs.edit();
 		editor.putString(Utils.PREFS_CURRENT_FRACTAL_KEY, fractal.getName());
-		editor.commit();
+		editor.apply();
 		finish();
 	}
 	

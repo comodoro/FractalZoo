@@ -37,12 +37,11 @@ public class KochSnowflake extends CanvasFractal {
         int paddingX = canvas.getWidth()/10;
         int paddingY = canvas.getHeight()/3;
 
-        int firstX = paddingX;
         int secondX = canvas.getWidth() - paddingX;
         int firstY = canvas.getHeight() - paddingY;
         int secondY = canvas.getHeight() - paddingY;
 
-        float dx = secondX - firstX;
+        float dx = secondX - paddingX;
         float dy = secondY - firstY;
 
         int length = (int) Math.sqrt(dx*dx+dy*dy);
@@ -52,16 +51,15 @@ public class KochSnowflake extends CanvasFractal {
 
         float height = (float)(Math.sqrt(2)/2 * length);
 
-        float cx = firstX + dx * 0.5f;
+        float cx = paddingX + dx * 0.5f;
         float cy = firstY + dy * 0.5f;
         float pDirX = -dirY;
-        float pDirY = dirX;
         float thirdX = cx - height * pDirX;
-        float thirdY = cy - height * pDirY;
+        float thirdY = cy - height * dirX;
 
-        drawNewPoint(firstX, firstY, secondX, secondY, iterations);
+        drawNewPoint(paddingX, firstY, secondX, secondY, iterations);
         drawNewPoint(secondX, secondY, thirdX, thirdY, iterations);
-        drawNewPoint(thirdX, thirdY, firstX, firstY, iterations);
+        drawNewPoint(thirdX, thirdY, paddingX, firstY, iterations);
 
 
     }

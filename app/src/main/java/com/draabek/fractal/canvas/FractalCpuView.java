@@ -56,7 +56,6 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	private void init(Context context) {
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
-		this.setOnTouchListener(new MotionTracker());
 		paint = new Paint();
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
@@ -67,6 +66,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 
+	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
 	@Override
 	protected void onDraw(Canvas canvas) {
 		rendering = true;
@@ -82,7 +82,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			}
 			if (fractal instanceof BitmapDrawFractal) {
 				Log.v(LOG_KEY, "Start drawing to buffer");
-				fractalBitmap = ((BitmapDrawFractal)fractal).redrawBitmap(fractalBitmap, position, true);
+				fractalBitmap = ((BitmapDrawFractal)fractal).redrawBitmap(fractalBitmap, position);
 			} else if (fractal instanceof CanvasFractal) {
 				Log.v(LOG_KEY, "Draw to canvas");
 				((CanvasFractal)fractal).draw(bufferCanvas);
@@ -120,7 +120,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		bufferCanvas = null;
 		fractalBitmap = null;
 		//consider apply instead of commit
-		prefs.edit().putString(Utils.PREFS_CURRENT_FRACTAL_KEY, FractalRegistry.getInstance().getCurrent().getName()).commit();
+		prefs.edit().putString(Utils.PREFS_CURRENT_FRACTAL_KEY, FractalRegistry.getInstance().getCurrent().getName()).apply();
 	}
 	
 	public void startTranslate() {
@@ -149,6 +149,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		Log.d(LOG_KEY, "Scale: " + scale);
 	}
 	
+	@SuppressWarnings("SynchronizeOnNonFinalField")
 	public void gestureRedraw(float dx, float dy, float scale) {
 		Log.d(LOG_KEY, "Redrawing gesture");
 		Canvas c = null;
@@ -176,7 +177,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		private boolean isMoveGesture;
 		private boolean isGesture;
 		
-		public void update(MotionEvent evt) {
+		void update(MotionEvent evt) {
 			Log.d(LOG_KEY, "Update on screen touch");
 			float x = evt.getX();
 			float y = evt.getY();
@@ -217,7 +218,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 					float y2 = evt.getY(1);
 					float newDistance = (float)Math.sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
 					if (distance != 0) {
-						float ratio = (float)(newDistance / distance);
+						float ratio = newDistance / distance;
 						scale(ratio);
 					} else {
 						distance = newDistance;
@@ -235,6 +236,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			update(event);
+			v.performClick();
 			return true;
 		}
 		
@@ -256,7 +258,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			intent.putExtra(getContext().getString(R.string.intent_extra_bitmap_file), tmpFile.getAbsolutePath());
 			getContext().startActivity(intent);
 		} catch (IOException e) {
-			Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();;
+			Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 

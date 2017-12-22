@@ -18,7 +18,7 @@ public class Utils {
 
     public static Bitmap getBitmapFromAsset(AssetManager mgr, String path) {
         InputStream is = null;
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         try {
             is = mgr.open(path);
             bitmap = BitmapFactory.decodeStream(is);

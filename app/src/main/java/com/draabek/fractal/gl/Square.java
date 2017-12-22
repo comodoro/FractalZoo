@@ -36,12 +36,11 @@ public class Square {
     private final FloatBuffer vertexBuffer;
     private final ShortBuffer drawListBuffer;
     private int mProgram;
-    private int mPositionHandle;
     private GLSLFractal currentFractal;
 
     // number of coordinates per vertex in this array
-    static final int COORDS_PER_VERTEX = 3;
-    static float squareCoords[] = {
+    private static final int COORDS_PER_VERTEX = 3;
+    private static float squareCoords[] = {
             -1.0f,  1.0f, 0.0f,   // top right
             -1.0f, -1.0f, 0.0f,   // bottom right
             1.0f, -1.0f, 0.0f,   // bottom left
@@ -49,7 +48,7 @@ public class Square {
 
     private final short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
 
-    private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
+    private static final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
@@ -125,7 +124,7 @@ public class Square {
         GLES20.glUseProgram(mProgram);
 
         // get handle to vertex shader's vPosition member
-        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
+        int mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
 
         // Enable a handle to the square vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);

@@ -138,14 +138,13 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
         return true;
     }
 
-    private boolean saveBitmap(File bitmapTempFile, File path) {
+    private void saveBitmap(File bitmapTempFile, File path) {
         FileChannel sourceChannel = null;
         FileChannel destChannel = null;
         try {
             sourceChannel = new FileInputStream(bitmapTempFile).getChannel();
             destChannel = new FileOutputStream(path).getChannel();
             destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
         } finally{
@@ -160,7 +159,6 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
                 e.printStackTrace();
             }
         }
-        return false;
     }
 
     public boolean storageAvailable() {
