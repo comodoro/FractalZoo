@@ -105,7 +105,21 @@
       "centerX": -0.5,
       "centerY": -0.5
     }
-  },{
+  },
+  {
+    "name":"Collatz Fractal",
+    "class":"com.draabek.fractal.gl.GLSLFractal",
+    "shaders": "collatz",
+    "thumbnail": "collatz_thumb.png",
+    "parameters":
+    {
+      "iterations": 100.0,
+      "centerX": -2.8,
+      "centerY": 0.0,
+      "scale": 0.5
+    }
+  },
+  {
   "name":"Koch Snowflake",
   "class":"com.draabek.fractal.canvas.instance.KochSnowflake",
   "thumbnail": "koch_snowflake_thumb.png",
