@@ -113,7 +113,7 @@
     "thumbnail": "collatz_thumb.png",
     "parameters":
     {
-      "iterations": 100.0,
+      "iterations": 1000.0,
       "centerX": -2.8,
       "centerY": 0.0,
       "scale": 0.5

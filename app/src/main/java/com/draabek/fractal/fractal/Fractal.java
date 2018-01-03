@@ -2,6 +2,8 @@ package com.draabek.fractal.fractal;
 
 import android.support.annotation.NonNull;
 
+import com.draabek.fractal.FractalViewWrapper;
+
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -19,6 +21,8 @@ public abstract class Fractal {
 		this();
 		this.name = name;
 	}
+
+	public abstract Class<? extends FractalViewWrapper> getViewWrapper();
 
 	public void updateSettings(Map<String, Float> newSettings) {
 		this.parameters.putAll(newSettings);

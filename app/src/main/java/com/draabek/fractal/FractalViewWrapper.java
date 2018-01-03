@@ -6,7 +6,7 @@ import android.view.View;
  * Created by Vojta on 04.08.2017.
  */
 
-public interface FractalViewHandler {
+public interface FractalViewWrapper {
     void saveBitmap();
     void setVisibility(int visibility);
     boolean isRendering();

@@ -44,7 +44,8 @@ before_install:
 - curl -L http://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip -O
 - unzip -oq android-ndk-r16b-linux-x86_64.zip
 - rm android-ndk-r16b-linux-x86_64.zip
-- export ANDROID_NDK_HOME=$HOME/android-ndk-r16b- chmod +x gradlew
+- export ANDROID_NDK_HOME=$HOME/android-ndk-r16b
+- chmod +x gradlew
 - echo y | android update sdk --no-ui --all --filter "tool,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository"
 - echo y | $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
 - ./gradlew dependencies || true # DON'T ADD unless you are getting "Install missing components using SDK manager"

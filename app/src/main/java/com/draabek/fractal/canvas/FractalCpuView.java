@@ -17,7 +17,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.draabek.fractal.FractalViewHandler;
+import com.draabek.fractal.FractalViewWrapper;
 import com.draabek.fractal.R;
 import com.draabek.fractal.SaveBitmapActivity;
 import com.draabek.fractal.Utils;
@@ -28,7 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
-public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callback, FractalViewHandler
+public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callback, FractalViewWrapper
 //,GestureDetector.OnDoubleTapListener, GestureDetector.OnGestureListener 
 {
 
@@ -56,15 +56,10 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	private void init(Context context) {
 		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
+		this.setOnTouchListener(new MotionTracker());
 		paint = new Paint();
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
-
-	@Override
-	public View getView() {
-		return this;
-	}
-
 
 	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
 	@Override
@@ -170,7 +165,34 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	public void tap(float x, float y) {
 		Log.d(LOG_KEY, "Single tap at point [" + x + ", " + y + "]");
 	}
-	
+
+	@Override
+	public void saveBitmap() {
+		try {
+			File tmpFile = File.createTempFile("bitmap", "jpg", this.getContext().getCacheDir());
+			fractalBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
+					new FileOutputStream(tmpFile));
+			Intent intent = new Intent(this.getContext(), SaveBitmapActivity.class);
+			intent.setAction(Intent.ACTION_SEND);
+			intent.putExtra(this.getContext().getString(R.string.intent_extra_bitmap_file), tmpFile.getAbsolutePath());
+			this.getContext().startActivity(intent);
+		} catch (IOException e) {
+			Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();;
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public boolean isRendering() {
+		return rendering;
+	}
+
+	@Override
+	public View getView() {
+		return this;
+	}
+
 	class MotionTracker implements OnTouchListener {
 		private float distance;
 		private PointF origin;
@@ -239,121 +261,5 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			v.performClick();
 			return true;
 		}
-		
 	}
-
-	@Override
-	public boolean isRendering() {
-		return rendering;
-	}
-
-	@Override
-	public void saveBitmap() {
-		try {
-			File tmpFile = File.createTempFile("bitmap", "jpg", getContext().getCacheDir());
-			fractalBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
-					new FileOutputStream(tmpFile));
-			Intent intent = new Intent(this.getContext(), SaveBitmapActivity.class);
-			intent.setAction(Intent.ACTION_SEND);
-			intent.putExtra(getContext().getString(R.string.intent_extra_bitmap_file), tmpFile.getAbsolutePath());
-			getContext().startActivity(intent);
-		} catch (IOException e) {
-			Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-		}
-
-
-	}
-
-
-	/*
-	@Override
-	public boolean onDoubleTap(MotionEvent event) {
-		logger.info("onDoubleTap");
-		lastX = event.getX();
-		lastY = event.getY();
-		float w = position.width();
-		float h = position.height();
-		float x = position.left;
-		float y = position.top;
-		logger.info("Rectangle: " + x + ", " + y + ", " + w + ", " + h);
-		position = new RectF(x + lastX - w, y + lastY - h, 2 * w, 2 * h);
-		fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
-		invalidate();
-		return true;
-	}
-
-	@Override
-	public boolean onDoubleTapEvent(MotionEvent arg0) {
-		logger.info("onDoubleTapEvent");
-		return true;
-	}
-
-	@Override
-	public boolean onSingleTapConfirmed(MotionEvent arg0) {
-		logger.info("onSingleTapConfirmed");
-		return false;
-	}
-
-	@Override
-	public boolean onDown(MotionEvent event) {
-		logger.info("onDown");
-		lastX = event.getX();
-		lastY = event.getY();
-		float w = position.width();
-		float h = position.height();
-		float x = position.left;
-		float y = position.top;
-		float normX = x + lastX / getWidth() * w - w/4;
-		float normY = y + lastY / getHeight() * h - h/4;
-		logger.info("Rectangle: " + normX + ", " + normY + ", " + w/2 + ", " + h/2);
-		position = new RectF(normX, normY,
-				w/2, h/2);
-		//fractalBitmap = fractal.redrawBitmap(fractalBitmap, position, true);
-		//invalidate();
-		new RedrawFractalTask().execute((Void[])null);
-		return false;	
-	}
-
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
-		logger.info("onFling");
-		return false;
-	}
-
-	@Override
-	public void onLongPress(MotionEvent e) {
-		logger.info("onLongPress");
-
-	}
-
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
-		logger.info("onScroll");
-		return false;
-	}
-
-	@Override
-	public void onShowPress(MotionEvent e) {
-		logger.info("onShowPress");
-	}
-
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		logger.info("onSingleTapUp");
-		return false;
-	}
-	
-	private class RedrawFractalTask extends AsyncTask<Void, Void, Bitmap> {
-	     protected Bitmap doInBackground(Void... params) {
-	         return fractal.redrawBitmap(fractalBitmap, position, portrait);
-	     }
-
-	     protected void onPostExecute(Bitmap result) {
-	         invalidate();
-	     }
-	 }
-	*/
 }

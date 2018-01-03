@@ -27,7 +27,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.draabek.fractal.FractalViewHandler;
+import com.draabek.fractal.FractalViewWrapper;
 import com.draabek.fractal.R;
 import com.draabek.fractal.SaveBitmapActivity;
 import com.draabek.fractal.Utils;
@@ -49,7 +49,7 @@ import static android.graphics.Bitmap.createBitmap;
  * This view can also be used to capture touch events, such as a user
  * interacting with drawn objects.
  */
-public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler {
+public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper {
 
     private MyGLRenderer mRenderer;
 
@@ -198,6 +198,9 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewHandler
         // add the source code to the shader and compile it
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
+
+        String s = GLES20.glGetShaderInfoLog(shader);
+        if ((s != null) && (!s.equals(""))) Log.d(MyGLSurfaceView.class.getName(), s);
 
         return shader;
     }

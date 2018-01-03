@@ -11,13 +11,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.draabek.fractal.canvas.CpuFractal;
 import com.draabek.fractal.canvas.FractalCpuView;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
-import com.draabek.fractal.gl.GLSLFractal;
 import com.draabek.fractal.gl.MyGLSurfaceView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -25,6 +24,8 @@ import com.google.gson.JsonParser;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 import com.google.android.gms.appindexing.Action;
@@ -38,9 +39,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String CURRENT_FRACTAL_KEY = "current_fractal";
     public static final int CHOOSE_FRACTAL_CODE = 1;
 
-    private MyGLSurfaceView myGLSurfaceView;
+    Map<Class<? extends FractalViewWrapper>, FractalViewWrapper> availableViews;
+    private ViewGroup currentViewContainer;
     private FractalCpuView cpuView;
-    private FractalViewHandler currentView;
+    private FractalViewWrapper currentView;
     private SharedPreferences prefs;
     private ProgressBar progressBar;
     public MainActivity() {
@@ -64,8 +66,13 @@ public class MainActivity extends AppCompatActivity {
                 FractalRegistry.getInstance().get(prefs.getString(Utils.PREFS_CURRENT_FRACTAL_KEY, "Mandelbrot"))
         );
         setContentView(R.layout.activity_main);
-        myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
-        cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
+
+        //UGLY
+        MyGLSurfaceView myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
+        availableViews = new HashMap<>();
+        availableViews.put(myGLSurfaceView.getClass(), myGLSurfaceView);
+        FractalCpuView cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
+        availableViews.put(cpuView.getClass(), cpuView);
         progressBar = (ProgressBar)findViewById(R.id.indeterminateBar);
         unveilCorrectView(FractalRegistry.getInstance().getCurrent().getName());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -113,13 +120,21 @@ public class MainActivity extends AppCompatActivity {
     private void unveilCorrectView(String newFractal) {
         Fractal f = FractalRegistry.getInstance().get(newFractal);
         if (currentView != null) currentView.setVisibility(View.GONE);
-        if (f instanceof CpuFractal) {
-            currentView = cpuView;
-            myGLSurfaceView.setVisibility(View.GONE);
-        } else if (f instanceof GLSLFractal) {
-            currentView = myGLSurfaceView;
-            cpuView.setVisibility(View.GONE);
+        Class<? extends FractalViewWrapper> requiredViewClass = f.getViewWrapper();
+        FractalViewWrapper available = availableViews.get(requiredViewClass);
+        if (available == null) {
+            try {
+                FractalViewWrapper requiredView = requiredViewClass.newInstance();
+                ViewGroup.LayoutParams params = currentView.getView().getLayoutParams();
+                currentViewContainer.addView(requiredView.getView(), params);
+                available = requiredView;
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
         }
+        }
+        currentView = available;
         FractalRegistry.getInstance().setCurrent(f);
         if (Utils.DEBUG) {
             Log.d(LOG_KEY, f.getName() + " is current");

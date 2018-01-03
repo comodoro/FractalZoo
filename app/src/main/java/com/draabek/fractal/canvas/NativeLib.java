@@ -10,13 +10,22 @@ public class NativeLib {
 		System.loadLibrary("fractalzoo-jni");
 	}
 
-	public static native void redrawMandelbrot(int[] array, 
-			int width, int height, 
-			double left, double top, double right, double bottom,
-			int maxiter);
-	public static native void redrawMandelbrotPart(int[] array, 
-			int width, int height,
-			double left, double top, double right, double bottom, 
-			int maxiter,
-			int x, int y, int x2, int y2);
+	public static native void redrawMandelbrot(int[] array,
+											   int width, int height,
+											   double left, double top, double right, double bottom,
+											   int maxiter);
+	public static native void redrawMandelbrotPart(int[] array,
+												   int width, int height,
+												   double left, double top, double right, double bottom,
+												   int maxiter,
+												   int x, int y, int x2, int y2);
+	public static native void redrawLorenz(int[] array,
+											   int width, int height,
+											   double left, double top, double right, double bottom,
+											   int maxiter);
+	public static native void redrawLorenzPart(int[] array,
+											   int width, int height,
+											   double left, double top, double right, double bottom,
+											   int maxiter,
+											   int x, int y, int x2, int y2);
 }

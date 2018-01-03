@@ -23,11 +23,6 @@ JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbro
 			for (j = 0;j < height;j++) {
 				 cr = left + (double)i/width*orig_x_len;
 				 ci = top + (double)j/width*orig_y_len;
-				 /*if (portrait) {
-					 double temp = cr;
-					 cr = ci;
-					 ci = temp;
-				 }*/
 				 zr = cr;
 				 zi = ci;
 			     for (iter = 0;iter < maxiter;iter++) {
@@ -68,11 +63,6 @@ JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbro
 		for (j = fromY;j < toY;j++) {
 			cr = left + (double)i/width*orig_x_len;
 			ci = top + (double)j/width*orig_y_len;
-			/*if (portrait) {
-				double temp = cr;
-				cr = ci;
-				ci = temp;
-			}*/
 			zr = cr;
 			zi = ci;
 			for (iter = 0;iter < maxiter;iter++) {
@@ -88,6 +78,21 @@ JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawMandelbro
 			color = color | color << 8 | color << 16 | 0xff000000;
 			bitmap[i + j*width] = color;
 		}
+	(*env)->ReleaseIntArrayElements(env, bitmapArray, bitmap, 0);
+}
+
+JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawLorenz
+		(JNIEnv * env, jclass clazz, jintArray bitmapArray, jint width, jint height,
+		 jdouble left, jdouble top, jdouble right, jdouble bottom, jint maxiter) {
+	jint *bitmap = (*env)->GetIntArrayElements(env, bitmapArray, 0);
+	(*env)->ReleaseIntArrayElements(env, bitmapArray, bitmap, 0);
+}
+
+JNIEXPORT void JNICALL Java_com_draabek_fractal_canvas_NativeLib_redrawLorenzPart
+		(JNIEnv * env, jclass clazz, jintArray bitmapArray, jint width, jint height, jdouble left,
+		 jdouble top, jdouble right, jdouble bottom, jint maxiter, jint fromX,
+		 jint fromY, jint toX, jint toY) {
+	jint *bitmap = (*env)->GetIntArrayElements(env, bitmapArray, 0);
 	(*env)->ReleaseIntArrayElements(env, bitmapArray, bitmap, 0);
 }
 

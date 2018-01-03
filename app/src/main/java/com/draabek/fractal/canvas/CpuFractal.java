@@ -1,5 +1,6 @@
 package com.draabek.fractal.canvas;
 
+import com.draabek.fractal.FractalViewWrapper;
 import com.draabek.fractal.fractal.Fractal;
 
 /**
@@ -7,4 +8,9 @@ import com.draabek.fractal.fractal.Fractal;
  */
 
 public class CpuFractal extends Fractal {
+
+    @Override
+    public Class<? extends FractalViewWrapper> getViewWrapper() {
+        return FractalCpuView.class;
+}
 }

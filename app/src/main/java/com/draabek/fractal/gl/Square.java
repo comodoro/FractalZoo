@@ -32,6 +32,8 @@ import java.util.Map;
  * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
  */
 public class Square {
+
+    static final String LOG_KEY = Square.class.getName();
     private final int[] extraBufferId = new int[1];
     private final FloatBuffer vertexBuffer;
     private final ShortBuffer drawListBuffer;
@@ -103,10 +105,16 @@ public class Square {
             Log.e(this.getClass().getName(), "Could not link program");
             String infoLog = GLES20.glGetShaderInfoLog(mProgram);
             GLES20.glDeleteProgram(mProgram);
+            GLES20.glFlush();
             mProgram = 0;
-            if (Utils.DEBUG) {
-                throw new RuntimeException("Failed to compile shader!" + '\n' + infoLog);
-            }
+            String msg = String.format("Failed to compile shader for %s\n%s",
+                    FractalRegistry.getInstance().getCurrent().getName(), infoLog);
+            Log.e(LOG_KEY,  msg);
+            //this sequence is strange, hopefully there will not be infinite loop
+            FractalRegistry.getInstance().setCurrent(
+                    FractalRegistry.getInstance().get("Mandelbrot")
+            );
+            updateCurrentFractal();
         }
         if (FractalRegistry.getInstance().getCurrent().getParameters().get("glBuffer") != null) {
             GLES20.glGenFramebuffers( 1, extraBufferId, 0 );
@@ -160,7 +168,7 @@ public class Square {
             }
         }
         GLES20.glUniform2f(resolutionHandle, width, height);
-        MyGLSurfaceView.checkGlError("glUniform1f");
+        MyGLSurfaceView.checkGlError("glUniform2f");
 
         // Draw the square
         GLES20.glDrawElements(
