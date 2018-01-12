@@ -50,6 +50,7 @@ public final class FractalRegistry {
 		if (shaderPath == null) {
 			return null;
 		}
+		if (!(shaderPath.contains("/"))) shaderPath = "shaders/" + shaderPath;
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					ctx.getAssets().open(shaderPath + "_fragment.glsl")
@@ -64,7 +65,7 @@ public final class FractalRegistry {
 				vertexIS = ctx.getAssets().open(shaderPath + "_vertex.glsl");
 			} catch(IOException e) {
 				Log.d(LOG_KEY, "Using default vertex shader for " + shaderPath);
-				vertexIS = ctx.getAssets().open("default_vertex.glsl");
+				vertexIS = ctx.getAssets().open("shaders/default_vertex.glsl");
 			}
 			if (vertexIS == null) {//fallback to simplest vertex shader
 				Log.e(LOG_KEY, "Not even default vertex shader found for fractal " + shaderPath);
@@ -103,7 +104,7 @@ public final class FractalRegistry {
                 Fractal fractal = (Fractal)cls.newInstance();
 				fractal.setName(name);
 				if (thumbPath != null) {
-					fractal.setThumbPath(thumbPath);
+					fractal.setThumbPath("thumbs/" + thumbPath);
 				}
 				if (fractal instanceof GLSLFractal) {
 					if (loadedShaders == null) {
