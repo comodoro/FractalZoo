@@ -13,6 +13,19 @@
     }
   },
   {
+    "name": "Burning Ship",
+    "class": "com.draabek.fractal.gl.GLSLFractal",
+    "shaders":"burning_ship",
+    "palette":"com.draabek.fractal.palette.CopperPalette",
+    "thumbnail": "burning_ship_thumb.png",
+    "parameters":
+    {
+      "centerX": 0.7, "centerY":0.5,
+      "scale": 0.5,
+      "iterations": 256
+    }
+  },
+  {
     "name": "Roentgen",
     "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders": "roentgen",
