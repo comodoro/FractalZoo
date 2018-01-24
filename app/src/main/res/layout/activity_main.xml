@@ -14,7 +14,7 @@
         style="?android:attr/progressBarStyleLarge"
         />
 
-    <com.draabek.fractal.gl.MyGLSurfaceView
+    <com.draabek.fractal.gl.RenderImageView
         android:id="@+id/fractalGlView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

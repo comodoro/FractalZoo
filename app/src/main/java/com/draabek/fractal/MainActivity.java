@@ -11,13 +11,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.draabek.fractal.canvas.FractalCpuView;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
-import com.draabek.fractal.gl.MyGLSurfaceView;
+import com.draabek.fractal.gl.RenderImageView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -40,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int CHOOSE_FRACTAL_CODE = 1;
 
     Map<Class<? extends FractalViewWrapper>, FractalViewWrapper> availableViews;
-    private ViewGroup currentViewContainer;
-    private FractalCpuView cpuView;
     private FractalViewWrapper currentView;
     private SharedPreferences prefs;
     private ProgressBar progressBar;
@@ -68,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //UGLY
-        MyGLSurfaceView myGLSurfaceView = (MyGLSurfaceView) findViewById(R.id.fractalGlView);
+        RenderImageView renderImageView = (RenderImageView) findViewById(R.id.fractalGlView);
         availableViews = new HashMap<>();
-        availableViews.put(myGLSurfaceView.getClass(), myGLSurfaceView);
+        availableViews.put(renderImageView.getClass(), renderImageView);
         FractalCpuView cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
         availableViews.put(cpuView.getClass(), cpuView);
         progressBar = (ProgressBar)findViewById(R.id.indeterminateBar);
@@ -111,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
     public boolean attemptSave() {
         currentView.saveBitmap();
         return true;
@@ -123,16 +119,7 @@ public class MainActivity extends AppCompatActivity {
         Class<? extends FractalViewWrapper> requiredViewClass = f.getViewWrapper();
         FractalViewWrapper available = availableViews.get(requiredViewClass);
         if (available == null) {
-            try {
-                FractalViewWrapper requiredView = requiredViewClass.newInstance();
-                ViewGroup.LayoutParams params = currentView.getView().getLayoutParams();
-                currentViewContainer.addView(requiredView.getView(), params);
-                available = requiredView;
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-        }
+            throw new RuntimeException("No appropriate view available");
         }
         currentView = available;
         FractalRegistry.getInstance().setCurrent(f);

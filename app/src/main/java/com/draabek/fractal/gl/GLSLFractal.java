@@ -11,7 +11,7 @@ public class GLSLFractal extends Fractal {
 
 	@Override
 	public Class<? extends FractalViewWrapper> getViewWrapper() {
-		return MyGLSurfaceView.class;
+		return RenderImageView.class;
 	}
 
 	public String[] getShaders() {

@@ -271,7 +271,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
 
             // Draw square
             mSquare.draw(width, height);
-
+            //MyGLSurfaceView.this.post(() -> MyGLSurfaceView.this.setVisibility(VISIBLE));
             if (capturing) {
                 MyGLSurfaceView.this.captureBitmapCallback(saveCurrentSurface(width, height));
                 capturing = false;

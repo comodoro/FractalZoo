@@ -114,7 +114,7 @@ public class Square {
             FractalRegistry.getInstance().setCurrent(
                     FractalRegistry.getInstance().get("Mandelbrot")
             );
-            updateCurrentFractal();
+            //updateCurrentFractal();
         }
         if (FractalRegistry.getInstance().getCurrent().getParameters().get("glBuffer") != null) {
             GLES20.glGenFramebuffers( 1, extraBufferId, 0 );
