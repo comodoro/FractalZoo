@@ -25,8 +25,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.nio.IntBuffer;
 
+import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.os.Environment.getExternalStoragePublicDirectory;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -78,8 +81,7 @@ public class GLGesturesTest {
 
         Assert.assertEquals(buffer1.length, buffer2.length);
         double diff = cumulativeDifference(int2rgb(buffer1), int2rgb(buffer2));
-        double zero = cumulativeDifference(int2rgb(buffer1), int2rgb(buffer1));
-        Assert.assertEquals(diff > 1.0, true);
+        Assert.assertEquals(true, diff > 1.0);
         fractalView = onView(
                 allOf(withId(R.id.fractalGlView), isDisplayed()));
         fractalView.perform(swipeUp());
@@ -88,7 +90,7 @@ public class GLGesturesTest {
 
         Assert.assertEquals(buffer1.length, buffer3.length);
         double diff2 = cumulativeDifference(int2rgb(buffer1), int2rgb(buffer3));
-        Assert.assertEquals(diff2 < 1.0, true);
+        Assert.assertEquals(true, diff2 < 1.0);
     }
 
     private int[] saveBuffer() {
@@ -111,7 +113,9 @@ public class GLGesturesTest {
                                                 0)),
                                 1),
                         isDisplayed()));
-        String savedFile = "/storage/sdcard/Pictures/Mandelbrot-test-" + System.currentTimeMillis() + ".jpg";
+        String savedFile = (new File(getExternalStoragePublicDirectory(DIRECTORY_PICTURES)
+                .getAbsolutePath(),
+                "Mandelbrot-test-" + System.currentTimeMillis() + ".jpg")).getAbsolutePath();
         appCompatEditText.perform(replaceText(savedFile),
                 closeSoftKeyboard());
 
@@ -152,7 +156,7 @@ public class GLGesturesTest {
         return cumdiff;
     }
 
-    double [][] int2rgb(int[] intColors) {
+    private double [][] int2rgb(int[] intColors) {
         double[][] rgb = new double[intColors.length][4];
         for (int i = 0;i < intColors.length;i++) {
             rgb[i][0] = (double)(intColors[0] & 0xFF)/255;

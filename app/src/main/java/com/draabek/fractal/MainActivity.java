@@ -110,11 +110,17 @@ public class MainActivity extends AppCompatActivity {
     }
     public boolean attemptSave() {
         currentView.saveBitmap();
+        //currentView.getView().post(() -> currentView.saveBitmap());
         return true;
     }
 
     private void unveilCorrectView(String newFractal) {
         Fractal f = FractalRegistry.getInstance().get(newFractal);
+        if (f == null) {
+            Log.e(this.getClass().getName(), String.format("Fractal %s not found", newFractal));
+            f = FractalRegistry.getInstance().get("Mandelbrot");
+        }
+        assert f != null;
         if (currentView != null) currentView.setVisibility(View.GONE);
         Class<? extends FractalViewWrapper> requiredViewClass = f.getViewWrapper();
         FractalViewWrapper available = availableViews.get(requiredViewClass);

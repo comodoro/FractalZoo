@@ -73,6 +73,16 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
 
     private void saveToFile() {
         String filename = filenameEdit.getText().toString();
+        String path = filename.substring(0, filename.lastIndexOf("/")-1);
+        File dir = new File(path);
+        if (!storageAvailable()) {
+            Log.e(LOG_KEY, "External storage not available");
+            return;
+        }
+        if ((!dir.exists()) && (!dir.mkdirs())) {
+            Log.e(LOG_KEY, "Directory specified does not exist and could not be created");
+            return;
+        }
         File f = new File(filename);
         saveBitmap(bitmapFile, f);
         Toast.makeText(SaveBitmapActivity.this, getString(R.string.save_bitmap_success_toast)
@@ -121,13 +131,8 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
                 //Just display a Toast
                 Toast.makeText(SaveBitmapActivity.this, rationale, Toast.LENGTH_SHORT).show();
                 final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ActivityCompat.requestPermissions(SaveBitmapActivity.this,
-                                new String[]{permission}, code);
-                    }
-                }, Toast.LENGTH_SHORT);
+                handler.postDelayed(() -> ActivityCompat.requestPermissions(SaveBitmapActivity.this,
+                        new String[]{permission}, code), Toast.LENGTH_SHORT);
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(SaveBitmapActivity.this,
@@ -166,6 +171,7 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
         // We can read and write the media
         return Environment.MEDIA_MOUNTED.equals(state);
     }
+
 
     private File getFile() {
         String fileName = FractalRegistry.getInstance().getCurrent().toString() + System.currentTimeMillis() + ".jpg";
