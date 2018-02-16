@@ -133,7 +133,25 @@ public class MainActivity extends AppCompatActivity {
             Log.d(LOG_KEY, f.getName() + " is current");
         }
         currentView.setVisibility(View.VISIBLE);
-        currentView.getView().postInvalidate();
+        currentView.clear();
+        currentView.setRenderListener(new RenderListener() {
+            @Override
+            public void onRenderRequested() {
+                Log.i(this.getClass().getName(), String.format("Rendering requested on %s",
+                        FractalRegistry.getInstance().getCurrent().getName()));
+                progressBar.post(() -> progressBar.setVisibility(View.VISIBLE));
+
+            }
+
+            @Override
+            public void onRenderComplete(long millis) {
+                Log.i(this.getClass().getName(), String.format("Rendering complete in %d ms", millis));
+                progressBar.post(() -> {
+                    if (!currentView.isRendering())
+                    progressBar.setVisibility(View.GONE);
+                });
+            }
+    });
     }
 
     @Override

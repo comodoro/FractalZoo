@@ -24,11 +24,11 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import com.draabek.fractal.FractalViewWrapper;
 import com.draabek.fractal.R;
+import com.draabek.fractal.RenderListener;
 import com.draabek.fractal.SaveBitmapActivity;
 import com.draabek.fractal.Utils;
 import com.draabek.fractal.fractal.FractalRegistry;
@@ -87,8 +87,13 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
     }
 
     @Override
-    public View getView() {
-        return this;
+    public void setRenderListener(RenderListener renderListener) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override
@@ -147,9 +152,9 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
                         }
                     }
                 }
-                case MotionEvent.ACTION_POINTER_UP:
-                case MotionEvent.ACTION_UP:
-                    requestRender();
+            case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_UP:
+                requestRender();
         }
         mPreviousX = x;
         mPreviousY = y;

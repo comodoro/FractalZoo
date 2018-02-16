@@ -86,7 +86,7 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
         File f = new File(filename);
         saveBitmap(bitmapFile, f);
         Toast.makeText(SaveBitmapActivity.this, getString(R.string.save_bitmap_success_toast)
-                        + bitmapFile.getAbsolutePath(),
+                        + f.getAbsolutePath(),
                 Toast.LENGTH_LONG).show();
         finish();
     }

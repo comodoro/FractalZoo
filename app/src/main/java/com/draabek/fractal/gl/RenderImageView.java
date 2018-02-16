@@ -5,15 +5,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.draabek.fractal.FractalViewWrapper;
 import com.draabek.fractal.R;
+import com.draabek.fractal.RenderListener;
 import com.draabek.fractal.SaveBitmapActivity;
 import com.draabek.fractal.Utils;
 import com.draabek.fractal.fractal.FractalRegistry;
@@ -40,6 +41,9 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
     float mPreviousX2;
     float mPreviousY2;
 
+    private RenderImageCache renderImageCache;
+    private RenderListener renderListener;
+
     public RenderImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         listenToLayout();
@@ -64,6 +68,7 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
                 requestRender();
             }
         });
+        renderImageCache = new RenderImageCache(Environment.getDataDirectory());
     }
 
 
@@ -78,24 +83,34 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
     public void init() {
         glThread = new Thread(() -> {
             while (!destroyFlag) {
-                if (reinitFlag) {
-                    pixelBuffer = new PixelBuffer(getWidth(), getHeight());
-                    squareRenderer = new SquareRenderer();
-                    pixelBuffer.setRenderer(squareRenderer);
-                    reinitFlag = false;
+                /*
+                FIXME without this ugly check init is called everytime on startup.
+                Turns out Android fires onGlobalLayout even with VisibilityGONE
+                */
+                if (this.getVisibility() == VISIBLE) {
+                    if (reinitFlag) {
+                        pixelBuffer = new PixelBuffer(getWidth(), getHeight());
+                        squareRenderer = new SquareRenderer();
+                        pixelBuffer.setRenderer(squareRenderer);
+                        reinitFlag = false;
 
-                }
-                if (renderingFlag) {
-                    Bitmap bitmap = pixelBuffer.getBitmap();
-                    this.post(() -> {
-                        this.setImageBitmap(bitmap);
-                        this.renderingFlag = false;
-                    });
-                }
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    }
+                    if (renderingFlag) {
+                        long start = System.currentTimeMillis();
+                        this.renderListener.onRenderRequested();
+                        Bitmap bitmap = pixelBuffer.getBitmap();
+                        this.post(() -> {
+                            this.setImageBitmap(bitmap);
+                            this.renderingFlag = false;
+                            this.renderImageCache.add(bitmap, FractalRegistry.getInstance().getCurrent().getName());
+                            this.renderListener.onRenderComplete(System.currentTimeMillis() - start);
+                        });
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -138,13 +153,11 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
         return renderingFlag;
     }
 
-    @Override
-    public View getView() {
-        return this;
-    }
-
     public void requestRender() {
         renderingFlag = true;
+        Bitmap cachedBitmap = renderImageCache.get(
+                FractalRegistry.getInstance().getCurrent().getName());
+        if (cachedBitmap != null) setImageBitmap(cachedBitmap);
     }
 
     @Override
@@ -218,4 +231,16 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
     public boolean performClick() {
         return super.performClick();
     }
+
+    @Override
+    public void setRenderListener(RenderListener renderListener) {
+        this.renderListener = renderListener;
+    }
+
+    @Override
+    public void clear() {
+        setImageBitmap(null);
+    }
+
+
 }

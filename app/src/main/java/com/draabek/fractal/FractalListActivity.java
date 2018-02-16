@@ -43,34 +43,38 @@ public class FractalListActivity extends ListActivity {
 				new String[]{"name", "thumbnail"},
 				new int[]{R.id.list_view_name, R.id.list_view_thumb}
 		);
-		adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-			public boolean setViewValue(View view, Object data, String textRepresentation) {
-				if ((view instanceof ImageView) && (data != null)) {
-					String s = (String)data;
-					if (s.startsWith("file://")) {
-						Uri imageUri = Uri.parse(s);
-						((ImageView)view).setImageURI(imageUri);
-					} else {
-						Bitmap bmp = Utils.getBitmapFromAsset(getAssets(), s);
-						((ImageView)view).setImageBitmap(bmp);
-					}
-					Log.v(LOG_KEY, "Thumb uri: " + data);
-				} else if (view instanceof TextView) {
-					((TextView)view).setText((String)data);
-				}
-				return true;
-			}
-		});
+		adapter.setViewBinder((view, data1, textRepresentation) -> {
+            if ((view instanceof ImageView) && (data1 != null)) {
+                String s = (String) data1;
+                if (s.startsWith("file://")) {
+                    Uri imageUri = Uri.parse(s);
+                    ((ImageView)view).setImageURI(imageUri);
+                } else {
+                    Bitmap bmp = Utils.getBitmapFromAsset(getAssets(), s);
+                    ((ImageView)view).setImageBitmap(bmp);
+                }
+                Log.v(LOG_KEY, "Thumb uri: " + data1);
+            } else if (view instanceof TextView) {
+                ((TextView)view).setText((String) data1);
+            }
+            return true;
+        });
 		// Bind to our new adapter.
 		setListAdapter(adapter);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
+
 		Fractal fractal = FractalRegistry.getInstance().get(
-				    ((Map)(getListView().getItemAtPosition(position))).get("name").toString()
+				    ((Map<String, String>)(getListView().getItemAtPosition(position))).get("name")
 		);
-		Log.d(LOG_KEY, fractal.getName() + " clicked");
+		assert fractal != null;
+		if (Utils.DEBUG) {
+
+			Log.d(LOG_KEY, fractal.getName() + " clicked");
+		}
 		Intent intent = this.getIntent();
 		intent.putExtra(MainActivity.CURRENT_FRACTAL_KEY, fractal.getName());
 		//FractalRegistry.getInstance().setCurrent(fractal);

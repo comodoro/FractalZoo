@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.draabek.fractal.FractalViewWrapper;
 import com.draabek.fractal.R;
+import com.draabek.fractal.RenderListener;
 import com.draabek.fractal.SaveBitmapActivity;
 import com.draabek.fractal.Utils;
 import com.draabek.fractal.fractal.FractalRegistry;
@@ -42,7 +44,8 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	private SurfaceHolder holder;
 	private SharedPreferences prefs;
 	private boolean rendering;
-	
+	private RenderListener renderListener;
+
 	public FractalCpuView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init(context);
@@ -65,6 +68,10 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	@Override
 	protected void onDraw(Canvas canvas) {
 		rendering = true;
+		if (renderListener != null) {
+			this.renderListener.onRenderRequested();
+		}
+		long start = System.currentTimeMillis();
 		Log.d(LOG_KEY,"onDraw");
 		SurfaceHolder sh = getHolder();
 		synchronized (sh) {
@@ -88,6 +95,9 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		}
 		Log.d(LOG_KEY, "finished onDraw");
 		rendering = false;
+		if (renderListener != null) {
+			renderListener.onRenderComplete(System.currentTimeMillis() - start);
+		}
 	}
 
 
@@ -177,10 +187,9 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			intent.putExtra(this.getContext().getString(R.string.intent_extra_bitmap_file), tmpFile.getAbsolutePath());
 			this.getContext().startActivity(intent);
 		} catch (IOException e) {
-			Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();;
+			Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
@@ -189,11 +198,28 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	@Override
-	public View getView() {
-		return this;
+	public void setRenderListener(RenderListener renderListener) {
+		this.renderListener = renderListener;
 	}
 
-	class MotionTracker implements OnTouchListener {
+    @Override
+    public void clear() {
+		if (holder == null) return;
+        Canvas c = null;
+        try {
+            synchronized(holder) {
+                c = holder.lockCanvas();
+                c.drawColor(Color.BLACK);
+            }
+        } finally {
+            if (c != null) {
+                holder.unlockCanvasAndPost(c);
+                invalidate();
+            }
+        }
+    }
+
+    class MotionTracker implements OnTouchListener {
 		private float distance;
 		private PointF origin;
 		private boolean isMoveGesture;
@@ -261,5 +287,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			v.performClick();
 			return true;
 		}
+
+
 	}
 }
