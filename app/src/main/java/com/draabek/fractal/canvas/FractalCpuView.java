@@ -30,6 +30,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
+@SuppressWarnings("SynchronizeOnNonFinalField")
 public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callback, FractalViewWrapper
 //,GestureDetector.OnDoubleTapListener, GestureDetector.OnGestureListener 
 {
@@ -57,14 +58,13 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 	private void init(Context context) {
-		SurfaceHolder holder = getHolder();
+		holder = getHolder();
 		holder.addCallback(this);
 		this.setOnTouchListener(new MotionTracker());
 		paint = new Paint();
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
 	@Override
 	protected void onDraw(Canvas canvas) {
 		rendering = true;
@@ -73,8 +73,8 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		}
 		long start = System.currentTimeMillis();
 		Log.d(LOG_KEY,"onDraw");
-		SurfaceHolder sh = getHolder();
-		synchronized (sh) {
+		this.holder = getHolder();
+		synchronized (this.holder) {
 			if ((fractalBitmap == null) || (fractalBitmap.getHeight() != canvas.getHeight()) ||
 					(fractalBitmap.getWidth() != canvas.getWidth()) || (bufferCanvas == null)) {
 				Log.v(LOG_KEY, "Reallocate buffer");
@@ -99,7 +99,6 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 			renderListener.onRenderComplete(System.currentTimeMillis() - start);
 		}
 	}
-
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -153,8 +152,7 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 		gestureRedraw(0, 0, scale);
 		Log.d(LOG_KEY, "Scale: " + scale);
 	}
-	
-	@SuppressWarnings("SynchronizeOnNonFinalField")
+
 	public void gestureRedraw(float dx, float dy, float scale) {
 		Log.d(LOG_KEY, "Redrawing gesture");
 		Canvas c = null;
@@ -204,7 +202,9 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
 
     @Override
     public void clear() {
-		if (holder == null) return;
+		if (holder == null) {
+			return;
+		}
         Canvas c = null;
         try {
             synchronized(holder) {

@@ -1,6 +1,6 @@
 precision mediump float;
 
-//uniform sampler1D tex;
+uniform sampler2D tex;
 uniform float centerX;
 uniform float centerY;
 uniform float scale;
@@ -24,7 +24,7 @@ void main() {
         z.y = y;
     }
 
-    //gl_FragColor = texture1D(tex, (i == u_iter ? 0.0 : float(i)) / 100.0);
-    vec3 color = vec3(float(j)/float(iterations));
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = texture2D(tex, (i == iterations ? 0.0 : float(i)) / 100.0, 1.0);
+//    vec3 color = vec3(float(j)/float(iterations));
+//    gl_FragColor = vec4(color, 1.0);
 }

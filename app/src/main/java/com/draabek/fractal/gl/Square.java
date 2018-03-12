@@ -18,7 +18,6 @@ package com.draabek.fractal.gl;
 import android.opengl.GLES20;
 import android.util.Log;
 
-import com.draabek.fractal.Utils;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
@@ -88,10 +87,10 @@ public class Square {
 
     private void updateShaders() {
         // prepare shaders and OpenGL program
-        int vertexShader = MyGLSurfaceView.loadShader(
+        int vertexShader = ShaderUtils.loadShader(
                 GLES20.GL_VERTEX_SHADER,
                 currentFractal.getShaders()[0]);
-        int fragmentShader = MyGLSurfaceView.loadShader(
+        int fragmentShader = ShaderUtils.loadShader(
                 GLES20.GL_FRAGMENT_SHADER,
                 currentFractal.getShaders()[1]);
 
@@ -145,31 +144,8 @@ public class Square {
 
         // Get rendering parameters and apply as uniforms
         Map<String, Float> settings = currentFractal.getParameters();
-        for (String setting : settings.keySet()) {
-            int uniformHandle = GLES20.glGetUniformLocation(mProgram, setting);
-            if (uniformHandle == -1) {
-                Log.w(this.getClass().getName(), "Unable to find uniform for " + setting);
-                if (Utils.DEBUG) {
-                    throw new RuntimeException("glGetUniformLocation " + setting + " error");
-                }
-            }
-            // For now only support single float uniforms
-            Object o = settings.get(setting);
-            float f = (float)o;
-            GLES20.glUniform1f(uniformHandle, f);
-            MyGLSurfaceView.checkGlError("glUniform1f");
-        }
-
-        int resolutionHandle = GLES20.glGetUniformLocation(mProgram, "resolution");
-        if (resolutionHandle == -1) {
-            Log.w(this.getClass().getName(), "Unable to find uniform for resolution");
-            if (Utils.DEBUG) {
-                throw new RuntimeException("glGetUniformLocation resolution error");
-            }
-        }
-        GLES20.glUniform2f(resolutionHandle, width, height);
-        MyGLSurfaceView.checkGlError("glUniform2f");
-
+        ShaderUtils.applyFloatUniforms(settings, mProgram);
+        ShaderUtils.applyResolutionUniform(width, height, mProgram);
         // Draw the square
         GLES20.glDrawElements(
                 GLES20.GL_TRIANGLES, drawOrder.length,

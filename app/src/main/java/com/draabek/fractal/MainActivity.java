@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private FractalViewWrapper currentView;
     private SharedPreferences prefs;
     private ProgressBar progressBar;
-    public MainActivity() {
-    }
 
     /**
      * Called when the activity is first created.
@@ -64,23 +62,27 @@ public class MainActivity extends AppCompatActivity {
         );
         setContentView(R.layout.activity_main);
 
-        //UGLY
+        //Put views into map where key is the view class, this is then requested from the fractal
         RenderImageView renderImageView = (RenderImageView) findViewById(R.id.fractalGlView);
         availableViews = new HashMap<>();
         availableViews.put(renderImageView.getClass(), renderImageView);
         FractalCpuView cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
         availableViews.put(cpuView.getClass(), cpuView);
+
         progressBar = (ProgressBar)findViewById(R.id.indeterminateBar);
-        unveilCorrectView(FractalRegistry.getInstance().getCurrent().getName());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        unveilCorrectView(FractalRegistry.getInstance().getCurrent().getName());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(LOG_KEY, "onCreateOptionsMenu");
+        if (Utils.DEBUG) {
+            Log.d(LOG_KEY, "onCreateOptionsMenu");
+        }
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -89,18 +91,26 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(LOG_KEY, "onOptionsItemSelected: " + item.getItemId());
+        if (Utils.DEBUG) {
+            Log.d(LOG_KEY, "onOptionsItemSelected: " + item.getItemId());
+        }
         switch (item.getItemId()) {
             case R.id.fractalList:
-                Log.d(LOG_KEY, "Fractal list menu item pressed");
+                if (Utils.DEBUG) {
+                    Log.d(LOG_KEY, "Fractal list menu item pressed");
+                }
                 Intent intent = new Intent(this, FractalListActivity.class);
                 startActivityForResult(intent, CHOOSE_FRACTAL_CODE);
                 return true;
             case R.id.save:
-                Log.d(LOG_KEY, "Save menu item pressed");
+                if (Utils.DEBUG) {
+                    Log.d(LOG_KEY, "Save menu item pressed");
+                }
                 return attemptSave();
             case R.id.options:
-                Log.d(LOG_KEY, "Options menu item pressed");
+                if (Utils.DEBUG) {
+                    Log.d(LOG_KEY, "Options menu item pressed");
+                }
                 Intent intent2 = new Intent(this, FractalPreferenceActivity.class);
                 startActivity(intent2);
                 return true;
@@ -110,10 +120,13 @@ public class MainActivity extends AppCompatActivity {
     }
     public boolean attemptSave() {
         currentView.saveBitmap();
-        //currentView.getView().post(() -> currentView.saveBitmap());
         return true;
     }
 
+    /**
+     * Make visible the correct view according to Fractal.getViewWrapper method
+     * @param newFractal Name of the current fractal
+     */
     private void unveilCorrectView(String newFractal) {
         Fractal f = FractalRegistry.getInstance().get(newFractal);
         if (f == null) {
@@ -161,7 +174,8 @@ public class MainActivity extends AppCompatActivity {
                 String pickedFractal = data.getStringExtra(CURRENT_FRACTAL_KEY);
                 unveilCorrectView(pickedFractal);
             } catch (Exception e) {
-                Log.e(LOG_KEY, "Exception on fractal switch: " + e);
+                Log.e(LOG_KEY, "Exception on fractal switch");
+                e.printStackTrace();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

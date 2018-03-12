@@ -24,22 +24,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * Render image shaders asynchronously using OpenGL ES 2.0
  * Created by Vojtech Drabek on 2018-01-13
  */
 
 public class RenderImageView extends android.support.v7.widget.AppCompatImageView implements FractalViewWrapper {
 
-    Thread glThread;
-    boolean renderingFlag;
-    boolean reinitFlag;
-    boolean destroyFlag;
-    PixelBuffer pixelBuffer;
-    SquareRenderer squareRenderer;
+    private Thread glThread;
+    private boolean renderingFlag;
+    private boolean reinitFlag;
+    private boolean destroyFlag;
+    private PixelBuffer pixelBuffer;
+    private SquareRenderer squareRenderer;
 
-    float mPreviousX;
-    float mPreviousY;
-    float mPreviousX2;
-    float mPreviousY2;
+    private float mPreviousX;
+    private float mPreviousY;
+    private float mPreviousX2;
+    private float mPreviousY2;
 
     private RenderImageCache renderImageCache;
     private RenderListener renderListener;
@@ -54,6 +55,9 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
         listenToLayout();
     }
 
+    /**
+     *
+     */
     private void listenToLayout() {
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
