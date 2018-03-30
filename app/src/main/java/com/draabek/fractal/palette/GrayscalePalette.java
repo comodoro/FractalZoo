@@ -1,9 +1,12 @@
 package com.draabek.fractal.palette;
 
-public class GrayscalePalette implements ColorPalette {
+public class GrayscalePalette extends ColorPalette {
 
 	private int[] intCache;
 
+	public GrayscalePalette() {
+		this(256);
+	}
 	public GrayscalePalette(int size) {
 		intCache = new int[size];
 		for (int i = 0;i < size;i++) {

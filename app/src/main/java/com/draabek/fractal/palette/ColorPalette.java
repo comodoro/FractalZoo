@@ -5,7 +5,8 @@ package com.draabek.fractal.palette;
  *
  */
 
-public interface ColorPalette {
-	int getColorInt(float intensity);
-	int[] getColorsInt();
+public abstract class ColorPalette {
+	public ColorPalette() {}
+	public abstract int getColorInt(float intensity);
+	public abstract int[] getColorsInt();
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.draabek.fractal.Utils;
 import com.draabek.fractal.gl.GLSLFractal;
+import com.draabek.fractal.palette.ColorPalette;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,6 +19,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static java.lang.Class.forName;
 
 public final class FractalRegistry {
 	private static final String LOG_KEY = FractalRegistry.class.getName();
@@ -99,7 +102,7 @@ public final class FractalRegistry {
 			String[] loadedShaders = loadShaders(ctx, shaders);
 			Class cls;
 			try {
-                cls = Class.forName(clazz);
+                cls = forName(clazz);
 				//this is frontal lobotomy
                 Fractal fractal = (Fractal)cls.newInstance();
 				fractal.setName(name);
@@ -122,6 +125,10 @@ public final class FractalRegistry {
 							settingsString, new TypeToken<HashMap<String, Float>>() {}.getType()
 					);
 					fractal.updateSettings(retMap);
+				}
+				if (paletteString != null) {
+						ColorPalette colorPalette = (ColorPalette)Class.forName(paletteString).newInstance();
+						fractal.setColorPalette(colorPalette);
 				}
 				add(fractal);
 			} catch(ClassNotFoundException e) {

@@ -1,6 +1,6 @@
 package com.draabek.fractal.palette;
 
-public class BWPalette implements ColorPalette {
+public class BWPalette extends ColorPalette {
 
 	private static int[] intCache = new int[] {0xff000000, 0xffffffff };
 
