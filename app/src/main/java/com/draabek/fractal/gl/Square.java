@@ -15,6 +15,7 @@
  */
 package com.draabek.fractal.gl;
 
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.util.Log;
 
@@ -146,7 +147,15 @@ public class Square {
         Map<String, Float> settings = currentFractal.getParameters();
         ShaderUtils.applyFloatUniforms(settings, mProgram);
         ShaderUtils.applyResolutionUniform(width, height, mProgram);
-        // Draw the square
+        int paletteHandle = GLES20.glGetUniformLocation(mProgram, "palette");
+        if (paletteHandle != -1) {
+            int[] colors = currentFractal.getColorPalette().getColorsInt();
+            Bitmap bitmap = Bitmap.createBitmap(colors, colors.length, 1, Bitmap.Config.ARGB_8888);
+            int handle = ShaderUtils.loadTexture(bitmap);
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, handle);
+            GLES20.glUniform1i(paletteHandle,0 );
+        }        // Draw the square
         GLES20.glDrawElements(
                 GLES20.GL_TRIANGLES, drawOrder.length,
                 GLES20.GL_UNSIGNED_SHORT, drawListBuffer);

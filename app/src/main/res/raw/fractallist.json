@@ -40,6 +40,7 @@
     "class": "com.draabek.fractal.gl.GLSLFractal",
     "shaders":"julia",
     "thumbnail": "julia_thumb.png",
+    "palette":"com.draabek.fractal.palette.CopperPalette",
     "parameters":
     {
       "centerX": 0.5, "centerY": 0.5,
@@ -124,6 +125,7 @@
     "class":"com.draabek.fractal.gl.GLSLFractal",
     "shaders": "collatz",
     "thumbnail": "collatz_thumb.png",
+    "palette":"com.draabek.fractal.palette.BWPalette",
     "parameters":
     {
       "iterations": 1000.0,

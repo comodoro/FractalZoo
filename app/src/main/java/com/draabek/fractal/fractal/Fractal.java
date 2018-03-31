@@ -3,6 +3,7 @@ package com.draabek.fractal.fractal;
 import android.support.annotation.NonNull;
 
 import com.draabek.fractal.FractalViewWrapper;
+import com.draabek.fractal.palette.ColorPalette;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -12,6 +13,8 @@ public abstract class Fractal {
 	protected String thumbPath;
 
 	protected Map<String, Float> parameters;
+
+	protected ColorPalette colorPalette;
 
 	public Fractal() {
 		parameters = new Hashtable<>();
@@ -48,5 +51,13 @@ public abstract class Fractal {
 
 	public void setThumbPath(String thumbPath) {
 		this.thumbPath = thumbPath;
+	}
+
+	public ColorPalette getColorPalette() {
+		return colorPalette;
+	}
+
+	public void setColorPalette(ColorPalette colorPalette) {
+		this.colorPalette = colorPalette;
 	}
 }

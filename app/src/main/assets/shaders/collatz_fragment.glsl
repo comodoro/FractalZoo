@@ -3,7 +3,7 @@
 precision mediump float;
 #endif
 
-//uniform sampler1D tex;
+uniform sampler2D palette;
 uniform float centerX;
 uniform float centerY;
 uniform float scale;
@@ -37,18 +37,19 @@ void main()
     vec2 center = vec2(centerX, centerY);
     float pi = 3.141592653;
  	vec2 z = (gl_FragCoord.xy / resolution.y - vec2(resolution.x * 0.5 / resolution.y, 0.5)) *scale - center;
- 	int n = 0;
-     for (int i = 0; i < maxiter; i++) {
-         // bail out if z gets too big
-         if ((length(z) > 16.0) ){
-             n = i;
-             break;
-         }
- 	if (float(i) > iterations) break;
-         // do one step of generalized Collatz function
-          z = (vec2(1.0,0.0) + 4.0 * z - cmul(vec2(1.0,0.0) + 2.0 * z, ccos(pi * z))) / 4.0;
-     }
-     // colour pixel according to escape time
-     float t = log(float(n + 1)) / log(1024.0);
-     gl_FragColor = vec4(float(n != 0) * vec3(sqrt(t), t, 1.0 - sqrt(t)),1.0);
+ 	int j = 0;
+    for (int i = 0; i < maxiter; i++) {
+        // bail out if z gets too big
+        if ((length(z) > 16.0) ){
+            j = i;
+            break;
+        }
+        if (float(i) > iterations) break;
+        // do one step of generalized Collatz function
+        z = (vec2(1.0,0.0) + 4.0 * z - cmul(vec2(1.0,0.0) + 2.0 * z, ccos(pi * z))) / 4.0;
+    }
+    // colour pixel according to escape time
+    float t = log(float(j + 1)) / log(1024.0);
+    gl_FragColor = vec4(float(j != 0) * vec3(sqrt(t), t, 1.0 - sqrt(t)),1.0);
+    //gl_FragColor = texture2D(palette, vec2((j == int(iterations) ? 0.0 : float(j)) / iterations, 0.5));
 }
