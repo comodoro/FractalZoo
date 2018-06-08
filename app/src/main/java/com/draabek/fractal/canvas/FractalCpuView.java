@@ -211,7 +211,9 @@ public class FractalCpuView extends SurfaceView implements SurfaceHolder.Callbac
                 c = holder.lockCanvas();
                 c.drawColor(Color.BLACK);
             }
-        } finally {
+        } catch (Exception e){
+        	e.printStackTrace();
+		}finally {
             if (c != null) {
                 holder.unlockCanvasAndPost(c);
                 invalidate();
