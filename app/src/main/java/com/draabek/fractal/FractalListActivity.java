@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,26 +19,36 @@ import android.widget.TextView;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FractalListActivity extends ListActivity {
 
+    public static final String INTENT_HIERARCHY_PATH = "INTENT_HIERARCHY_PATH";
+	private Deque<String> hierarchyPath;
+
 	private static final String LOG_KEY = FractalListActivity.class.getName();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		String keyPathStr = getIntent().getStringExtra(INTENT_HIERARCHY_PATH);
+		String[] path = (keyPathStr == null) ? new String[]{} : keyPathStr.split("\\|");
+		hierarchyPath = new ArrayDeque<>(Arrays.asList(path));
 		List<Map<String, String>> data = new ArrayList<>();
-		for (Fractal fractal : FractalRegistry.getInstance().getFractals().values()) {
+		for (String item : FractalRegistry.getInstance().getOnLevel(hierarchyPath)) {
 			Map<String, String> row = new HashMap<>();
-			row.put("name", fractal.getName());
-			row.put("thumbnail", fractal.getThumbPath());
+			row.put("name", item);
+			Fractal fractal = FractalRegistry.getInstance().getFractals().get(item);
+			row.put("thumbnail", (fractal != null) ? fractal.getThumbPath() : null);
 			data.add(row);
 		}
 		SimpleAdapter adapter = new SimpleAdapter(
-				this, // Context.
+				this,
 				data,
 				R.layout.list_view_row,
 				new String[]{"name", "thumbnail"},
@@ -55,35 +66,51 @@ public class FractalListActivity extends ListActivity {
                 }
                 Log.v(LOG_KEY, "Thumb uri: " + data1);
             } else if (view instanceof TextView) {
-                ((TextView)view).setText((String) data1);
+                String localizedName;
+                try {
+                    localizedName = getResources().getString(getResources()
+                            .getIdentifier((String) data1, "string", "com.draabek.fractal"));
+                } catch (Resources.NotFoundException e) {
+                    localizedName = (String) data1;
+                }
+                ((TextView)view).setText(localizedName);
             }
             return true;
         });
-		// Bind to our new adapter.
 		setListAdapter(adapter);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-
-		Fractal fractal = FractalRegistry.getInstance().get(
-				    ((Map<String, String>)(getListView().getItemAtPosition(position))).get("name")
-		);
-		assert fractal != null;
-		if (Utils.DEBUG) {
-
-			Log.d(LOG_KEY, fractal.getName() + " clicked");
-		}
-		Intent intent = this.getIntent();
-		intent.putExtra(MainActivity.CURRENT_FRACTAL_KEY, fractal.getName());
-		//FractalRegistry.getInstance().setCurrent(fractal);
-		this.setResult(RESULT_OK, intent);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		Editor editor = prefs.edit();
-		editor.putString(Utils.PREFS_CURRENT_FRACTAL_KEY, fractal.getName());
-		editor.apply();
-		finish();
+	    String item = ((Map<String, String>)(getListView().getItemAtPosition(position))).get("name");
+		Fractal fractal = FractalRegistry.getInstance().get(item);
+		if (fractal == null) {
+            if (Utils.DEBUG) {
+                Log.d(LOG_KEY, String.format("Menu item %s clicked", item));
+            }
+            Intent intent = new Intent(this, FractalListActivity.class);
+            //String path = String.join(" ", hierarchyPath); //API 26
+            StringBuilder pathBuilder = new StringBuilder();
+                for (int i = 0;i < hierarchyPath.size();i++) {
+                pathBuilder.append(hierarchyPath.pop()).append("|");
+            }
+            pathBuilder.append(item);
+            intent.putExtra(INTENT_HIERARCHY_PATH, pathBuilder.toString());
+            startActivity(intent);
+        } else {
+            if (Utils.DEBUG) {
+                Log.d(LOG_KEY, String.format("Fractal %s clicked", fractal.getName()));
+            }
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(MainActivity.CURRENT_FRACTAL_KEY, fractal.getName());
+            //FractalRegistry.getInstance().setCurrent(fractal);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            Editor editor = prefs.edit();
+            editor.putString(Utils.PREFS_CURRENT_FRACTAL_KEY, fractal.getName());
+            editor.apply();
+            startActivity(intent);
+        }
 	}
 	
 	

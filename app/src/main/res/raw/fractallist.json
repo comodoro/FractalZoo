@@ -1,147 +1,152 @@
-[
-  {
-    "name": "Mandelbrot",
-    "class": "com.draabek.fractal.gl.GLSLFractal",
-    "shaders":"mandelbrot",
-    "palette":"com.draabek.fractal.palette.CopperPalette",
-    "thumbnail": "mandelbrot_thumb.png",
-    "parameters":
+{
+  "Classical": [
     {
-      "centerX": 0.7, "centerY":0.5,
-      "scale": 0.5,
-      "iterations": 256
-    }
-  },
-  {
-    "name": "Burning Ship",
-    "class": "com.draabek.fractal.gl.GLSLFractal",
-    "shaders":"burning_ship",
-    "palette":"com.draabek.fractal.palette.CopperPalette",
-    "thumbnail": "burning_ship_thumb.png",
-    "parameters":
+      "name": "Mandelbrot",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "mandelbrot",
+      "palette": "com.draabek.fractal.palette.CopperPalette",
+      "thumbnail": "mandelbrot_thumb.png",
+      "parameters": {
+        "centerX": 0.7,
+        "centerY": 0.5,
+        "scale": 0.5,
+        "iterations": 256
+      }
+    },
     {
-      "centerX": 0.7, "centerY":0.5,
-      "scale": 0.5,
-      "iterations": 256
-    }
-  },
-  {
-    "name": "Roentgen",
-    "class": "com.draabek.fractal.gl.GLSLFractal",
-    "shaders": "roentgen",
-    "thumbnail": "roentgen_thumb.png",
-    "parameters": {
-      "centerX": 0.0,
-      "centerY": 0.0
-    }
-  },
-  {
-    "name": "Julia",
-    "class": "com.draabek.fractal.gl.GLSLFractal",
-    "shaders":"julia",
-    "thumbnail": "julia_thumb.png",
-    "palette":"com.draabek.fractal.palette.CopperPalette",
-    "parameters":
+      "name": "Julia",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "julia",
+      "thumbnail": "julia_thumb.png",
+      "palette": "com.draabek.fractal.palette.CopperPalette",
+      "parameters": {
+        "centerX": 0.5,
+        "centerY": 0.5,
+        "scale": 0.3,
+        "iterations": 256
+      }
+    },
     {
-      "centerX": 0.5, "centerY": 0.5,
-      "scale": 0.3,
-      "iterations": 256
-    }
-  },
-  {
-    "name": "Fleshy",
-    "class": "com.draabek.fractal.gl.GLSLFractal",
-    "shaders":"fleshy",
-    "thumbnail": "fleshy_thumb.png",
-    "parameters":
+      "name": "Burning Ship",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "burning_ship",
+      "palette": "com.draabek.fractal.palette.CopperPalette",
+      "thumbnail": "burning_ship_thumb.png",
+      "parameters": {
+        "centerX": 0.7,
+        "centerY": 0.5,
+        "scale": 0.5,
+        "iterations": 256
+      }
+    },
     {
-      "centerX": 0.5, "centerY": 0.5
+      "name": "Collatz",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "collatz",
+      "thumbnail": "collatz_thumb.png",
+      "palette": "com.draabek.fractal.palette.BWPalette",
+      "parameters": {
+        "iterations": 4096.0,
+        "centerX": -2.8,
+        "centerY": 0.0,
+        "scale": 0.5
+      }
     }
-  },
-  {
-    "name": "PChaos",
-    "class": "com.draabek.fractal.gl.GLSLFractal",
-    "shaders":"pchaos",
-    "thumbnail": "pchaos_thumb.png",
-    "parameters":
+  ],
+  "Geometrical": [
     {
-      "centerX": 0.5, "centerY": 0.5
-    }
-  },
-  {
-    "name": "Burner",
-    "class": "com.draabek.fractal.gl.GLSLFractal",
-    "shaders":"burner",
-    "thumbnail": "burner_thumb.png",
-    "parameters":
+      "name": "Sierpinski Triangle",
+      "class": "com.draabek.fractal.canvas.instance.SierpinskiTriangle",
+      "thumbnail": "sierpinski_triangle_thumb.png",
+      "parameters": {
+        "iterations": 5.0,
+        "centerX": 0.0,
+        "centerY": 0.0
+      }
+    },
     {
-      "centerX": 0.0, "centerY": 0.0
-    }
-  },
-  {
-    "name":"Sierpinski Triangle",
-    "class":"com.draabek.fractal.canvas.instance.SierpinskiTriangle",
-    "thumbnail": "sierpinski_triangle_thumb.png",
-    "parameters":
+      "name": "Fractal Tree",
+      "class": "com.draabek.fractal.canvas.instance.FractalTree",
+      "thumbnail": "fractal_tree_thumb.png",
+      "parameters": {
+        "angle": 20.0,
+        "iterations": 10.0,
+        "centerX": 0.0,
+        "centerY": 0.7
+      }
+    },
     {
-      "iterations": 5.0,
-      "centerX": 0.0, "centerY": 0.0
-    }
-  },
-  {
-    "name":"Fractal Tree",
-    "class":"com.draabek.fractal.canvas.instance.FractalTree",
-    "thumbnail": "fractal_tree_thumb.png",
-    "parameters":
+      "name": "Pythagoras Tree",
+      "class": "com.draabek.fractal.canvas.instance.PythagorasTree",
+      "thumbnail": "pythagoras_tree_thumb.png",
+      "parameters": {
+        "iterations": 12.0,
+        "centerX": 0.0,
+        "centerY": 0.0
+      }
+    },
     {
-      "angle": 20.0,
-      "iterations": 10.0,
-      "centerX": 0.0, "centerY": 0.7
-    }
-  },  {
-  "name":"Pythagoras Tree",
-  "class":"com.draabek.fractal.canvas.instance.PythagorasTree",
-  "thumbnail": "pythagoras_tree_thumb.png",
-  "parameters":
-  {
-    "iterations": 12.0,
-    "centerX": 0.0, "centerY": 0.0
-  }
-},
-  {
-    "name":"Sierpinski Carpet",
-    "class":"com.draabek.fractal.gl.GLSLFractal",
-    "shaders": "sierpinski_carpet",
-    "thumbnail": "sierpinski_carpet_thumb.png",
-    "parameters":
+      "name": "Sierpinski Carpet",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "sierpinski_carpet",
+      "thumbnail": "sierpinski_carpet_thumb.png",
+      "parameters": {
+        "iterations": 10.0,
+        "centerX": -0.5,
+        "centerY": -0.5
+      }
+    },
     {
-      "iterations": 10.0,
-      "centerX": -0.5,
-      "centerY": -0.5
+      "name": "Koch Snowflake",
+      "class": "com.draabek.fractal.canvas.instance.KochSnowflake",
+      "thumbnail": "koch_snowflake_thumb.png",
+      "parameters": {
+        "iterations": 6.0,
+        "centerX": 0.0,
+        "centerY": 0.0
+      }
     }
-  },
-  {
-    "name":"Collatz Fractal",
-    "class":"com.draabek.fractal.gl.GLSLFractal",
-    "shaders": "collatz",
-    "thumbnail": "collatz_thumb.png",
-    "palette":"com.draabek.fractal.palette.BWPalette",
-    "parameters":
+  ],
+  "GLSL Sandbox": [
     {
-      "iterations": 1000.0,
-      "centerX": -2.8,
-      "centerY": 0.0,
-      "scale": 0.5
+      "name": "Roentgen",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "roentgen",
+      "thumbnail": "roentgen_thumb.png",
+      "parameters": {
+        "centerX": 0.0,
+        "centerY": 0.0
+      }
+    },
+    {
+      "name": "Fleshy",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "fleshy",
+      "thumbnail": "fleshy_thumb.png",
+      "parameters": {
+        "centerX": 0.5,
+        "centerY": 0.5
+      }
+    },
+    {
+      "name": "PChaos",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "pchaos",
+      "thumbnail": "pchaos_thumb.png",
+      "parameters": {
+        "centerX": 0.5,
+        "centerY": 0.5
+      }
+    },
+    {
+      "name": "Burner",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "burner",
+      "thumbnail": "burner_thumb.png",
+      "parameters": {
+        "centerX": 0.0,
+        "centerY": 0.0
+      }
     }
-  },
-  {
-  "name":"Koch Snowflake",
-  "class":"com.draabek.fractal.canvas.instance.KochSnowflake",
-  "thumbnail": "koch_snowflake_thumb.png",
-  "parameters":
-  {
-    "iterations": 6.0,
-    "centerX": 0.0, "centerY": 0.0
-  }
+  ]
 }
-]

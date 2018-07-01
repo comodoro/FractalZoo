@@ -17,21 +17,14 @@ import com.draabek.fractal.canvas.FractalCpuView;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 import com.draabek.fractal.gl.RenderImageView;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
-
-*/
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_KEY = MainActivity.class.getName();
@@ -43,35 +36,48 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private ProgressBar progressBar;
 
+    private String readFully(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        return stringBuilder.toString();
+    }
     /**
      * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Reader jsonReader = new InputStreamReader(this.getResources().openRawResource(R.raw.fractallist));
-        JsonParser parser = new JsonParser();
-        JsonElement fractalElement = parser.parse(jsonReader);
-        JsonArray fractalArray = fractalElement.getAsJsonArray();
-        FractalRegistry.getInstance().init(this, fractalArray);
+        InputStream is = this.getResources().openRawResource(R.raw.fractallist);
+        try {
+            FractalRegistry.getInstance().init(readFully(is));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         //ugh
-        FractalRegistry.getInstance().setCurrent(
-                FractalRegistry.getInstance().get(prefs.getString(Utils.PREFS_CURRENT_FRACTAL_KEY, "Mandelbrot"))
-        );
+        Fractal lastFractal = FractalRegistry.getInstance().get(prefs.getString(Utils.PREFS_CURRENT_FRACTAL_KEY, "Mandelbrot"));
+        if (lastFractal == null) {
+            lastFractal = FractalRegistry.getInstance().get("Mandelbrot");
+        }
+        FractalRegistry.getInstance().setCurrent(lastFractal);
         setContentView(R.layout.activity_main);
 
         //Put views into map where key is the view class, this is then requested from the fractal
-        RenderImageView renderImageView = (RenderImageView) findViewById(R.id.fractalGlView);
+        RenderImageView renderImageView = findViewById(R.id.fractalGlView);
         availableViews = new HashMap<>();
         availableViews.put(renderImageView.getClass(), renderImageView);
-        FractalCpuView cpuView = (FractalCpuView) findViewById(R.id.fractalCpuView);
+        FractalCpuView cpuView = findViewById(R.id.fractalCpuView);
         availableViews.put(cpuView.getClass(), cpuView);
 
-        progressBar = (ProgressBar)findViewById(R.id.indeterminateBar);
+        progressBar = findViewById(R.id.indeterminateBar);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -124,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Make visible the correct view according to Fractal.getViewWrapper method
+     * Make visible correct view according to the Fractal.getViewWrapper method
      * @param newFractal Name of the current fractal
      */
     private void unveilCorrectView(String newFractal) {

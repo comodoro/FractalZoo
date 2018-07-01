@@ -9,7 +9,7 @@ uniform float centerY;
 uniform float scale;
 uniform float iterations;
 uniform vec2 resolution;
-#define maxiter 1024
+#define maxiter 65535
 
 // hyperbolic cosine
 float cosh(float x) {
@@ -36,7 +36,7 @@ void main()
     // set viewing parameters
     vec2 center = vec2(centerX, centerY);
     float pi = 3.141592653;
- 	vec2 z = (gl_FragCoord.xy / resolution.y - vec2(resolution.x * 0.5 / resolution.y, 0.5)) *scale - center;
+ 	vec2 z = (gl_FragCoord.xy / resolution.y - vec2(resolution.x * 0.5 / resolution.y, 0.5)) / scale - center;
  	int j = 0;
     for (int i = 0; i < maxiter; i++) {
         // bail out if z gets too big
@@ -49,7 +49,7 @@ void main()
         z = (vec2(1.0,0.0) + 4.0 * z - cmul(vec2(1.0,0.0) + 2.0 * z, ccos(pi * z))) / 4.0;
     }
     // colour pixel according to escape time
-    float t = log(float(j + 1)) / log(1024.0);
+    float t = log(float(j + 1)) / log(float(iterations));
     gl_FragColor = vec4(float(j != 0) * vec3(sqrt(t), t, 1.0 - sqrt(t)),1.0);
     //gl_FragColor = texture2D(palette, vec2((j == int(iterations) ? 0.0 : float(j)) / iterations, 0.5));
 }
