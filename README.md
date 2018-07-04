@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/comodoro/FractalZoo.svg?branch=master)](https://travis-ci.org/comodoro/FractalZoo)
+
 FractalZoo - fractal visualization
 ==================================
 

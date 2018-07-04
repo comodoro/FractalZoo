@@ -10,7 +10,7 @@ public class GrayscalePalette extends ColorPalette {
 	public GrayscalePalette(int size) {
 		intCache = new int[size];
 		for (int i = 0;i < size;i++) {
-			int rgbval = (int)((double)i/size * 0xff);
+            int rgbval = (int)((Math.log(i)/Math.log(size)+Math.exp(-i)) * 0xff) & 0xff;
 			intCache[i] = rgbval | rgbval << 8 | rgbval << 16 | 0xff000000;
 		}
 	}

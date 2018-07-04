@@ -18,11 +18,11 @@
       "class": "com.draabek.fractal.gl.GLSLFractal",
       "shaders": "julia",
       "thumbnail": "julia_thumb.png",
-      "palette": "com.draabek.fractal.palette.CopperPalette",
+      "palette": "com.draabek.fractal.palette.PeasyPalette",
       "parameters": {
-        "centerX": 0.5,
-        "centerY": 0.5,
-        "scale": 0.3,
+        "centerX": 1.0,
+        "centerY": 0.55,
+        "scale": 0.5,
         "iterations": 256
       }
     },
@@ -37,6 +37,45 @@
         "centerY": 0.5,
         "scale": 0.5,
         "iterations": 256
+      }
+    },
+    {
+      "name": "Tricorn",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "tricorn",
+      "palette": "com.draabek.fractal.palette.CopperPalette",
+      "thumbnail": "mandelbrot_thumb.png",
+      "parameters": {
+        "centerX": 0.6,
+        "centerY": 0.5,
+        "scale": 0.3,
+        "iterations": 256
+      }
+    },
+    {
+      "name": "Manowar",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "manowar",
+      "palette": "com.draabek.fractal.palette.CopperPalette",
+      "thumbnail": "mandelbrot_thumb.png",
+      "parameters": {
+        "centerX": 0.6,
+        "centerY": 0.5,
+        "scale": 0.3,
+        "iterations": 256
+      }
+    },
+    {
+      "name": "Magnet",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "magnet",
+      "palette": "com.draabek.fractal.palette.CoolPalette",
+      "thumbnail": "mandelbrot_thumb.png",
+      "parameters": {
+        "centerX": 0.6,
+        "centerY": 0.5,
+        "scale": 0.3,
+        "iterations": 64
       }
     },
     {

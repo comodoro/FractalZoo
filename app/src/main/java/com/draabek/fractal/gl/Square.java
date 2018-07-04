@@ -114,7 +114,6 @@ public class Square {
             FractalRegistry.getInstance().setCurrent(
                     FractalRegistry.getInstance().get("Mandelbrot")
             );
-            //updateCurrentFractal();
         }
         if (FractalRegistry.getInstance().getCurrent().getParameters().get("glBuffer") != null) {
             GLES20.glGenFramebuffers( 1, extraBufferId, 0 );
@@ -146,7 +145,7 @@ public class Square {
         // Get rendering parameters and apply as uniforms
         Map<String, Float> settings = currentFractal.getParameters();
         ShaderUtils.applyFloatUniforms(settings, mProgram);
-        ShaderUtils.applyResolutionUniform(width, height, mProgram);
+        ShaderUtils.applyResolutionUniform(Math.min(width, height), Math.min(width, height), mProgram);
         int paletteHandle = GLES20.glGetUniformLocation(mProgram, "palette");
         if (paletteHandle != -1) {
             int[] colors = currentFractal.getColorPalette().getColorsInt();

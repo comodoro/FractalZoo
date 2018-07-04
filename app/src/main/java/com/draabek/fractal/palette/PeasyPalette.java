@@ -1,17 +1,17 @@
 package com.draabek.fractal.palette;
 
-public class CopperPalette extends ColorPalette {
+public class PeasyPalette extends ColorPalette {
 
 	private int[] intCache;
 
-	public CopperPalette() {
+	public PeasyPalette() {
 		this(256);
 	}
-	public CopperPalette(int size) {
+	public PeasyPalette(int size) {
 		intCache = new int[size];
 		for (int i = 1;i < size;i++) {
-			int rval = (int)((Math.log(i)/Math.log(size)+Math.exp(-i)) * 0xff) & 0xff;
-			intCache[i] = rval << 16 | rval/2 << 8 | 0xff000000;
+            int val = (int)((Math.log(i)/Math.log(size)+Math.exp(-i)) * 0xff) & 0xff;
+			intCache[i] = val/2 | val << 8 | 0xff000000;
 		}
 	}
 
