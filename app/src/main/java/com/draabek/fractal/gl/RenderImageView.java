@@ -41,6 +41,7 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
     private float mPreviousY;
     private float mPreviousX2;
     private float mPreviousY2;
+    private boolean gestureInProgress;
 
     private RenderImageCache renderImageCache;
     private RenderListener renderListener;
@@ -178,6 +179,10 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
         }
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
+                if (mPreviousX == 0) mPreviousX = x;
+                if (mPreviousY == 0) mPreviousY = y;
+
+                gestureInProgress = true;
                 if (Utils.DEBUG) {
                     Log.d(this.getClass().getName(), "GL MOVE");
                 }
@@ -220,14 +225,22 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
                         }
                     }
                 }
-            case MotionEvent.ACTION_POINTER_UP:
+                mPreviousX = x;
+                mPreviousY = y;
+                mPreviousX2 = x2;
+                mPreviousY2 = y2;
+                return true;
+
             case MotionEvent.ACTION_UP:
-                requestRender();
+            case MotionEvent.ACTION_POINTER_UP:
+                if (gestureInProgress) {
+                    requestRender();
+                    gestureInProgress = false;
+                    return true;
+                } else {
+                    return performClick();
+                }
         }
-        mPreviousX = x;
-        mPreviousY = y;
-        mPreviousX2 = x2;
-        mPreviousY2 = y2;
         return true;
     }
 

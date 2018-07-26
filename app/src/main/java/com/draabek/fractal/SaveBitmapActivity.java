@@ -46,9 +46,9 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_bitmap);
-        radioGroup = (RadioGroup) findViewById(R.id.save_bitmap_radio_group);
-        filenameEdit = (EditText) findViewById(R.id.bitmap_filename);
-        Button button = (Button) findViewById(R.id.save_bitmap_ok_button);
+        radioGroup = findViewById(R.id.save_bitmap_radio_group);
+        filenameEdit = findViewById(R.id.bitmap_filename);
+        Button button = findViewById(R.id.save_bitmap_ok_button);
         bitmapFile = new File(this.getIntent().getStringExtra(getString(R.string.intent_extra_bitmap_file)));
         File suggestedPath = getFile();
         filenameEdit.getText().append(suggestedPath.getAbsolutePath());

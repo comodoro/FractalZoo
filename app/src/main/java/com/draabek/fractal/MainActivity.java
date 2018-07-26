@@ -7,9 +7,11 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -85,6 +87,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (Utils.DEBUG) {
+                Log.d(LOG_KEY, "ACTION_UP");
+            }
+            if (getSupportActionBar() == null) return false;
+            if (getSupportActionBar().isShowing()) getSupportActionBar().hide();
+            else getSupportActionBar().show();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (Utils.DEBUG) {
             Log.d(LOG_KEY, "onCreateOptionsMenu");
@@ -106,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(LOG_KEY, "Fractal list menu item pressed");
                 }
                 Intent intent = new Intent(this, FractalListActivity.class);
+                intent.putExtra(FractalListActivity.INTENT_HIERARCHY_PATH,
+                        getIntent().getStringExtra(FractalListActivity.INTENT_HIERARCHY_PATH));
                 startActivityForResult(intent, CHOOSE_FRACTAL_CODE);
                 return true;
             case R.id.save:

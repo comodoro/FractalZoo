@@ -23,8 +23,5 @@ void main() {
         z.x = x;
         z.y = y;
     }
-
     gl_FragColor = texture2D(palette, vec2((j == int(iterations) ? 0.0 : float(j)) / iterations, 0.5));
-//    vec3 color = vec3(float(j)/float(iterations));
-//    gl_FragColor = vec4(color, 1.0);
 }

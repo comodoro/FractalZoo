@@ -21,7 +21,6 @@ void main() {
 	    j++;
         float x = (z.x * z.x - z.y * z.y) + cX;
         float y = (z.y * z.x + z.x * z.y) + cY;
-
         if((x * x + y * y) > 4.0) break;
         z.x = x;
         z.y = y;

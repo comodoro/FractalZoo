@@ -25,5 +25,6 @@
     <string name="save_bitmap_set_wallpaper_rationale">The Set Wallpaper permission is needed to set the Home screen wallpaper.</string>
     <string name="save_bitmap_success_toast">Current screen saved to</string>
     <string name="thumbnail">Thumbnail</string>
+    <string name="fractal_parameters">Fractal parameters</string>
 
 </resources>

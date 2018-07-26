@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,19 +18,24 @@ import java.util.Map;
 public class RenderImageCache {
 
     private Map<String, String> cacheFileNames;
-    private File cacheDir;
 
     RenderImageCache(File cacheDir) {
         cacheFileNames = new HashMap<>();
-        this.cacheDir = cacheDir;
     }
 
     public void add(Bitmap bitmap, String fractalName) {
-        File cacheFile = new File(cacheDir.getAbsolutePath() + File.pathSeparator + fractalName);
-        if (cacheFile.exists()) {
-            if (!cacheFile.delete()) {
-                Log.w(this.getClass().getName(), String.format("Could not delete cache for %s", fractalName));
+        File cacheFile;
+        try {
+            cacheFile = File.createTempFile(fractalName, "cache");
+            if (cacheFile.exists()) {
+                if (!cacheFile.delete()) {
+                    Log.w(this.getClass().getName(), String.format("Could not delete cache for %s", fractalName));
+                }
             }
+            cacheFileNames.put(fractalName, cacheFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
         }
         try {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(cacheFile));

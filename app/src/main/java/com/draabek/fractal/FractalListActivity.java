@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -92,11 +93,16 @@ public class FractalListActivity extends ListActivity {
             Intent intent = new Intent(this, FractalListActivity.class);
             //String path = String.join(" ", hierarchyPath); //API 26
             StringBuilder pathBuilder = new StringBuilder();
-                for (int i = 0;i < hierarchyPath.size();i++) {
+            for (int i = 0;i < hierarchyPath.size();i++) {
                 pathBuilder.append(hierarchyPath.pop()).append("|");
             }
             pathBuilder.append(item);
-            intent.putExtra(INTENT_HIERARCHY_PATH, pathBuilder.toString());
+            String path = pathBuilder.toString();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            Editor editor = prefs.edit();
+            editor.putString(Utils.PREFS_CURRENT_FRACTAL_PATH, path);
+            editor.apply();
+            if (!path.equals("")) intent.putExtra(INTENT_HIERARCHY_PATH, pathBuilder.toString());
             startActivity(intent);
         } else {
             if (Utils.DEBUG) {
@@ -104,6 +110,7 @@ public class FractalListActivity extends ListActivity {
             }
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(MainActivity.CURRENT_FRACTAL_KEY, fractal.getName());
+            intent.putExtra(INTENT_HIERARCHY_PATH, getIntent().getStringExtra(INTENT_HIERARCHY_PATH));
             //FractalRegistry.getInstance().setCurrent(fractal);
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             Editor editor = prefs.edit();
@@ -112,6 +119,24 @@ public class FractalListActivity extends ListActivity {
             startActivity(intent);
         }
 	}
-	
-	
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (hierarchyPath.size() < 1) return super.onKeyDown(keyCode, event);
+            Intent intent = new Intent(this, FractalListActivity.class);
+            StringBuilder pathBuilder = new StringBuilder();
+            for (int i = 0;i < hierarchyPath.size()-1;i++) {
+                pathBuilder.append(hierarchyPath.pop()).append("|");
+            }
+            if (pathBuilder.length() > 0) {
+                pathBuilder.deleteCharAt(pathBuilder.length()-1);
+                intent.putExtra(INTENT_HIERARCHY_PATH, pathBuilder.toString());
+            }
+
+            startActivity(intent);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }
