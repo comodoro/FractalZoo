@@ -131,12 +131,19 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(LOG_KEY, "Save menu item pressed");
                 }
                 return attemptSave();
+            case R.id.parameters:
+                if (Utils.DEBUG) {
+                    Log.d(LOG_KEY, "Parameters menu item pressed");
+                }
+                Intent intent2 = new Intent(this, FractalParametersActivity.class);
+                startActivity(intent2);
+                return true;
             case R.id.options:
                 if (Utils.DEBUG) {
                     Log.d(LOG_KEY, "Options menu item pressed");
                 }
-                Intent intent2 = new Intent(this, FractalPreferenceActivity.class);
-                startActivity(intent2);
+                Intent intent3 = new Intent(this, FractalPreferenceActivity.class);
+                startActivity(intent3);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

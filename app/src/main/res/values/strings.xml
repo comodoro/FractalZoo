@@ -26,5 +26,6 @@
     <string name="save_bitmap_success_toast">Current screen saved to</string>
     <string name="thumbnail">Thumbnail</string>
     <string name="fractal_parameters">Fractal parameters</string>
+    <string name="parameters_ok_button">OK</string>
 
 </resources>
