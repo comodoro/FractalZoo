@@ -27,5 +27,6 @@
     <string name="thumbnail">Thumbnail</string>
     <string name="fractal_parameters">Fractal parameters</string>
     <string name="parameters_ok_button">OK</string>
+    <string name="progress_bar">Progress Bar</string>
 
 </resources>

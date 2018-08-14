@@ -1,7 +1,9 @@
-package com.draabek.fractal;
+package com.draabek.fractal.activity;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import com.draabek.fractal.R;
 
 public class FractalPreferenceActivity extends PreferenceActivity {
 	@Override

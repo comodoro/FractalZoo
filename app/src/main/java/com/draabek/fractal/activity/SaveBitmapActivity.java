@@ -1,4 +1,4 @@
-package com.draabek.fractal;
+package com.draabek.fractal.activity;
 
 import android.Manifest;
 import android.app.WallpaperManager;
@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.draabek.fractal.R;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.io.File;

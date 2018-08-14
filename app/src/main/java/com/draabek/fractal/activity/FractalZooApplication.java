@@ -1,4 +1,4 @@
-package com.draabek.fractal;
+package com.draabek.fractal.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Application;

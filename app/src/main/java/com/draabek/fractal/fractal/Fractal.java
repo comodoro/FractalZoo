@@ -2,7 +2,6 @@ package com.draabek.fractal.fractal;
 
 import android.support.annotation.NonNull;
 
-import com.draabek.fractal.FractalViewWrapper;
 import com.draabek.fractal.palette.ColorPalette;
 
 import java.util.Hashtable;

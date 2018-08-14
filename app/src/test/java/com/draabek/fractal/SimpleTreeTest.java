@@ -1,5 +1,7 @@
 package com.draabek.fractal;
 
+import com.draabek.fractal.util.SimpleTree;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -9,7 +11,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 
 public class SimpleTreeTest {
 

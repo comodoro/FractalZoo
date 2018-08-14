@@ -1,4 +1,4 @@
-package com.draabek.fractal;
+package com.draabek.fractal.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +14,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.draabek.fractal.fractal.FractalViewWrapper;
+import com.draabek.fractal.R;
+import com.draabek.fractal.fractal.RenderListener;
+import com.draabek.fractal.util.Utils;
 import com.draabek.fractal.canvas.FractalCpuView;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;

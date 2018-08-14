@@ -1,4 +1,6 @@
-package com.draabek.fractal;
+package com.draabek.fractal.fractal;
+
+import com.draabek.fractal.fractal.RenderListener;
 
 /**
  * Created by Vojta on 04.08.2017.

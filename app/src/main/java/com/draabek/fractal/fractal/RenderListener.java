@@ -1,4 +1,4 @@
-package com.draabek.fractal;
+package com.draabek.fractal.fractal;
 
 /**
  * Created by Vojtech Drabek on 2018-02-14.

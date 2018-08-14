@@ -12,11 +12,11 @@ import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
-import com.draabek.fractal.FractalViewWrapper;
+import com.draabek.fractal.fractal.FractalViewWrapper;
 import com.draabek.fractal.R;
-import com.draabek.fractal.RenderListener;
-import com.draabek.fractal.SaveBitmapActivity;
-import com.draabek.fractal.Utils;
+import com.draabek.fractal.fractal.RenderListener;
+import com.draabek.fractal.activity.SaveBitmapActivity;
+import com.draabek.fractal.util.Utils;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.io.File;

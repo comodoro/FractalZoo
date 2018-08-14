@@ -5,7 +5,7 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 
-import com.draabek.fractal.Utils;
+import com.draabek.fractal.util.Utils;
 
 import java.util.Locale;
 import java.util.Map;

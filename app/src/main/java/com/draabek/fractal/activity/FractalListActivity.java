@@ -1,4 +1,4 @@
-package com.draabek.fractal;
+package com.draabek.fractal.activity;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.draabek.fractal.R;
+import com.draabek.fractal.util.Utils;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
 

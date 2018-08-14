@@ -1,6 +1,6 @@
 package com.draabek.fractal.canvas;
 
-import com.draabek.fractal.FractalViewWrapper;
+import com.draabek.fractal.fractal.FractalViewWrapper;
 import com.draabek.fractal.fractal.Fractal;
 
 /**

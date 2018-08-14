@@ -1,4 +1,4 @@
-package com.draabek.fractal;
+package com.draabek.fractal.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.draabek.fractal.R;
 import com.draabek.fractal.fractal.FractalRegistry;
 
 import java.util.Locale;

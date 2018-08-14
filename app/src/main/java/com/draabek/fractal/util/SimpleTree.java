@@ -1,4 +1,4 @@
-package com.draabek.fractal;
+package com.draabek.fractal.util;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

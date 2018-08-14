@@ -1,14 +1,20 @@
-package com.draabek.fractal;
+package com.draabek.fractal.activity;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+
+import com.draabek.fractal.R;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -17,9 +23,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -28,22 +38,18 @@ import static org.hamcrest.Matchers.anything;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
+public class FractalListActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void mainActivityTest() {
-        ViewInteraction actionMenuItemView = onView(
-                allOf(withId(R.id.fractalList), withContentDescription("Fractal List"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.toolbar),
-                                        0),
-                                0),
-                        isDisplayed()));
-        actionMenuItemView.perform(click());
+    public void fractalListActivityTest() {
+        Intents.init();
+        Intent intent = new Intent(FractalZooApplication.getContext(),FractalListActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        getInstrumentation().startActivitySync(intent);
 
         DataInteraction relativeLayout = onData(anything())
                 .inAdapterView(allOf(withId(android.R.id.list),
@@ -53,15 +59,7 @@ public class MainActivityTest {
                 .atPosition(0);
         relativeLayout.perform(click());
 
-        ViewInteraction actionMenuItemView2 = onView(
-                allOf(withId(R.id.fractalList), withContentDescription("Fractal List"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.toolbar),
-                                        0),
-                                0),
-                        isDisplayed()));
-        actionMenuItemView2.perform(click());
+        pressBack();
 
         DataInteraction relativeLayout2 = onData(anything())
                 .inAdapterView(allOf(withId(android.R.id.list),
@@ -71,15 +69,7 @@ public class MainActivityTest {
                 .atPosition(1);
         relativeLayout2.perform(click());
 
-        ViewInteraction actionMenuItemView3 = onView(
-                allOf(withId(R.id.fractalList), withContentDescription("Fractal List"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.toolbar),
-                                        0),
-                                0),
-                        isDisplayed()));
-        actionMenuItemView3.perform(click());
+        pressBack();
 
         DataInteraction relativeLayout3 = onData(anything())
                 .inAdapterView(allOf(withId(android.R.id.list),
@@ -89,6 +79,15 @@ public class MainActivityTest {
                 .atPosition(2);
         relativeLayout3.perform(click());
 
+        DataInteraction relativeLayout4 = onData(anything())
+                .inAdapterView(allOf(withId(android.R.id.list),
+                        childAtPosition(
+                                withId(android.R.id.content),
+                                0)))
+                .atPosition(0);
+        relativeLayout4.perform(click());
+
+        intended(hasComponent(MainActivity.class.getName()));
     }
 
     private static Matcher<View> childAtPosition(

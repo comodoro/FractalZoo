@@ -3,9 +3,9 @@ package com.draabek.fractal.fractal;
 import android.content.Context;
 import android.util.Log;
 
-import com.draabek.fractal.FractalZooApplication;
-import com.draabek.fractal.SimpleTree;
-import com.draabek.fractal.Utils;
+import com.draabek.fractal.activity.FractalZooApplication;
+import com.draabek.fractal.util.SimpleTree;
+import com.draabek.fractal.util.Utils;
 import com.draabek.fractal.gl.GLSLFractal;
 import com.draabek.fractal.palette.ColorPalette;
 import com.google.gson.Gson;

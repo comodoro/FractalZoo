@@ -8,6 +8,7 @@
         android:id="@+id/indeterminateBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:title="@string/progress_bar"
         android:visibility="invisible"
         android:layout_centerInParent="true"
         android:background="@color/transparent"
