@@ -68,8 +68,8 @@ before_script:
 
 script:
 # disable instrumentation tests until they are working
-#- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
-- "./gradlew clean build -PdisablePreDex --stacktrace"
+- "./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
+#- "./gradlew clean build -PdisablePreDex --stacktrace"
 
 after_failure:
 - cat logcat.log

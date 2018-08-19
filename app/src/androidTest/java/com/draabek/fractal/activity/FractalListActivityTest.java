@@ -1,20 +1,14 @@
 package com.draabek.fractal.activity;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.espresso.DataInteraction;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.intent.Intents;
-import android.support.test.rule.ActivityTestRule;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-
-import com.draabek.fractal.R;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -25,13 +19,10 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
@@ -41,11 +32,11 @@ import static org.hamcrest.Matchers.anything;
 public class FractalListActivityTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(MainActivity.class);
 
     @Test
     public void fractalListActivityTest() {
-        Intents.init();
+
         Intent intent = new Intent(FractalZooApplication.getContext(),FractalListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

@@ -1,19 +1,21 @@
 package com.draabek.fractal.activity;
 
-
-import android.app.Activity;
-import android.support.test.espresso.DataInteraction;
+import android.content.Intent;
+import android.support.test.espresso.UiController;
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.TextView;
 
 import com.draabek.fractal.R;
+import com.draabek.fractal.fractal.FractalRegistry;
+
+import junit.framework.Assert;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -22,64 +24,37 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
+import java.io.File;
+import java.io.IOException;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class ClickToolbarTest {
+public class SaveBitmapActivityTest {
+
 
     @Rule
     public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(MainActivity.class);
 
     @Test
-    public void clickToolbarTest() {
-
+    public void fractalParametersActivityTest() throws IOException {
         ViewInteraction actionMenuItemView = onView(
-                allOf(withId(R.id.fractalList), withContentDescription("Fractal List"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.toolbar),
-                                        0),
-                                0),
-                        isDisplayed()));
-        actionMenuItemView.perform(click());
-
-        intended(hasComponent(FractalListActivity.class.getName()));
-
-        DataInteraction relativeLayout = onData(anything())
-                .inAdapterView(allOf(withId(android.R.id.list),
-                        childAtPosition(
-                                withId(android.R.id.content),
-                                0)))
-                .atPosition(0);
-        relativeLayout.perform(click());
-
-        DataInteraction relativeLayout2 = onData(anything())
-                .inAdapterView(allOf(withId(android.R.id.list),
-                        childAtPosition(
-                                withId(android.R.id.content),
-                                0)))
-                .atPosition(0);
-        relativeLayout2.perform(click());
-
-        intended(hasComponent(MainActivity.class.getName()));
-
-        ViewInteraction actionMenuItemView2 = onView(
                 allOf(withId(R.id.save), withContentDescription("Save as JPG"),
                         childAtPosition(
                                 childAtPosition(
@@ -87,9 +62,7 @@ public class ClickToolbarTest {
                                         0),
                                 1),
                         isDisplayed()));
-        actionMenuItemView2.perform(click());
-
-        intended(hasComponent(SaveBitmapActivity.class.getName()));
+        actionMenuItemView.perform(click());
 
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.bitmap_filename),
@@ -100,7 +73,11 @@ public class ClickToolbarTest {
                                                 0)),
                                 1),
                         isDisplayed()));
-
+        String absTempPath = File.createTempFile("pre", ".JPG").getAbsolutePath();
+        appCompatEditText.perform(replaceText(absTempPath), closeSoftKeyboard());
+        //TODO add checks
+        //        getInstrumentation().waitForIdleSync();
+        //        Assert.assertTrue(new File(absTempPath).length() > 0);
         ViewInteraction appCompatRadioButton = onView(
                 allOf(withId(R.id.bitmap_filename_radio), withText("Save as file"),
                         childAtPosition(
@@ -112,17 +89,6 @@ public class ClickToolbarTest {
                         isDisplayed()));
         appCompatRadioButton.perform(click());
 
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.bitmap_filename),
-                        childAtPosition(
-                                allOf(withId(R.id.save_bitmap_radio_group),
-                                        childAtPosition(
-                                                withClassName(is("android.widget.LinearLayout")),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        appCompatEditText2.perform(click());
-
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.save_bitmap_ok_button), withText("OK"),
                         childAtPosition(
@@ -133,45 +99,38 @@ public class ClickToolbarTest {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction actionMenuItemView3 = onView(
-                allOf(withId(R.id.parameters), withContentDescription("Fractal parameters"),
+        ViewInteraction actionMenuItemView2 = onView(
+                allOf(withId(R.id.save), withContentDescription("Save as JPG"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.toolbar),
                                         0),
+                                1),
+                        isDisplayed()));
+        actionMenuItemView2.perform(click());
+
+        ViewInteraction appCompatRadioButton2 = onView(
+                allOf(withId(R.id.bitmap_set_as_background_radio), withText("Set as Home screen background"),
+                        childAtPosition(
+                                allOf(withId(R.id.save_bitmap_radio_group),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.LinearLayout")),
+                                                0)),
                                 2),
                         isDisplayed()));
-        actionMenuItemView3.perform(click());
+        appCompatRadioButton2.perform(click());
 
-        intended(hasComponent(FractalParametersActivity.class.getName()));
-
-        ViewInteraction button = onView(
-                allOf(withText("OK"),
-                        childAtPosition(
-                                allOf(withId(R.id.layout_parameters),
-                                        childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
-                                9),
-                        isDisplayed()));
-        button.perform(click());
-
-        ViewInteraction actionMenuItemView4 = onView(
-                allOf(withId(R.id.options), withContentDescription("Options"),
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.save_bitmap_ok_button), withText("OK"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.toolbar),
+                                        withId(android.R.id.content),
                                         0),
-                                3),
+                                1),
                         isDisplayed()));
-        actionMenuItemView4.perform(click());
+        appCompatButton2.perform(click());
 
-        intended(hasComponent(FractalPreferenceActivity.class.getName()));
-
-        pressBack();
-
-        intended(hasComponent(MainActivity.class.getName()));
-
+        //intended(hasComponent(MainActivity.class.getName()));
     }
 
     private static Matcher<View> childAtPosition(
@@ -192,4 +151,5 @@ public class ClickToolbarTest {
             }
         };
     }
+
 }

@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.draabek.fractal.palette.ColorPalette;
 
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class Fractal {
@@ -16,7 +16,7 @@ public abstract class Fractal {
 	protected ColorPalette colorPalette;
 
 	public Fractal() {
-		parameters = new Hashtable<>();
+		parameters = new LinkedHashMap<>();
 	}
 
 	public Fractal(String name) {

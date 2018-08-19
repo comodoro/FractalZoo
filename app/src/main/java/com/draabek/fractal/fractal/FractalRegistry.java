@@ -4,10 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.draabek.fractal.activity.FractalZooApplication;
-import com.draabek.fractal.util.SimpleTree;
-import com.draabek.fractal.util.Utils;
 import com.draabek.fractal.gl.GLSLFractal;
 import com.draabek.fractal.palette.ColorPalette;
+import com.draabek.fractal.util.SimpleTree;
+import com.draabek.fractal.util.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -155,8 +155,13 @@ public final class FractalRegistry {
             for (JsonElement treeLeaf : jsonElement.getAsJsonArray()) {
                 JsonObject jsonObject = treeLeaf.getAsJsonObject();
                 Fractal fractal = fractalFromJsonObject(jsonObject);
-                fractals.put(fractal.getName(), fractal);
-                hierarchy.putPath(treeLeaves, fractal.getName());
+                if (fractal != null) {
+                    fractals.put(fractal.getName(), fractal);
+                    hierarchy.putPath(treeLeaves, fractal.getName());
+                } else {
+                    Log.e(LOG_KEY, String.format("Cannot load fractal %s",
+                            jsonObject.get("name").getAsString()));
+                }
             }
         } else {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
