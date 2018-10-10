@@ -23,6 +23,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
@@ -38,7 +41,7 @@ public class FractalParametersActivityTest {
     public IntentsTestRule<MainActivity> mActivityTestRule = new IntentsTestRule<>(MainActivity.class);
 
     @Test
-    public void fractalParametersActivityTest() {
+    public void fractalParametersActivityTest() throws ParseException{
         Intent intent = new Intent(FractalZooApplication.getContext(),FractalParametersActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -61,7 +64,7 @@ public class FractalParametersActivityTest {
                                 0)),
                 2),
                 isDisplayed()));
-        Assert.assertEquals(Float.parseFloat(desiredValue), Float.parseFloat(parameterValue), Float.MAX_VALUE);
+        Assert.assertEquals(Float.parseFloat(desiredValue), NumberFormat.getInstance().parse(parameterValue).floatValue(), Float.MAX_VALUE);
         /*TODO make it work
         ViewInteraction button = onView(
                 allOf(withText("OK"),
