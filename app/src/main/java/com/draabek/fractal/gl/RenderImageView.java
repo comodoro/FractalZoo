@@ -22,6 +22,8 @@ import com.draabek.fractal.fractal.FractalRegistry;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Render image shaders asynchronously using OpenGL ES 2.0
@@ -30,10 +32,9 @@ import java.io.IOException;
 
 public class RenderImageView extends android.support.v7.widget.AppCompatImageView implements FractalViewWrapper {
 
-    private Thread glThread;
+    private Map<Long, Boolean> terminateThreads = new Hashtable<>();
     private boolean renderingFlag;
     private boolean reinitFlag;
-    private boolean destroyFlag;
     private PixelBuffer pixelBuffer;
     private SquareRenderer squareRenderer;
 
@@ -79,47 +80,50 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
 
     @Override
     public void setVisibility(int visibility) {
+        int oldVisibility = this.getVisibility();
         super.setVisibility(visibility);
-        if (visibility == VISIBLE) {
+        if (visibility == VISIBLE && (oldVisibility != VISIBLE)) {
             requestRender();
         }
     }
 
     public void init() {
-        glThread = new Thread(() -> {
-            while (!destroyFlag) {
+        Thread glThread = new Thread(() -> {
+            Boolean exiting;
+            do {
+                exiting = terminateThreads.get(Thread.currentThread().getId());
                 /*
                 FIXME without this ugly check init is called everytime on startup.
-                Turns out Android fires onGlobalLayout even with VisibilityGONE
+                Turns out Android fires onGlobalLayout even with Visibility.GONE
                 */
                 if (this.getVisibility() == VISIBLE) {
                     if (reinitFlag) {
-                        pixelBuffer = new PixelBuffer(getWidth(), getHeight());
-                        squareRenderer = new SquareRenderer();
-                        pixelBuffer.setRenderer(squareRenderer);
-                        reinitFlag = false;
-
+                        if ((exiting == null) || (exiting)) {
+                            pixelBuffer = new PixelBuffer(getWidth(), getHeight());
+                            squareRenderer = new SquareRenderer();
+                            pixelBuffer.setRenderer(squareRenderer);
+                            reinitFlag = false;
+                        }
                     }
                     if (renderingFlag) {
-                        long start = System.currentTimeMillis();
-                        this.renderListener.onRenderRequested();
-                        Bitmap bitmap = pixelBuffer.getBitmap();
-                        this.post(() -> {
-                            this.setImageBitmap(bitmap);
-                            this.renderingFlag = false;
-                            this.renderImageCache.add(bitmap, FractalRegistry.getInstance().getCurrent().getName());
-                            this.renderListener.onRenderComplete(System.currentTimeMillis() - start);
-                        });
-                    }
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        exiting = terminateThreads.get(Thread.currentThread().getId());
+                        if ((exiting == null) || (exiting)) {
+                            long start = System.currentTimeMillis();
+                            this.renderListener.onRenderRequested();
+                            Bitmap bitmap = pixelBuffer.getBitmap();
+                            this.post(() -> {
+                                this.setImageBitmap(bitmap);
+                                this.renderingFlag = false;
+                                this.renderImageCache.add(bitmap, FractalRegistry.getInstance().getCurrent().getName());
+                                this.renderListener.onRenderComplete(System.currentTimeMillis() - start);
+                            });
+                        }
                     }
                 }
-            }
+            } while((exiting == null) || exiting);
         });
         glThread.start();
+        terminateThreads.put(glThread.getId(), false);
     }
 
     //or just save current bitmap redundantly
@@ -141,6 +145,15 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
         try {
             File tmpFile = File.createTempFile("bitmap", ".img", getContext().getCacheDir());
             Bitmap bitmap = this.getBitmap();
+            for (int i = 0;(i < 60) && (bitmap == null);i++) {
+                Log.d(this.getClass().getName(), "Wait for draw " + i);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                bitmap = this.getBitmap();
+            }
             if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100,
                     new FileOutputStream(tmpFile))) throw new IOException("Could not compress bitmap");
             Intent intent = new Intent(this.getContext(), SaveBitmapActivity.class);
@@ -158,11 +171,19 @@ public class RenderImageView extends android.support.v7.widget.AppCompatImageVie
         return renderingFlag;
     }
 
+    private void cancelAllThreads() {
+        for (long key : terminateThreads.keySet()) {
+            terminateThreads.put(key, true);
+        }
+    }
     public void requestRender() {
+        if (isRendering()) cancelAllThreads();
         renderingFlag = true;
-        Bitmap cachedBitmap = renderImageCache.get(
-                FractalRegistry.getInstance().getCurrent().getName());
-        if (cachedBitmap != null) setImageBitmap(cachedBitmap);
+        if (getBitmap() != null) {
+            Bitmap cachedBitmap = renderImageCache.get(
+                    FractalRegistry.getInstance().getCurrent().getName());
+            setImageBitmap(cachedBitmap);
+        }
     }
 
     @Override
