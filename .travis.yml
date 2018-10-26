@@ -79,3 +79,10 @@ after_failure:
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
+webhooks:
+  urls:
+  - https://webhooks.gitter.im/e/6f795865e6068238fd7e
+  on_success: always  # options: [always|never|change] default: always
+  on_failure: always  # options: [always|never|change] default: always
+  on_start: never     # options: [always|never|change] default: always

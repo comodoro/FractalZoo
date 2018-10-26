@@ -23,7 +23,10 @@
         "centerX": 1.0,
         "centerY": 0.55,
         "scale": 0.5,
-        "iterations": 256
+        "iterations": 256,
+        "cX": -0.7,
+        "cY": 0.27015
+
       }
     },
     {
@@ -43,13 +46,40 @@
       "name": "Tricorn",
       "class": "com.draabek.fractal.gl.GLSLFractal",
       "shaders": "tricorn",
+      "palette": "com.draabek.fractal.palette.ZebraPalette",
+      "thumbnail": "mandelbrot_thumb.png",
+      "parameters": {
+        "centerX": 0.6,
+        "centerY": 0.7,
+        "scale": 0.3,
+        "iterations": 256
+      }
+    },
+    {
+      "name": "Generalized Mandelbrot",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "generalized_mandelbrot",
       "palette": "com.draabek.fractal.palette.CopperPalette",
       "thumbnail": "mandelbrot_thumb.png",
       "parameters": {
         "centerX": 0.6,
-        "centerY": 0.5,
+        "centerY": 0.7,
+        "exponent": 2.0,
         "scale": 0.3,
-        "iterations": 256
+        "iterations": 256.0
+      }
+    },
+    {
+      "name": "Orbit Mandelbrot",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "mandelbrot_orbit",
+      "palette": "com.draabek.fractal.palette.CopperPalette",
+      "thumbnail": "mandelbrot_thumb.png",
+      "parameters": {
+        "centerX": 0.6,
+        "centerY": 0.7,
+        "scale": 0.3,
+        "iterations": 1024.0
       }
     },
     {
@@ -66,16 +96,29 @@
       }
     },
     {
-      "name": "Magnet",
+      "name": "Magnet 1",
       "class": "com.draabek.fractal.gl.GLSLFractal",
-      "shaders": "magnet",
-      "palette": "com.draabek.fractal.palette.CoolPalette",
+      "shaders": "magnet1",
+      "palette": "com.draabek.fractal.palette.CopperPalette",
       "thumbnail": "mandelbrot_thumb.png",
       "parameters": {
-        "centerX": 0.6,
-        "centerY": 0.5,
+        "centerX": 0.0,
+        "centerY": 0.0,
         "scale": 0.3,
-        "iterations": 64
+        "iterations": 1024.0
+      }
+    },
+    {
+      "name": "Magnet 2",
+      "class": "com.draabek.fractal.gl.GLSLFractal",
+      "shaders": "magnet2",
+      "palette": "com.draabek.fractal.palette.CopperPalette",
+      "thumbnail": "mandelbrot_thumb.png",
+      "parameters": {
+        "centerX": 0.0,
+        "centerY": 0.0,
+        "scale": 0.3,
+        "iterations": 128
       }
     },
     {

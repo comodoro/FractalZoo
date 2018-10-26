@@ -6,11 +6,15 @@ uniform float centerY;
 uniform float scale;
 uniform float iterations;
 uniform vec2 resolution;
-const vec2 c = vec2(-0.7,0.2);
-#define maxiter 1024
+const vec2 c = vec2(0.,0.);
+#define maxiter 65535
 
 vec2 cplx2(vec2 z) {
     return vec2(z.x * z.x - z.y * z.y, z.y * z.x + z.x * z.y);
+}
+
+vec2 cplx3(vec2 z) {
+    return vec2(z.x * z.x * z.x - 3. * z.x * z.y * z.y, 3. * z.x * z.x * z.y - z.y * z.y * z.y);
 }
 
 void main() {
@@ -18,15 +22,15 @@ void main() {
     vec2 coord = vec2(gl_FragCoord.x, gl_FragCoord.y) / resolution;
     vec2 z = (coord - center) / scale;
     int j = 0;
-    vec2 zlast = z;
+
     for(int i = 0; i<maxiter; i++) {
 	    if (float(i) >= iterations) break;
 	    j++;
-        vec2 znew = cplx2((cplx2(zlast) + c - 1.) / (length(z) + c - 2.));
+        vec2 znew = cplx2((cplx3(z) + 3.*(c - 1.) * z + (c - 1.) * (c - 2.)) /
+          (3.* cplx2(z) + 3. * (c - 2.) * z + (c - 1.) * (c - 2.) + 1.));
 
-        if((znew.x * znew.x + znew.y * znew.y) > 4.0) break;
+        if ((znew.x * znew.x + znew.y * znew.y) > 4.0) break;
 
-        zlast = z;
         z = znew;
     }
 
