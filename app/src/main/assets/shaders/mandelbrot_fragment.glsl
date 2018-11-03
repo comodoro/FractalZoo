@@ -6,6 +6,7 @@ uniform float centerY;
 uniform float scale;
 uniform float iterations;
 uniform vec2 resolution;
+uniform float smoothing;
 #define maxiter 65535
 void main() {
     vec2 center = vec2(centerX, centerY);
@@ -28,6 +29,8 @@ void main() {
     if (j == iterations) {
         j = 0.0;
     }
-    j = j + 2. - log(log(z.x*z.x + z.y*z.y)) / log(2.);
+    if (smoothing == 1.0) {
+        j = j + 2. - log(log(z.x*z.x + z.y*z.y)) / log(2.);
+    }
     gl_FragColor = texture2D(palette, vec2(j/iterations, 0.5));
 }

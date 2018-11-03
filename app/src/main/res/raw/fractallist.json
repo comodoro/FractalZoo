@@ -10,7 +10,8 @@
         "centerX": 0.7,
         "centerY": 0.5,
         "scale": 0.5,
-        "iterations": 256
+        "iterations": 256,
+        "smoothing": 1.0
       }
     },
     {
@@ -62,10 +63,10 @@
       "palette": "com.draabek.fractal.palette.CopperPalette",
       "thumbnail": "mandelbrot_thumb.png",
       "parameters": {
-        "centerX": 0.6,
-        "centerY": 0.7,
-        "exponent": 2.0,
-        "scale": 0.3,
+        "centerX": 0.7,
+        "centerY": 0.5,
+        "exponent": 3.0,
+        "scale": 0.5,
         "iterations": 256.0
       }
     },
@@ -76,9 +77,9 @@
       "palette": "com.draabek.fractal.palette.CopperPalette",
       "thumbnail": "mandelbrot_thumb.png",
       "parameters": {
-        "centerX": 0.6,
-        "centerY": 0.7,
-        "scale": 0.3,
+        "centerX": 0.7,
+        "centerY": 0.5,
+        "scale": 0.5,
         "iterations": 1024.0
       }
     },
