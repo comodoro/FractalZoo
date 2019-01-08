@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion 28
@@ -24,7 +23,7 @@ android {
 
         debug {
             applicationIdSuffix ".debug"
-            testCoverageEnabled true
+            testCoverageEnabled false
         }
     }
 
