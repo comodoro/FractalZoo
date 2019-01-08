@@ -4,35 +4,16 @@ package com.draabek.fractal;
 import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.SystemClock;
-import android.support.test.espresso.DataInteraction;
-import android.support.test.espresso.NoMatchingViewException;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.action.GeneralLocation;
-import android.support.test.espresso.action.GeneralSwipeAction;
-import android.support.test.espresso.action.Press;
-import android.support.test.espresso.action.Swipe;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.draabek.fractal.activity.MainActivity;
+import com.draabek.fractal.fractal.FractalRegistry;
 
-import junit.framework.AssertionFailedError;
-
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsNot;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -43,23 +24,31 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.IntBuffer;
 
-import static android.os.Environment.DIRECTORY_PICTURES;
-import static android.os.Environment.getExternalStoragePublicDirectory;
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
+import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.GeneralLocation;
+import androidx.test.espresso.action.GeneralSwipeAction;
+import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Swipe;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
+
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 //FIXME
@@ -120,26 +109,30 @@ public class GLGesturesTest {
         waitForRender();
         int[] buffer1 = saveBuffer();
 
+        float centerY = FractalRegistry.getInstance().getCurrent().getParameters().get("centerY");
         ViewInteraction fractalView = onView(
                 allOf(withId(R.id.fractalGlView), isDisplayed()));
 
         fractalView.perform(swipeDown());
         waitForRender();
+        float centerY2 = FractalRegistry.getInstance().getCurrent().getParameters().get("centerY");
         int[] buffer2 = saveBuffer();
 
         Assert.assertEquals(buffer1.length, buffer2.length);
         double diff = cumulativeDifference(buffer1, buffer2);
-        Assert.assertEquals(true, diff > 1);
+        Assert.assertTrue(diff > 1);
         fractalView = onView(
                 allOf(withId(R.id.fractalGlView), isDisplayed()));
         fractalView.perform(swipeUp());
         waitForRender();
+        float newCenterY = FractalRegistry.getInstance().getCurrent().getParameters().get("centerY");
+        Assert.assertTrue(Math.abs(centerY - centerY2) > Math.abs(centerY - newCenterY));
         int[] buffer3 = saveBuffer();
         Assert.assertEquals(buffer1.length, buffer3.length);
 //        TODO Increase precision to be actually relevant
 //        This just asserts that Original difference is bigger than current difference
         double diff2 = cumulativeDifference(buffer1, buffer3);
-        Assert.assertEquals(0, diff2, diff);
+       // Assert.assertEquals(0, diff2, diff);
     }
 
 

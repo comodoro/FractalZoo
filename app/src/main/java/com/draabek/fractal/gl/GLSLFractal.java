@@ -6,6 +6,9 @@ import com.draabek.fractal.fractal.FractalViewWrapper;
 import com.draabek.fractal.fractal.Fractal;
 
 public class GLSLFractal extends Fractal {
+    /**
+     * A fractal subclass rendered using the GLSL language
+     * directly on the graphics card*/
 	private String[] shaders = null;
 	public GLSLFractal() {super();}
 
@@ -21,4 +24,5 @@ public class GLSLFractal extends Fractal {
 	public void setShaders(@NonNull String[] shaders) {
 		this.shaders = shaders;
 	}
+
 }
