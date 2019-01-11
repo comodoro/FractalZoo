@@ -60,7 +60,6 @@ public class SimpleTree<T> {
             addChild(value);
             return;
         }
-        boolean found = false;
         for (int repeat = 0;repeat < 2;repeat++) {
             for (int i = 0; i < children.size(); i++) {
                 SimpleTree<T> child = children.get(i);

@@ -1,0 +1,16 @@
+{
+  "path": "All fractals|Classical",
+  "name": "Julia",
+  "class": "com.draabek.fractal.gl.GLSLFractal",
+  "shaders": "julia",
+  "thumbnail": "julia_thumb.png",
+  "palette": "com.draabek.fractal.palette.PeasyPalette",
+  "parameters": {
+    "centerX": 0.45,
+    "centerY": 0.81,
+    "scale": 0.4,
+    "iterations": 256,
+    "cX": -0.8,
+    "cY": 0.15
+  }
+}

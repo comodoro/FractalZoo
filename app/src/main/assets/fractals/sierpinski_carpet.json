@@ -1,0 +1,12 @@
+{
+  "path": "All fractals|Geometrical",
+  "name": "Sierpiński Carpet",
+  "class": "com.draabek.fractal.gl.GLSLFractal",
+  "shaders": "sierpinski_carpet",
+  "thumbnail": "sierpinski_carpet_thumb.png",
+  "parameters": {
+    "iterations": 10.0,
+    "centerX": -0.5,
+    "centerY": -0.5
+  }
+}

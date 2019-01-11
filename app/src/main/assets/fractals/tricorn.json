@@ -1,0 +1,14 @@
+{
+  "path": "All fractals|Classical",
+  "name": "Tricorn",
+  "class": "com.draabek.fractal.gl.GLSLFractal",
+  "shaders": "tricorn",
+  "palette": "com.draabek.fractal.palette.ZebraPalette",
+  "thumbnail": "mandelbrot_thumb.png",
+  "parameters": {
+    "centerX": 0.6,
+    "centerY": 0.7,
+    "scale": 0.3,
+    "iterations": 256
+  }
+}

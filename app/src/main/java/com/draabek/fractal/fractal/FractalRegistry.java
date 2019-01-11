@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -35,7 +34,7 @@ public final class FractalRegistry {
 
 	private FractalRegistry() {
 	    fractals = new LinkedHashMap<>();
-	    hierarchy = new SimpleTree<>("");
+	    hierarchy = new SimpleTree<>("All fractals");
 	}
 
 	private boolean initialized = false;
@@ -45,10 +44,6 @@ public final class FractalRegistry {
             instance = new FractalRegistry();
 		}
 		return instance;
-	}
-	
-	public void add(Fractal fractal) {
-		fractals.put(fractal.getName(), fractal);
 	}
 
 	public Map<String, Fractal> getFractals() {
@@ -150,35 +145,27 @@ public final class FractalRegistry {
 		}
 	}
 
-	private void processJsonElement(JsonElement jsonElement, Deque<String> treeLeaves) {
-        if (jsonElement.isJsonArray()) {
-            for (JsonElement treeLeaf : jsonElement.getAsJsonArray()) {
-                JsonObject jsonObject = treeLeaf.getAsJsonObject();
-                Fractal fractal = fractalFromJsonObject(jsonObject);
-                if (fractal != null) {
-                    fractals.put(fractal.getName(), fractal);
-                    hierarchy.putPath(treeLeaves, fractal.getName());
-                } else {
-                    Log.e(LOG_KEY, String.format("Cannot load fractal %s",
-                            jsonObject.get("name").getAsString()));
-                }
-            }
+	private void processJsonElement(JsonElement jsonElement) {
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        String pathInList = jsonObject.get("path").getAsString();
+        jsonObject.remove("path");
+        String[] s = pathInList.split("\\|");
+        Fractal fractal = fractalFromJsonObject(jsonObject);
+        if (fractal != null) {
+            fractals.put(fractal.getName(), fractal);
+            hierarchy.putPath(s, fractal.getName());
         } else {
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-            for (String key : jsonObject.keySet()) {
-                treeLeaves.push(key);
-                processJsonElement(jsonObject.get(key), treeLeaves);
-                treeLeaves.pop();
-            }
+            Log.e(LOG_KEY, String.format("Cannot load fractal %s",
+                    jsonObject.get("name").getAsString()));
         }
     }
 
-	public void init(String fractalListJson) {
+	public void init(String[] fractalList) {
 		if (initialized) return;
-        JsonElement jsonElement = new Gson().fromJson(fractalListJson, JsonElement.class);
-        Deque<String> stringDeque = new ArrayDeque<>();
-        stringDeque.push("");
-        processJsonElement(jsonElement, stringDeque);
+		for (String fractal : fractalList) {
+            JsonElement jsonElement = new Gson().fromJson(fractal, JsonElement.class);
+            processJsonElement(jsonElement);
+        }
 		initialized = true;
 	}
 

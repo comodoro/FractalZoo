@@ -1,0 +1,11 @@
+{
+  "path": "All fractals|Geometrical",
+  "name": "Pythagoras Tree",
+  "class": "com.draabek.fractal.canvas.instance.PythagorasTree",
+  "thumbnail": "pythagoras_tree_thumb.png",
+  "parameters": {
+    "iterations": 12.0,
+    "centerX": 0.0,
+    "centerY": 0.0
+  }
+}

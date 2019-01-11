@@ -1,0 +1,14 @@
+{
+  "path": "All fractals|Classical",
+  "name": "Orbit Mandelbrot",
+  "class": "com.draabek.fractal.gl.GLSLFractal",
+  "shaders": "mandelbrot_orbit",
+  "palette": "com.draabek.fractal.palette.CopperPalette",
+  "thumbnail": "mandelbrot_thumb.png",
+  "parameters": {
+    "centerX": 0.7,
+    "centerY": 0.5,
+    "scale": 0.5,
+    "iterations": 1024.0
+  }
+}

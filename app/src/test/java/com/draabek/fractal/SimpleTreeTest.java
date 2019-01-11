@@ -2,7 +2,7 @@ package com.draabek.fractal;
 
 import com.draabek.fractal.util.SimpleTree;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

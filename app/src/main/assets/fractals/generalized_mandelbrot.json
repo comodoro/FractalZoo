@@ -1,0 +1,15 @@
+{
+  "path": "All fractals|Classical",
+  "name": "Generalized Mandelbrot",
+  "class": "com.draabek.fractal.gl.GLSLFractal",
+  "shaders": "generalized_mandelbrot",
+  "palette": "com.draabek.fractal.palette.CopperPalette",
+  "thumbnail": "mandelbrot_thumb.png",
+  "parameters": {
+    "centerX": 0.7,
+    "centerY": 0.5,
+    "exponent": 3.0,
+    "scale": 0.5,
+    "iterations": 256.0
+  }
+}

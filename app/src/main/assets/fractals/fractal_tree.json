@@ -1,0 +1,12 @@
+{
+  "path": "All fractals|Geometrical",
+  "name": "Fractal Tree",
+  "class": "com.draabek.fractal.canvas.instance.FractalTree",
+  "thumbnail": "fractal_tree_thumb.png",
+  "parameters": {
+    "angle": 20.0,
+    "iterations": 10.0,
+    "centerX": 0.0,
+    "centerY": 0.7
+  }
+}

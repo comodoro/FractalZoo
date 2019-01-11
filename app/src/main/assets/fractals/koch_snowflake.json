@@ -1,0 +1,11 @@
+{
+  "path": "All fractals|Geometrical",
+  "name": "Koch Snowflake",
+  "class": "com.draabek.fractal.canvas.instance.KochSnowflake",
+  "thumbnail": "koch_snowflake_thumb.png",
+  "parameters": {
+    "iterations": 6.0,
+    "centerX": 0.0,
+    "centerY": 0.0
+  }
+}

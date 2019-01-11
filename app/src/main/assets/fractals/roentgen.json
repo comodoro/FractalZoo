@@ -1,0 +1,11 @@
+{
+  "path": "All fractals|GLSL Sandbox",
+  "name": "Roentgen",
+  "class": "com.draabek.fractal.gl.GLSLFractal",
+  "shaders": "roentgen",
+  "thumbnail": "roentgen_thumb.png",
+  "parameters": {
+    "centerX": 0.0,
+    "centerY": 0.0
+  }
+}

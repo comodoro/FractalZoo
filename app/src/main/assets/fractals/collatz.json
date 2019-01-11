@@ -1,0 +1,14 @@
+{
+  "path": "All fractals|Classical",
+  "name": "Collatz",
+  "class": "com.draabek.fractal.gl.GLSLFractal",
+  "shaders": "collatz",
+  "thumbnail": "collatz_thumb.png",
+  "palette": "com.draabek.fractal.palette.BWPalette",
+  "parameters": {
+    "iterations": 4096.0,
+    "centerX": -2.8,
+    "centerY": 0.0,
+    "scale": 0.5
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "path": "All fractals|GLSL Sandbox",
+  "name": "Burner",
+  "class": "com.draabek.fractal.gl.GLSLFractal",
+  "shaders": "burner",
+  "thumbnail": "burner_thumb.png",
+  "parameters": {
+    "centerX": 0.0,
+    "centerY": 0.0
+  }
+}

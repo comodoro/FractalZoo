@@ -50,16 +50,28 @@ public class MainActivity extends AppCompatActivity {
         }
         return stringBuilder.toString();
     }
+
+    String[] readFractalMetadata() throws IOException {
+        String[] fractals = getAssets().list("fractals");
+        String[] fractalStrings = new String[fractals.length];
+        for (int i = 0; i < fractals.length; i++) {
+            String fractal = fractals[i];
+            InputStream is = getAssets().open("fractals/" + fractal);
+            String json = readFully(is);
+            fractalStrings[i] = json;
+        }
+        return fractalStrings;
+    }
     /**
      * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        InputStream is = this.getResources().openRawResource(R.raw.fractallist);
         try {
-            FractalRegistry.getInstance().init(readFully(is));
+            FractalRegistry.getInstance().init(readFractalMetadata());
         } catch (IOException e) {
+            Log.e(LOG_KEY,"Exception loading fractal metadata");
             throw new RuntimeException(e);
         }
 

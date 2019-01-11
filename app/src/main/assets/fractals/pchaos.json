@@ -1,0 +1,11 @@
+{
+  "path": "All fractals|GLSL Sandbox",
+  "name": "PChaos",
+  "class": "com.draabek.fractal.gl.GLSLFractal",
+  "shaders": "pchaos",
+  "thumbnail": "pchaos_thumb.png",
+  "parameters": {
+    "centerX": 0.5,
+    "centerY": 0.5
+  }
+}
