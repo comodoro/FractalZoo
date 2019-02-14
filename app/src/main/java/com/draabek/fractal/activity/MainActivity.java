@@ -34,6 +34,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_KEY = MainActivity.class.getName();
+    private static final String DEFAULT_FRACTAL_NAME = "Mandelbrot";
     public static final String CURRENT_FRACTAL_KEY = "current_fractal";
     public static final int CHOOSE_FRACTAL_CODE = 1;
 
@@ -215,10 +216,10 @@ public class MainActivity extends AppCompatActivity {
     private Fractal getLastFractal() {
         Fractal lastFractal = FractalRegistry
             .getInstance()
-            .get(prefs.getString(Utils.PREFS_CURRENT_FRACTAL_KEY, "Mandelbrot"));
+            .get(prefs.getString(Utils.PREFS_CURRENT_FRACTAL_KEY, DEFAULT_FRACTAL_NAME));
 
         if (lastFractal == null) {
-            lastFractal = FractalRegistry.getInstance().get("Mandelbrot");
+            lastFractal = FractalRegistry.getInstance().get(DEFAULT_FRACTAL_NAME);
         }
 
         return lastFractal;
