@@ -61,12 +61,7 @@ public class MainActivity extends AppCompatActivity {
         FractalRegistry.getInstance().setCurrent(getLastFractal());
         setContentView(R.layout.activity_main);
 
-        //Put views into map where key is the view class, this is then requested from the fractal
-        RenderImageView renderImageView = findViewById(R.id.fractalGlView);
-        availableViews = new HashMap<>();
-        availableViews.put(renderImageView.getClass(), renderImageView);
-        FractalCpuView cpuView = findViewById(R.id.fractalCpuView);
-        availableViews.put(cpuView.getClass(), cpuView);
+        initAvailableViews();
 
         progressBar = findViewById(R.id.indeterminateBar);
 
@@ -223,5 +218,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return lastFractal;
+    }
+
+    //Put views into map where key is the view class, this is then requested from the fractal
+    private void initAvailableViews() {
+        RenderImageView renderImageView = findViewById(R.id.fractalGlView);
+        FractalCpuView cpuView = findViewById(R.id.fractalCpuView);
+
+        availableViews = new HashMap<>();
+        availableViews.put(renderImageView.getClass(), renderImageView);
+        availableViews.put(cpuView.getClass(), cpuView);
     }
 }
