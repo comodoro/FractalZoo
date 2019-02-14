@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     public boolean attemptSave() {
         currentView.saveBitmap();
         return true;
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         if (available == null) {
             throw new RuntimeException("No appropriate view available");
         }
+
         currentView = available;
         FractalRegistry.getInstance().setCurrent(f);
         if (Utils.DEBUG) {
@@ -177,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(this.getClass().getName(), String.format("Rendering complete in %d ms", millis));
                 progressBar.post(() -> {
                     if (!currentView.isRendering())
-                    progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
                 });
             }
         });
