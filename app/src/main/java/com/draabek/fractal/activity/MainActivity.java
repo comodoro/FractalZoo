@@ -57,12 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //ugh
-        Fractal lastFractal = FractalRegistry.getInstance().get(prefs.getString(Utils.PREFS_CURRENT_FRACTAL_KEY, "Mandelbrot"));
-        if (lastFractal == null) {
-            lastFractal = FractalRegistry.getInstance().get("Mandelbrot");
-        }
-        FractalRegistry.getInstance().setCurrent(lastFractal);
+        FractalRegistry.getInstance().setCurrent(getLastFractal());
         setContentView(R.layout.activity_main);
 
         //Put views into map where key is the view class, this is then requested from the fractal
@@ -215,5 +210,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    private Fractal getLastFractal() {
+        Fractal lastFractal = FractalRegistry
+            .getInstance()
+            .get(prefs.getString(Utils.PREFS_CURRENT_FRACTAL_KEY, "Mandelbrot"));
+
+        if (lastFractal == null) {
+            lastFractal = FractalRegistry.getInstance().get("Mandelbrot");
+        }
+
+        return lastFractal;
     }
 }
