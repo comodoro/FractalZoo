@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (Utils.DEBUG) {
@@ -148,12 +147,12 @@ public class MainActivity extends AppCompatActivity {
         Fractal f = FractalRegistry.getInstance().get(newFractal);
         if (f == null) {
             Log.e(this.getClass().getName(), String.format("Fractal %s not found", newFractal));
-            f = FractalRegistry.getInstance().get("Mandelbrot");
+            f = FractalRegistry.getInstance().get(DEFAULT_FRACTAL_NAME);
         }
         assert f != null;
+
         if (currentView != null) currentView.setVisibility(View.GONE);
-        Class<? extends FractalViewWrapper> requiredViewClass = f.getViewWrapper();
-        FractalViewWrapper available = availableViews.get(requiredViewClass);
+        FractalViewWrapper available = availableViews.get(f.getViewWrapper());
         if (available == null) {
             throw new RuntimeException("No appropriate view available");
         }
