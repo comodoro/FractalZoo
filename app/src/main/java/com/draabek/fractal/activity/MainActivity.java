@@ -31,6 +31,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_KEY = MainActivity.class.getName();
@@ -41,7 +44,12 @@ public class MainActivity extends AppCompatActivity {
     Map<Class<? extends FractalViewWrapper>, FractalViewWrapper> availableViews;
     private FractalViewWrapper currentView;
     private SharedPreferences prefs;
-    private ProgressBar progressBar;
+
+    @BindView(R.id.indeterminateBar)
+    ProgressBar progressBar;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     /**
      * Called when the activity is first created.
@@ -60,13 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
         FractalRegistry.getInstance().setCurrent(getLastFractal());
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         initAvailableViews();
-
-        progressBar = findViewById(R.id.indeterminateBar);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         unveilCorrectView(FractalRegistry.getInstance().getCurrent().getName());
