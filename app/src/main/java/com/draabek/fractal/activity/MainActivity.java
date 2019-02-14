@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import com.draabek.fractal.fractal.FractalViewWrapper;
 import com.draabek.fractal.R;
 import com.draabek.fractal.fractal.RenderListener;
+import com.draabek.fractal.util.AssetsReadUtils;
 import com.draabek.fractal.util.Utils;
 import com.draabek.fractal.canvas.FractalCpuView;
 import com.draabek.fractal.fractal.Fractal;
@@ -41,27 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private ProgressBar progressBar;
 
-    private String readFully(InputStream inputStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        StringBuilder stringBuilder = new StringBuilder();
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-        return stringBuilder.toString();
-    }
-
-    String[] readFractalMetadata() throws IOException {
-        String[] fractals = getAssets().list("fractals");
-        String[] fractalStrings = new String[fractals.length];
-        for (int i = 0; i < fractals.length; i++) {
-            String fractal = fractals[i];
-            InputStream is = getAssets().open("fractals/" + fractal);
-            String json = readFully(is);
-            fractalStrings[i] = json;
-        }
-        return fractalStrings;
-    }
     /**
      * Called when the activity is first created.
      */
@@ -69,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            FractalRegistry.getInstance().init(readFractalMetadata());
+            FractalRegistry.getInstance().init(AssetsReadUtils.readFractalMetadata(this));
         } catch (IOException e) {
             Log.e(LOG_KEY,"Exception loading fractal metadata");
             throw new RuntimeException(e);
@@ -210,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                 });
             }
-    });
+        });
     }
 
     @Override
