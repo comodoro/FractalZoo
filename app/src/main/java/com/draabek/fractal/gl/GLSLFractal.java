@@ -1,6 +1,6 @@
 package com.draabek.fractal.gl;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.draabek.fractal.fractal.FractalViewWrapper;
 import com.draabek.fractal.fractal.Fractal;

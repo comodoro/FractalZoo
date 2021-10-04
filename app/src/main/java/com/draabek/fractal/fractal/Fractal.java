@@ -1,6 +1,6 @@
 package com.draabek.fractal.fractal;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.draabek.fractal.palette.ColorPalette;
 

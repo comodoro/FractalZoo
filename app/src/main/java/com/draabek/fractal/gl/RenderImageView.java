@@ -30,7 +30,7 @@ import java.util.Map;
  * Created by Vojtech Drabek on 2018-01-13
  */
 
-public class RenderImageView extends android.support.v7.widget.AppCompatImageView implements FractalViewWrapper {
+public class RenderImageView extends androidx.appcompat.widget.AppCompatImageView implements FractalViewWrapper {
 
     private Map<Long, Boolean> terminateThreads = new Hashtable<>();
     private boolean renderingFlag;
