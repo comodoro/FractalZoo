@@ -6,10 +6,10 @@ Java code style, maybe even adjust neighboring lines if they do not look
 good. But no pull requests just for the sake of pretty code.
 
 Currently the easiest way is to add new fractal classes. Either as
-subclasses of CanvasFractal, or to app/src/main/assets/ as glsl files.
+subclasses of CanvasFractal (easiest, least computationally effective), 
+or to app/src/main/assets/ as glsl files.
 The fractal then needs to be added to src/main/res/raw/fractallist.json
-to be visible to the app (no fancy automatic class loading, not yet
-anyway).
+to be visible to the app (no automatic class loading, not yet anyway).
 
 There can be parameters, see fractallist.json, of which centerX, centerY,
 and scale are special - they will provide the respective functionalities

@@ -12,3 +12,5 @@ When I was reading release notes for some other fractal visualization app, there
 The goal is unsurprisingly to eventually get the app to an usable state and release it somewhere. Primarily probably on [F-droid](https://f-droid.org/), because it is a shining beacon of openness in this bleak corporate world:-) Then Google Play and various other app stores, if it brings something positive.
 
 Current development stage is pre-alpha, where bugs are common and nothing works properly. Progress to alpha stage is tracked by a [GitHub project](https://github.com/comodoro/FractalZoo/projects/1).
+
+Update 10/2020: I have not been able to maintain it here, but have decided to give it one more try, a Hacktoberfest try
