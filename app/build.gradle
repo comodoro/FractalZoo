@@ -11,10 +11,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
-    lintOptions {
-        disable "MinSdkTooLow", "OldTargetApi", "SameReturnValue", "SameParameterValue", "WeakerAccess"
-        abortOnError false
-    }
     buildTypes {
         release {
             minifyEnabled true
@@ -45,6 +41,11 @@ android {
             includeAndroidResources = true
         }
     }
+    lint {
+        abortOnError false
+        disable 'MinSdkTooLow', 'OldTargetApi', 'SameReturnValue', 'SameParameterValue', 'WeakerAccess'
+    }
+    namespace 'com.draabek.fractal'
 }
 
 
